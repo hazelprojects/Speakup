@@ -95,20 +95,23 @@ window.addEventListener('appinstalled', () => {
   window.FIREBASE_READY = true;
 
   onAuthStateChanged(auth, (user) => {
+    if(user) {
+      signOut(auth).then(() => {
+        const loadingEl = document.getElementById('authLoadingScreen');
+        if(loadingEl) loadingEl.style.display = 'none';
+        const loginSc = document.getElementById('loginScreen');
+        if(loginSc) loginSc.style.display = 'flex';
+        const panelWrap = document.getElementById('adminPanelWrap');
+        if(panelWrap) panelWrap.style.display = 'none';
+      });
+      return;
+    }
     window.FB_CURRENT_USER = user;
-    // Loading screen hatao
     const loadingEl = document.getElementById('authLoadingScreen');
     if(loadingEl) loadingEl.style.display = 'none';
-
-    if(user){
-      // User logged in hai — login screen hide karo
-      const loginSc = document.getElementById('loginScreen');
-      if(loginSc) loginSc.style.display = 'none';
-    } else {
-      // User logged out — login screen dikhao
-      const loginSc = document.getElementById('loginScreen');
-      if(loginSc) loginSc.style.display = 'flex';
-      const panelWrap = document.getElementById('adminPanelWrap');
+    const loginSc = document.getElementById('loginScreen');
+    if(loginSc) loginSc.style.display = 'flex';
+    const panelWrap = document.getElementById('adminPanelWrap');
       if(panelWrap) panelWrap.style.display = 'none';
     }
 
