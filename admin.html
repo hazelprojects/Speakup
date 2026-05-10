@@ -11,33 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="SpeakUp Admin">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script>
-let _pwaPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  _pwaPrompt = e;
-  setTimeout(() => {
-    const b = document.getElementById('installBanner');
-    if(b) b.style.display = 'flex';
-  }, 2000);
-});
-function installApp() {
-  if(!_pwaPrompt) return;
-  _pwaPrompt.prompt();
-  _pwaPrompt.userChoice.then(() => {
-    const b = document.getElementById('installBanner');
-    if(b) b.style.display = 'none';
-    _pwaPrompt = null;
-  });
-}
-function dismissInstall() {
-  const b = document.getElementById('installBanner');
-  if(b) b.style.display = 'none';
-}
-window.addEventListener('appinstalled', () => {
-  const b = document.getElementById('installBanner');
-  if(b) b.style.display = 'none';
-});
+// PWA install code removed — admin panel installable nahi hai
 </script>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <!-- Firebase -->
 <script type="module">
@@ -160,15 +138,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
 @keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
 
-/* INSTALL BANNER */
-#installBanner{display:none;position:fixed;bottom:20px;left:16px;right:16px;background:linear-gradient(135deg,#1C1A2E,#13121F);border:2px solid rgba(255,107,157,.4);border-radius:18px;padding:14px 16px;z-index:9998;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(255,107,157,.25);}
-#installBanner .ib-icon{font-size:32px;flex-shrink:0;}
-#installBanner .ib-text{flex:1;}
-#installBanner .ib-title{font-family:'Fredoka One',sans-serif;font-size:15px;color:#FF6B9D;margin-bottom:2px;}
-#installBanner .ib-sub{font-size:11px;color:#7B7A99;}
-#installBanner .ib-btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
-#installBanner .ib-install{background:linear-gradient(135deg,#FF6B9D,#CC3366);border:none;border-radius:10px;padding:8px 14px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;white-space:nowrap;}
-#installBanner .ib-dismiss{background:transparent;border:1px solid #252340;border-radius:10px;padding:6px 10px;color:#7B7A99;font-size:11px;cursor:pointer;}
+/* Install banner CSS removed */
 
 /* LOGIN SCREEN */
 #loginScreen{
@@ -512,7 +482,6 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
   <button class="nav-tab" onclick="showPage('phase3',this);loadPhase3Data();" style="background:linear-gradient(135deg,rgba(255,100,0,.12),rgba(255,50,0,.08));color:#FF9500;font-weight:800;">🔥 Phase 3</button>
   <button class="nav-tab" onclick="showPage('onboarding',this);loadOnboardingData();" style="background:linear-gradient(135deg,rgba(46,229,157,.12),rgba(91,141,239,.08));color:#2EE59D;font-weight:800;">🚀 Onboarding</button>
   <button class="nav-tab" onclick="showPage('settings',this)">⚙️ Settings</button>
-  <button class="nav-tab" onclick="showPage('broadcast',this);loadBroadcastHistory();" style="background:linear-gradient(135deg,rgba(255,107,157,.15),rgba(255,50,100,.08));color:#FF6B9D;font-weight:800;">📢 Broadcast</button>
 </div>
 
 <!-- ════════════════════════════
@@ -589,6 +558,43 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     </div>
     <div class="card-sub">Har language mein kitne din ka lesson Firebase mein hai (AD se live)</div>
     <div id="lessonStatus" style="margin-top:10px;"><div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">⏳ Load ho raha hai...</div></div>
+  </div>
+
+  <!-- ── Analytics Charts ── -->
+  <div class="card" id="analyticsChartsCard">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="card-title" style="margin-bottom:0;">📊 Analytics — Last 7 Days</div>
+      <button onclick="loadAnalyticsCharts()" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:10px;padding:5px 12px;color:var(--g);font-size:11px;font-weight:800;cursor:pointer;font-family:'Fredoka One',sans-serif;">🔄 Refresh</button>
+    </div>
+    <div class="card-sub">Firebase emailProfiles se live data — createdAt field se aggregate</div>
+
+    <!-- DAU Line Chart -->
+    <div style="margin-top:16px;">
+      <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">👥 Daily Active Users (Signups Proxy)</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="chartDAU"></canvas>
+      </div>
+    </div>
+
+    <!-- Signups Bar Chart -->
+    <div style="margin-top:20px;">
+      <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">🆕 New Signups Per Day</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="chartSignups"></canvas>
+      </div>
+    </div>
+
+    <!-- Lessons Completed Bar Chart -->
+    <div style="margin-top:20px;">
+      <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">📚 Lessons Completed Per Day</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="chartLessons"></canvas>
+      </div>
+    </div>
+
+    <div id="analyticsStatus" style="text-align:center;color:var(--mut);font-size:12px;padding:8px 0 0;">
+      ⏳ Dashboard load pe auto-refresh hoga...
+    </div>
   </div>
 
 </div>
@@ -1558,6 +1564,7 @@ ZAROORI RULES:
     <div class="card-title">🔥 Firebase Registered Users</div>
     <div class="card-sub">Sab registered users — Ban/Unban/Reset Progress</div>
     <button onclick="renderFirebaseUsers()" style="width:100%;padding:10px;background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:10px;color:var(--g);font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;margin-bottom:12px;">🔄 Refresh Users</button>
+    <input class="inp" id="fbUserSearch" placeholder="🔍 Email ya username se search..." style="margin:0 0 12px 0;width:100%;box-sizing:border-box;" oninput="filterFirebaseUsers()">
     <div id="fbUsersList"><div style="color:var(--mut);text-align:center;padding:20px;">Refresh karo users dekhne ke liye</div></div>
   </div>
 
@@ -5724,6 +5731,8 @@ async function onAdminAuthChange(user){
   // Dono dynamic sections render karo AD load hote hi
   renderLangManager();
   renderLessonStatus();
+  // Analytics charts — slight delay taake Firebase init ho jaaye
+  setTimeout(()=>{ if(typeof loadAnalyticsCharts==='function') loadAnalyticsCharts(); }, 2000);
   const firstTab = document.querySelector('.nav-tab');
   if(firstTab) showPage('dashboard', firstTab);
 }
@@ -5828,13 +5837,6 @@ async function activateProUser(){
     showToast('👑 Pro activated!','#FFD700');
     document.getElementById('proUserEmail').value='';
     loadProUsers();
-    // ── Pro notification ──
-    try {
-      const uid2 = await findUidByEmail(email);
-      if(uid2 && typeof sendProNotifToUser==='function') {
-        await sendProNotifToUser(uid2, email, 'activated', planLabel, null);
-      }
-    } catch(_){}
   } catch(e){
     showProMsg('❌ Error: '+e.message, false);
   }
@@ -5852,13 +5854,6 @@ async function deactivateProUser(){
     showToast('❌ Pro deactivated!','var(--r)');
     document.getElementById('proUserEmail').value='';
     loadProUsers();
-    // ── Pro removed notification ──
-    try {
-      const uid3 = await findUidByEmail(email);
-      if(uid3 && typeof sendProNotifToUser==='function') {
-        await sendProNotifToUser(uid3, email, 'deactivated', null, null);
-      }
-    } catch(_){}
   } catch(e){
     showProMsg('❌ Error: '+e.message, false);
   }
@@ -5939,7 +5934,7 @@ async function renderAdminAccessManager(){
       const expired = data.expiry && data.expiry < Date.now();
       const daysLeft = data.expiry ? Math.ceil((data.expiry - Date.now())/(1000*60*60*24)) : null;
       const expiryStr = data.expiry
-        ? (expired ? '⛔ Expire ho gaya' : '📅 '+new Date(data.expiry).toLocaleDateString()+' ('+daysLeft+' din baaki)')
+        ? (expired ? '⛔ Expire ho gaya' : '📅 '+new Date(data.expiry).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'})+' ('+daysLeft+' din baaki)')
         : '♾️ No expiry';
       const levelNum = data.level || 1;
       const levelIcon = levelNum===1 ? '👑' : '📚';
@@ -6144,7 +6139,7 @@ function renderDashboard(){
       if(!snap.exists()){ document.getElementById('statActiveToday').textContent=0; return; }
       const users=snap.val();
       let active=0,bestStreak=0,totalXP=0;
-      const today=new Date().toDateString();
+      const today=new Date().toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'});
       Object.values(users).forEach(u=>{
         if(u.langs){Object.values(u.langs).forEach(ld=>{if(ld.courses){Object.values(ld.courses).forEach(c=>{totalXP+=(c.xp||0);if((c.streak||0)>bestStreak)bestStreak=c.streak;});}})}
       });
@@ -6159,6 +6154,203 @@ function renderDashboard(){
   if(statLessons) statLessons.textContent = lessonsCount;
   // Lesson status dynamically render karo
   renderLessonStatus();
+}
+
+
+// ════════════════════════════════════════════
+// ANALYTICS CHARTS — Chart.js + Firebase
+// ════════════════════════════════════════════
+// Destroy karo agar pehle se exist kare
+const _suChartInstances = {};
+function _destroyChart(id){
+  if(_suChartInstances[id]){ _suChartInstances[id].destroy(); delete _suChartInstances[id]; }
+}
+
+// Last 7 din ki date labels banao (PKT)
+function _getLast7Days(){
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();
+    d.setDate(d.getDate()-i);
+    days.push(d.toLocaleDateString('en-PK',{timeZone:'Asia/Karachi',month:'short',day:'numeric'}));
+  }
+  return days;
+}
+
+// Timestamp ko PKT date string mein convert karo
+function _tsToPKTDate(ts){
+  if(!ts) return null;
+  return new Date(typeof ts==='number'?ts:ts.toMillis?.()??ts)
+    .toLocaleDateString('en-PK',{timeZone:'Asia/Karachi',month:'short',day:'numeric'});
+}
+
+// Chart.js default options (dark theme)
+function _chartDefaults(label, color){
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{
+        backgroundColor:'rgba(20,20,35,0.92)',
+        titleColor:'#fff',
+        bodyColor:'rgba(255,255,255,0.75)',
+        borderColor:color,
+        borderWidth:1,
+        padding:10,
+        callbacks:{label:ctx=>' '+ctx.parsed.y+' '+label}
+      }
+    },
+    scales:{
+      x:{
+        ticks:{color:'rgba(255,255,255,0.45)',font:{size:10}},
+        grid:{color:'rgba(255,255,255,0.05)'}
+      },
+      y:{
+        beginAtZero:true,
+        ticks:{color:'rgba(255,255,255,0.45)',font:{size:10},stepSize:1,precision:0},
+        grid:{color:'rgba(255,255,255,0.08)'}
+      }
+    }
+  };
+}
+
+async function loadAnalyticsCharts(){
+  const statusEl = document.getElementById('analyticsStatus');
+  if(statusEl) statusEl.textContent='⏳ Firebase se data aa raha hai...';
+
+  const labels = _getLast7Days();
+
+  // ── Zero arrays ──
+  const signupCounts  = new Array(7).fill(0);
+  const dauCounts     = new Array(7).fill(0);
+  const lessonCounts  = new Array(7).fill(0);
+
+  // ── Firebase se emailProfiles read karo ──
+  if(window.FB_FSDB){
+    try{
+      const snap = await window.FB_GET_DOCS(window.FB_COLLECTION(window.FB_FSDB,'emailProfiles'));
+      const today = new Date();
+      snap.forEach(doc=>{
+        const d = doc.data();
+        // Signups — createdAt se
+        const signupLabel = _tsToPKTDate(d.createdAt);
+        const si = labels.indexOf(signupLabel);
+        if(si!==-1) signupCounts[si]++;
+        // DAU proxy — lastLogin / updatedAt / createdAt — jo mil jaaye
+        const actTs = d.lastLogin || d.updatedAt || d.lastActive || d.createdAt;
+        const actLabel = _tsToPKTDate(actTs);
+        const ai = labels.indexOf(actLabel);
+        if(ai!==-1) dauCounts[ai]++;
+        // Lessons completed — lessonDates array ya langs mein done check
+        if(d.lessonDates && Array.isArray(d.lessonDates)){
+          d.lessonDates.forEach(ts=>{
+            const ll = _tsToPKTDate(ts);
+            const li = labels.indexOf(ll);
+            if(li!==-1) lessonCounts[li]++;
+          });
+        }
+      });
+      if(statusEl) statusEl.textContent='✅ Firebase data loaded — '+snap.size+' users';
+    }catch(e){
+      if(statusEl) statusEl.textContent='⚠️ Firebase error: '+e.message+' — Local data se chart bana raha hoon';
+    }
+  } else {
+    if(statusEl) statusEl.textContent='ℹ️ Firebase nahi mila — Local profiles se estimate';
+  }
+
+  // ── Local profiles se lessons fallback ──
+  try{
+    const profiles = JSON.parse(localStorage.getItem('su_profiles')||'[]');
+    profiles.forEach(p=>{
+      if(!p.langs) return;
+      Object.values(p.langs).forEach(ld=>{
+        if(!ld.courses) return;
+        Object.values(ld.courses).forEach(c=>{
+          if(c.done && Array.isArray(c.done)){
+            c.done.forEach(dayNum=>{
+              // done array sirf day numbers store karta hai — exact date nahi
+              // Isliye last lesson timestamp use karo agar ho
+            });
+          }
+          // lastStudied timestamp check
+          const ls = c.lastStudied || c.lastActive;
+          if(ls){
+            const ll = _tsToPKTDate(ls);
+            const li = labels.indexOf(ll);
+            if(li!==-1) lessonCounts[li]++;
+          }
+        });
+      });
+    });
+  }catch(e){}
+
+  // ── Chart 1: DAU Line Chart ──
+  _destroyChart('chartDAU');
+  const dauCtx = document.getElementById('chartDAU')?.getContext('2d');
+  if(dauCtx){
+    _suChartInstances['chartDAU'] = new Chart(dauCtx,{
+      type:'line',
+      data:{
+        labels,
+        datasets:[{
+          label:'Active Users',
+          data:dauCounts,
+          borderColor:'#2EE59D',
+          backgroundColor:'rgba(46,229,157,0.12)',
+          fill:true,
+          tension:0.4,
+          pointBackgroundColor:'#2EE59D',
+          pointRadius:4,
+          pointHoverRadius:6,
+          borderWidth:2.5
+        }]
+      },
+      options:_chartDefaults('users','#2EE59D')
+    });
+  }
+
+  // ── Chart 2: New Signups Bar Chart ──
+  _destroyChart('chartSignups');
+  const sigCtx = document.getElementById('chartSignups')?.getContext('2d');
+  if(sigCtx){
+    _suChartInstances['chartSignups'] = new Chart(sigCtx,{
+      type:'bar',
+      data:{
+        labels,
+        datasets:[{
+          label:'New Signups',
+          data:signupCounts,
+          backgroundColor:'rgba(91,141,239,0.75)',
+          borderColor:'rgba(91,141,239,1)',
+          borderWidth:1.5,
+          borderRadius:6
+        }]
+      },
+      options:_chartDefaults('signups','rgba(91,141,239,1)')
+    });
+  }
+
+  // ── Chart 3: Lessons Completed Bar Chart ──
+  _destroyChart('chartLessons');
+  const lesCtx = document.getElementById('chartLessons')?.getContext('2d');
+  if(lesCtx){
+    _suChartInstances['chartLessons'] = new Chart(lesCtx,{
+      type:'bar',
+      data:{
+        labels,
+        datasets:[{
+          label:'Lessons',
+          data:lessonCounts,
+          backgroundColor:'rgba(255,209,102,0.75)',
+          borderColor:'rgba(255,209,102,1)',
+          borderWidth:1.5,
+          borderRadius:6
+        }]
+      },
+      options:_chartDefaults('lessons','rgba(255,209,102,1)')
+    });
+  }
 }
 
 // ════════════════════════════════════════════
@@ -6860,7 +7052,11 @@ async function renderUsers(){
   const raw = localStorage.getItem('su_profiles');
   const profiles = raw ? JSON.parse(raw) : [];
   const query = document.getElementById('userSearch')?.value?.toLowerCase()||'';
-  const filtered = query ? profiles.filter(p=>(p.name||'').toLowerCase().includes(query)) : profiles;
+  const filtered = query ? profiles.filter(p=>
+    (p.name||'').toLowerCase().includes(query) ||
+    (p.username||'').toLowerCase().includes(query) ||
+    (p.email||'').toLowerCase().includes(query)
+  ) : profiles;
 
   if(filtered.length === 0){
     el.innerHTML = `<div style="text-align:center;padding:24px;color:var(--mut);">
@@ -6926,6 +7122,53 @@ async function renderUsers(){
   }).join('');
 }
 
+// Firebase users globally store karo taake search filter kar sake
+window._fbUsersCache = [];
+
+function _buildFbUserHTML(data, isBanned){
+  const uid=data.uid||'';
+  const email=data.email||'';
+  const displayName=data.displayName||data.name||email.split('@')[0];
+  const signupDate=data.createdAt?new Date(data.createdAt).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'}):'N/A';
+  return `<div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid ${isBanned?'rgba(255,75,75,.4)':'var(--bdr)'};">
+    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:28px">${isBanned?'🚫':'👤'}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;">${displayName}</div>
+        <div style="font-size:11px;color:var(--mut);">${email}</div>
+        <div style="font-size:11px;color:var(--mut);">Signup: ${signupDate}</div>
+        <div style="font-size:12px;color:${isBanned?'var(--r)':'var(--g)'};font-weight:800;">${isBanned?'❌ BANNED':'✅ Active'}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      ${uid?(isBanned
+        ?`<button onclick="unbanUser('${uid}')" style="background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);border-radius:8px;padding:5px 12px;color:var(--g);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">✅ Unban</button>`
+        :`<button onclick="banUser('${uid}','${email}')" style="background:rgba(255,75,75,.15);border:1px solid rgba(255,75,75,.3);border-radius:8px;padding:5px 12px;color:var(--r);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">🚫 Ban</button>`
+      ):''}
+      ${uid?`<button onclick="resetUserProgress('${uid}','${email}')" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 12px;color:var(--b);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">🔄 Reset</button>`:''}
+    </div>
+  </div>`;
+}
+
+function filterFirebaseUsers(){
+  const el=document.getElementById('fbUsersList');
+  if(!el||!window._fbUsersCache.length) return;
+  const query=(document.getElementById('fbUserSearch')?.value||'').toLowerCase().trim();
+  const filtered=query
+    ? window._fbUsersCache.filter(u=>
+        (u.email||'').toLowerCase().includes(query)||
+        (u.displayName||'').toLowerCase().includes(query)||
+        (u.name||'').toLowerCase().includes(query)||
+        (u.username||'').toLowerCase().includes(query)
+      )
+    : window._fbUsersCache;
+  if(!filtered.length){
+    el.innerHTML='<div style="color:var(--mut);text-align:center;padding:20px">🔍 Koi user nahi mila "'+query+'" se</div>';
+    return;
+  }
+  el.innerHTML=filtered.map(u=>_buildFbUserHTML(u,u._isBanned)).join('');
+}
+
 async function renderFirebaseUsers(){
   const el=document.getElementById('fbUsersList');
   if(!el) return;
@@ -6937,34 +7180,18 @@ async function renderFirebaseUsers(){
     const bannedUIDs=new Set();
     bannedSnap.forEach(d=>{ if(d.data().banned) bannedUIDs.add(d.id); });
     if(snap.empty){ el.innerHTML='<div style="color:var(--mut);text-align:center;padding:20px">Koi registered user nahi</div>'; return; }
-    let html='';
+    // Cache mein store karo
+    window._fbUsersCache=[];
     snap.forEach(d=>{
       const data=d.data();
-      const uid=data.uid||'';
-      const email=data.email||'';
-      const isBanned=bannedUIDs.has(uid);
-      const displayName=data.displayName||data.name||email.split('@')[0];
-      const signupDate=data.createdAt?new Date(data.createdAt).toLocaleDateString():'N/A';
-      html+=`<div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid ${isBanned?'rgba(255,75,75,.4)':'var(--bdr)'};">
-        <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
-          <div style="font-size:28px">${isBanned?'🚫':'👤'}</div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-weight:800;font-size:14px;">${displayName}</div>
-            <div style="font-size:11px;color:var(--mut);">${email}</div>
-            <div style="font-size:11px;color:var(--mut);">Signup: ${signupDate}</div>
-            <div style="font-size:12px;color:${isBanned?'var(--r)':'var(--g)'};font-weight:800;">${isBanned?'❌ BANNED':'✅ Active'}</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-          ${uid?(isBanned
-            ?`<button onclick="unbanUser('${uid}')" style="background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);border-radius:8px;padding:5px 12px;color:var(--g);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">✅ Unban</button>`
-            :`<button onclick="banUser('${uid}','${email}')" style="background:rgba(255,75,75,.15);border:1px solid rgba(255,75,75,.3);border-radius:8px;padding:5px 12px;color:var(--r);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">🚫 Ban</button>`
-          ):''}
-          ${uid?`<button onclick="resetUserProgress('${uid}','${email}')" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 12px;color:var(--b);font-size:12px;cursor:pointer;font-family:'Fredoka One',sans-serif;">🔄 Reset</button>`:''}
-        </div>
-      </div>`;
+      data._isBanned=bannedUIDs.has(data.uid||'');
+      window._fbUsersCache.push(data);
     });
-    el.innerHTML=html||'<div style="color:var(--mut);text-align:center;padding:20px">Koi user nahi mila</div>';
+    // Search input clear karo aur sab show karo
+    const searchEl=document.getElementById('fbUserSearch');
+    if(searchEl) searchEl.value='';
+    el.innerHTML=window._fbUsersCache.map(u=>_buildFbUserHTML(u,u._isBanned)).join('')
+      ||'<div style="color:var(--mut);text-align:center;padding:20px">Koi user nahi mila</div>';
   }catch(e){ el.innerHTML='<div style="color:var(--r);padding:20px">Error: '+e.message+'</div>'; }
 }
 
@@ -10282,17 +10509,7 @@ function resetLocalProfile(pid){
 </script>
 
 <!-- INSTALL BANNER -->
-<div id="installBanner">
-  <div class="ib-icon">📲</div>
-  <div class="ib-text">
-    <div class="ib-title">App Install Karo!</div>
-    <div class="ib-sub">Home screen pe add karo — fast access</div>
-  </div>
-  <div class="ib-btns">
-    <button class="ib-install" onclick="installApp()">⬇️ Install</button>
-    <button class="ib-dismiss" onclick="dismissInstall()">Baad Mein</button>
-  </div>
-</div>
+<!-- installBanner removed -->
 
 <script>
 // ═══════════════════════════════════════════════════════
@@ -10374,13 +10591,6 @@ async function pm_activatePro(){
     pm_loadProUsers();
     // Also sync to old activateProUser functions
     if(typeof loadProUsers==='function') loadProUsers();
-    // ── Pro notification ──
-    try {
-      const uid_pm = await findUidByEmail(email);
-      if(uid_pm && typeof sendProNotifToUser==='function') {
-        await sendProNotifToUser(uid_pm, email, 'activated', PM_PLAN_LABELS[_pm_selectedPlan], null);
-      }
-    } catch(_){}
   } catch(e){ pm_showMsg('❌ Error: '+e.message, false); }
 }
 
@@ -10398,13 +10608,6 @@ async function pm_deactivatePro(){
     document.getElementById('pm_proEmail').value='';
     pm_loadProUsers();
     if(typeof loadProUsers==='function') loadProUsers();
-    // ── Pro removed notification ──
-    try {
-      const uid_pm2 = await findUidByEmail(email);
-      if(uid_pm2 && typeof sendProNotifToUser==='function') {
-        await sendProNotifToUser(uid_pm2, email, 'deactivated', null, null);
-      }
-    } catch(_){}
   } catch(e){ pm_showMsg('❌ Error: '+e.message, false); }
 }
 
@@ -10462,8 +10665,8 @@ function pm_renderProUsers(){
     const expired = u.expiry && now > u.expiry;
     const daysLeft = u.expiry ? Math.ceil((u.expiry-now)/86400000) : null;
     const planLabel = PM_PLAN_LABELS[u.plan]||u.plan||'Unknown';
-    const activatedDate = u.activatedAt ? new Date(u.activatedAt).toLocaleDateString('en-PK') : 'Unknown';
-    const expiryDate = u.expiry ? new Date(u.expiry).toLocaleDateString('en-PK') : '∞';
+    const activatedDate = u.activatedAt ? new Date(u.activatedAt).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'}) : 'Unknown';
+    const expiryDate = u.expiry ? new Date(u.expiry).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'}) : '∞';
 
     let statusHTML;
     if(expired){
@@ -11218,7 +11421,7 @@ async function loadObRecentUsers(){
       .slice(0,20);
 
     el.innerHTML = data.map(d=>{
-      const date = d.completedAt ? new Date(d.completedAt).toLocaleDateString('ur-PK') : '—';
+      const date = d.completedAt ? new Date(d.completedAt).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'}) : '—';
       const goalLabel = OB_GOAL_LABELS_ADMIN[d.goal]||d.goal||'—';
       const langLabel = OB_LANG_FLAGS[d.lang]||d.lang||'—';
       const plan = d.plan === 'monthly' ? '👑 Pro Monthly' : d.plan === 'yearly' ? '👑 Pro Yearly' : d.skipped ? '⏭️ Skip' : '🆓 Free';
@@ -11271,7 +11474,7 @@ async function ob_exportAnalytics(){
       ...data.map(d=>[
         d.goal||'—', d.lang||'—', d.time||'—', d.course||'—',
         d.plan||'—',
-        d.completedAt ? new Date(d.completedAt).toLocaleDateString() : '—'
+        d.completedAt ? new Date(d.completedAt).toLocaleDateString('en-PK',{timeZone:'Asia/Karachi'}) : '—'
       ].join(','))
     ].join('\n');
     navigator.clipboard?.writeText(csv)
@@ -11329,284 +11532,6 @@ window.saveOnboardingToFirebase = function(data){
   }).catch(e=>console.warn('OB save error:', e));
 };
 
-</script>
-
-<!-- ════════════════════════════
-     PAGE: BROADCAST / NOTIFICATIONS
-════════════════════════════ -->
-<div class="page" id="page-broadcast">
-
-
-  <!-- ── Tab switcher ── -->
-  <div style="display:flex;gap:6px;margin-bottom:14px;">
-    <button onclick="bcSwitchTab('broadcast')" id="bcTab_broadcast" class="nav-tab active" style="border-radius:12px;flex:1;padding:10px;">📢 Broadcast</button>
-    <button onclick="bcSwitchTab('personal')" id="bcTab_personal" class="nav-tab" style="border-radius:12px;flex:1;padding:10px;">👤 Personal</button>
-    <button onclick="bcSwitchTab('history')" id="bcTab_history" class="nav-tab" style="border-radius:12px;flex:1;padding:10px;">📋 History</button>
-  </div>
-
-  <!-- ══ TAB: BROADCAST ══ -->
-  <div id="bcPanel_broadcast">
-    <div class="card" style="border-color:rgba(255,107,157,.35);background:linear-gradient(135deg,rgba(255,107,157,.05),rgba(13,12,31,1));">
-      <div class="card-title">📢 Sab Users Ko Notification</div>
-      <div class="card-sub">Yeh message <b style="color:var(--admin)">har user</b> ki notification list mein jayega foran.</div>
-      <div class="inp-label">🏷️ Title</div>
-      <input class="inp" id="bc_title" placeholder="e.g. 🎉 Naya Feature! ya ⚠️ Important Update" maxlength="80">
-      <div class="inp-label" style="margin-top:4px;">💬 Message</div>
-      <textarea class="inp" id="bc_message" placeholder="Sab users tak yeh paigham jayega..." rows="3" maxlength="400"></textarea>
-      <div class="inp-label" style="margin-top:4px;">🎨 Type</div>
-      <select class="inp" id="bc_type">
-        <option value="info">ℹ️ Info (Blue)</option>
-        <option value="success">✅ Success (Green)</option>
-        <option value="warning">⚠️ Warning (Yellow)</option>
-        <option value="promo">🎁 Promo (Pink)</option>
-        <option value="urgent">🚨 Urgent (Red)</option>
-      </select>
-      <button class="btn btn-pink" onclick="sendBroadcast()" id="bcSendBtn" style="margin-top:8px;">📤 Sab Ko Bhejo</button>
-      <div id="bc_sendMsg" style="display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:700;"></div>
-    </div>
-  </div>
-
-  <!-- ══ TAB: PERSONAL ══ -->
-  <div id="bcPanel_personal" style="display:none;">
-    <div class="card" style="border-color:rgba(91,141,239,.35);background:linear-gradient(135deg,rgba(91,141,239,.05),rgba(13,12,31,1));">
-      <div class="card-title">👤 Specific User Ko Notification</div>
-      <div class="card-sub">Kisi ek user ko alag se message bhejo (email ya UID se)</div>
-      <div class="inp-label">📧 User Email ya UID</div>
-      <input class="inp" id="pn_target" placeholder="user@email.com" autocomplete="off">
-      <div style="font-size:11px;color:var(--mut);margin:-6px 0 10px;">Email type karo — user dhundh kar notification jayegi</div>
-      <div class="inp-label">🏷️ Title</div>
-      <input class="inp" id="pn_title" placeholder="e.g. 🎉 Tumhara Pro Activate Hua!" maxlength="80">
-      <div class="inp-label" style="margin-top:4px;">💬 Message</div>
-      <textarea class="inp" id="pn_message" placeholder="Yeh sirf is user ko dikhega..." rows="3" maxlength="400"></textarea>
-      <div class="inp-label" style="margin-top:4px;">🎨 Type</div>
-      <select class="inp" id="pn_type">
-        <option value="info">ℹ️ Info (Blue)</option>
-        <option value="success">✅ Success (Green)</option>
-        <option value="promo">🎁 Promo (Pink)</option>
-        <option value="warning">⚠️ Warning (Yellow)</option>
-        <option value="urgent">🚨 Urgent (Red)</option>
-        <option value="pro">👑 Pro (Gold)</option>
-      </select>
-      <button class="btn btn-blue" onclick="sendPersonalNotif()" id="pnSendBtn" style="margin-top:8px;">📨 Is User Ko Bhejo</button>
-      <div id="pn_sendMsg" style="display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font-size:13px;font-weight:700;"></div>
-    </div>
-  </div>
-
-  <!-- ══ TAB: HISTORY ══ -->
-  <div id="bcPanel_history" style="display:none;">
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div class="card-title" style="margin:0;">📋 Sent History</div>
-        <button onclick="loadBroadcastHistory()" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:10px;padding:5px 12px;color:var(--g);font-size:11px;font-weight:800;cursor:pointer;">🔄 Refresh</button>
-      </div>
-      <div class="card-sub">Aakhri 20 notifications (broadcast + personal)</div>
-      <div id="bc_history"><div style="color:var(--mut);font-size:13px;text-align:center;padding:16px;">⏳ Load ho raha hai...</div></div>
-    </div>
-  </div>
-
-</div><!-- end page-broadcast -->
-
-<script>
-// ══════════════════════════════════════════
-//   FULL NOTIFICATION SYSTEM — Admin Panel
-// ══════════════════════════════════════════
-
-const BC_COLORS = {
-  info:    { bg:'rgba(91,141,239,.15)',  border:'rgba(91,141,239,.4)',  icon:'ℹ️',  color:'#5B8DEF' },
-  success: { bg:'rgba(46,229,157,.15)', border:'rgba(46,229,157,.4)', icon:'✅', color:'#2EE59D' },
-  warning: { bg:'rgba(255,209,102,.15)',border:'rgba(255,209,102,.4)',icon:'⚠️', color:'#FFD166' },
-  promo:   { bg:'rgba(255,107,157,.15)',border:'rgba(255,107,157,.4)',icon:'🎁', color:'#FF6B9D' },
-  urgent:  { bg:'rgba(255,107,107,.18)',border:'rgba(255,107,107,.5)',icon:'🚨', color:'#FF6B6B' },
-  pro:     { bg:'rgba(255,215,0,.15)',  border:'rgba(255,215,0,.4)',  icon:'👑', color:'#FFD700' },
-  pro_exp: { bg:'rgba(255,107,107,.15)',border:'rgba(255,107,107,.4)',icon:'⚠️', color:'#FF9500' },
-};
-
-// ── Tab Switch ──
-function bcSwitchTab(tab) {
-  ['broadcast','personal','history'].forEach(t => {
-    document.getElementById('bcPanel_'+t).style.display = t===tab ? 'block' : 'none';
-    const btn = document.getElementById('bcTab_'+t);
-    if(btn) { btn.classList.toggle('active', t===tab); }
-  });
-  if(tab==='history') loadBroadcastHistory();
-}
-
-// ── Core: Send notification to a specific user by UID ──
-async function sendNotifToUser(uid, payload) {
-  if(!window.FB_DB) return;
-  const notifId = 'n_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-  const notifRef = window.FB_REF(window.FB_DB, 'userNotifs/' + uid + '/' + notifId);
-  await window.FB_SET(notifRef, {
-    ...payload,
-    id: notifId,
-    sentAt: Date.now(),
-    read: false,
-    deleted: false
-  });
-}
-
-// ── Find UID by email ──
-async function findUidByEmail(email) {
-  if(!window.FB_DB) return null;
-  email = email.toLowerCase().trim();
-  // Check users node
-  const snap = await window.FB_GET(window.FB_REF(window.FB_DB, 'users'));
-  if(snap.exists()) {
-    const data = snap.val();
-    for(const uid in data) {
-      const uEmail = (data[uid].email || data[uid].proSub?.email || '').toLowerCase();
-      if(uEmail === email) return uid;
-    }
-  }
-  return null;
-}
-
-// ── Broadcast: Sab users ko ──
-async function sendBroadcast() {
-  const title   = document.getElementById('bc_title')?.value?.trim();
-  const message = document.getElementById('bc_message')?.value?.trim();
-  const type    = document.getElementById('bc_type')?.value || 'info';
-  if(!title || !message) { bcShowMsg('❌ Title aur message dono zaroori!','var(--r)','bc_sendMsg'); return; }
-  if(!window.FB_DB) { bcShowMsg('❌ Firebase connect nahi!','var(--r)','bc_sendMsg'); return; }
-
-  const btn = document.getElementById('bcSendBtn');
-  if(btn) { btn.disabled=true; btn.textContent='⏳ Bhej raha hai...'; }
-
-  const payload = { title, message, type, sentBy: window.FB_CURRENT_USER?.email||'admin', isBroadcast: true };
-
-  try {
-    // 1. Sab users dhundho
-    const snap = await window.FB_GET(window.FB_REF(window.FB_DB, 'users'));
-    let count = 0;
-    if(snap.exists()) {
-      const uids = Object.keys(snap.val());
-      for(const uid of uids) {
-        await sendNotifToUser(uid, payload);
-        count++;
-      }
-    }
-
-    // 2. History mein save karo
-    const hid = 'bc_' + Date.now();
-    await window.FB_SET(window.FB_REF(window.FB_DB, 'notifHistory/' + hid), {
-      ...payload, id: hid, sentAt: Date.now(), recipientCount: count, recipientType: 'broadcast'
-    });
-
-    bcShowMsg('✅ '+count+' users ko notification bhej di! 🎉','var(--g)','bc_sendMsg');
-    document.getElementById('bc_title').value = '';
-    document.getElementById('bc_message').value = '';
-  } catch(e) {
-    bcShowMsg('❌ Error: '+e.message,'var(--r)','bc_sendMsg');
-  } finally {
-    if(btn) { btn.disabled=false; btn.textContent='📤 Sab Ko Bhejo'; }
-  }
-}
-
-// ── Personal: Specific user ko ──
-async function sendPersonalNotif() {
-  const target  = document.getElementById('pn_target')?.value?.trim();
-  const title   = document.getElementById('pn_title')?.value?.trim();
-  const message = document.getElementById('pn_message')?.value?.trim();
-  const type    = document.getElementById('pn_type')?.value || 'info';
-
-  if(!target || !title || !message) { bcShowMsg('❌ Email, title aur message sab zaroori!','var(--r)','pn_sendMsg'); return; }
-  if(!window.FB_DB) { bcShowMsg('❌ Firebase connect nahi!','var(--r)','pn_sendMsg'); return; }
-
-  const btn = document.getElementById('pnSendBtn');
-  if(btn) { btn.disabled=true; btn.textContent='⏳ Dhundh raha hai...'; }
-
-  try {
-    let uid = null;
-    // UID directly diya?
-    if(target.length > 20 && !target.includes('@')) {
-      uid = target;
-    } else {
-      uid = await findUidByEmail(target);
-    }
-
-    if(!uid) { bcShowMsg('❌ Yeh email kisi user se match nahi hua. Firebase mein check karo.','var(--r)','pn_sendMsg'); return; }
-
-    const payload = { title, message, type, sentBy: window.FB_CURRENT_USER?.email||'admin', isBroadcast: false, targetEmail: target };
-    await sendNotifToUser(uid, payload);
-
-    // History
-    const hid = 'pn_' + Date.now();
-    await window.FB_SET(window.FB_REF(window.FB_DB, 'notifHistory/' + hid), {
-      ...payload, id: hid, sentAt: Date.now(), recipientType: 'personal', targetUid: uid
-    });
-
-    bcShowMsg('✅ '+target+' ko notification bhej di!','var(--g)','pn_sendMsg');
-    document.getElementById('pn_target').value='';
-    document.getElementById('pn_title').value='';
-    document.getElementById('pn_message').value='';
-  } catch(e) {
-    bcShowMsg('❌ Error: '+e.message,'var(--r)','pn_sendMsg');
-  } finally {
-    if(btn) { btn.disabled=false; btn.textContent='📨 Is User Ko Bhejo'; }
-  }
-}
-
-// ── Load History ──
-async function loadBroadcastHistory() {
-  const histEl = document.getElementById('bc_history');
-  if(!histEl || !window.FB_DB) return;
-  histEl.innerHTML = '<div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">⏳ Load ho raha hai...</div>';
-  try {
-    const snap = await window.FB_GET(window.FB_REF(window.FB_DB,'notifHistory'));
-    if(!snap.exists()) { histEl.innerHTML='<div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">Koi history nahi abhi</div>'; return; }
-    const items = Object.values(snap.val()).sort((a,b)=>b.sentAt-a.sentAt).slice(0,20);
-    histEl.innerHTML = items.map(d => {
-      const c = BC_COLORS[d.type] || BC_COLORS.info;
-      const date = new Date(d.sentAt).toLocaleString('ur-PK');
-      const who = d.recipientType==='broadcast' ? `📢 Broadcast (${d.recipientCount||'?'} users)` : `👤 ${d.targetEmail||d.targetUid||'personal'}`;
-      return `<div style="background:var(--card2);border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:8px;">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-          <span style="font-size:18px;">${c.icon}</span>
-          <span style="font-size:13px;font-weight:800;color:${c.color};flex:1;">${d.title}</span>
-          <span style="font-size:10px;background:rgba(255,255,255,.06);padding:2px 7px;border-radius:8px;color:var(--mut);">${who}</span>
-        </div>
-        <div style="font-size:12px;color:rgba(255,255,255,.6);line-height:1.5;margin-bottom:4px;">${d.message}</div>
-        <div style="font-size:10px;color:var(--mut);">${date} · By: ${d.sentBy}</div>
-      </div>`;
-    }).join('');
-  } catch(e) {
-    histEl.innerHTML = `<div style="color:var(--r);font-size:12px;">Error: ${e.message}</div>`;
-  }
-}
-
-function bcShowMsg(msg, color, elId) {
-  const el = document.getElementById(elId||'bc_sendMsg');
-  if(!el) return;
-  el.textContent = msg;
-  el.style.background = color==='var(--g)' ? 'rgba(46,229,157,.1)' : 'rgba(255,107,107,.1)';
-  el.style.border = '1px solid '+(color==='var(--g)' ? 'rgba(46,229,157,.3)' : 'rgba(255,107,107,.3)');
-  el.style.color = color;
-  el.style.display = 'block';
-  setTimeout(()=>el.style.display='none', 5000);
-}
-
-// ══ GLOBAL: Pro notification helper — admin ke activate/deactivate ke baad call hoga ══
-async function sendProNotifToUser(uid, email, type, planLabel, expiryDate) {
-  if(!uid || !window.FB_DB) return;
-  let title, message, ntype;
-  if(type === 'activated') {
-    title   = '👑 Pro Activate Ho Gaya!';
-    message = `Mubarak ho! Tumhara SpeakUp Pro (${planLabel}) successfully activate ho gaya hai. Sab premium features ab unlock hain 🎉`;
-    ntype   = 'pro';
-  } else if(type === 'deactivated') {
-    title   = '❌ Pro Subscription Khatam';
-    message = `Tumhara Pro subscription expire ho gaya ya remove kar diya gaya. Dobara Pro lenay ke liye app mein Payment section dekho.`;
-    ntype   = 'warning';
-  } else if(type === 'expiring_soon') {
-    title   = '⏰ Pro Khatam Hone Wala Hai!';
-    message = `Tumhara Pro subscription kal khatam ho raha hai (${expiryDate}). Expire hone se pehle renew karo taake progress uninterrupted rahe!`;
-    ntype   = 'pro_exp';
-  }
-  await sendNotifToUser(uid, { title, message, type: ntype, sentBy: 'system', isBroadcast: false, isProNotif: true });
-}
-window.sendProNotifToUser = sendProNotifToUser;
-window.sendNotifToUser = sendNotifToUser;
-window.findUidByEmail = findUidByEmail;
 </script>
 
 <!-- ✅ Custom Confirm Modal (deleteDay ke liye zaroori) -->
