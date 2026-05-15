@@ -11443,7 +11443,6 @@ async function checkProFromFirebase(){
       }, 100);
     }
 
-    // ✅ FIX: Agar Firebase pe kuch nahi mila toh localStorage clear karo
     function _clearPro(){
       localStorage.removeItem('su_pro_uid_'+uid);
       localStorage.removeItem('su_pro_'+uid);
@@ -11453,41 +11452,48 @@ async function checkProFromFirebase(){
       }, 100);
     }
 
-    const s1 = await window.FB_GET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub'));
-    if(s1.exists()){
+    // ✅ FIX: Har Firebase call alag try/catch mein — ek fail ho toh baaki check hote rahein
+    // ✅ FIX: anyError track karo — error pe _clearPro mat karo (network issue se Pro gum na ho)
+    let anyError = false;
+
+    // 1. users/{uid}/proSub
+    let s1 = null;
+    try{ s1 = await window.FB_GET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub')); }
+    catch(e){ console.warn('checkPro s1 error:', e.message); anyError = true; }
+    if(s1 && s1.exists()){
       const d1 = s1.val();
-      // ✅ FIX: Expiry check on Firebase data
       if(d1.expiry && Date.now() > d1.expiry){
-        // Expired — clean karo everywhere
         try{ await window.FB_SET(window.FB_REF(window.FB_DB,'users/'+uid+'/proSub'), null); }catch(e2){}
         try{ await window.FB_SET(window.FB_REF(window.FB_DB,'proByEmail/'+emailKey), null); }catch(e2){}
-        _clearPro();
-        return;
+        _clearPro(); return;
       }
       _save(d1); return;
     }
 
-    const s2 = await window.FB_GET(window.FB_REF(window.FB_DB, 'proByEmail/'+emailKey));
-    if(s2.exists()){
+    // 2. proByEmail/{key}
+    let s2 = null;
+    try{ s2 = await window.FB_GET(window.FB_REF(window.FB_DB, 'proByEmail/'+emailKey)); }
+    catch(e){ console.warn('checkPro s2 error:', e.message); anyError = true; }
+    if(s2 && s2.exists()){
       const d2 = s2.val();
       if(d2.expiry && Date.now() > d2.expiry){
-        // Expired — clean karo
         try{ await window.FB_SET(window.FB_REF(window.FB_DB,'proByEmail/'+emailKey), null); }catch(e2){}
-        _clearPro();
-        return;
+        _clearPro(); return;
       }
       _save(d2);
       try{ await window.FB_SET(window.FB_REF(window.FB_DB,'users/'+uid+'/proSub'),d2); }catch(e2){}
       return;
     }
 
-    const s3 = await window.FB_GET(window.FB_REF(window.FB_DB, 'proUsers/'+emailKey));
-    if(s3.exists()){
+    // 3. proUsers/{key}
+    let s3 = null;
+    try{ s3 = await window.FB_GET(window.FB_REF(window.FB_DB, 'proUsers/'+emailKey)); }
+    catch(e){ console.warn('checkPro s3 error:', e.message); anyError = true; }
+    if(s3 && s3.exists()){
       const d3 = s3.val();
       if(d3.expiry && Date.now() > d3.expiry){
         try{ await window.FB_SET(window.FB_REF(window.FB_DB,'proUsers/'+emailKey), null); }catch(e2){}
-        _clearPro();
-        return;
+        _clearPro(); return;
       }
       _save(d3);
       try{ await window.FB_SET(window.FB_REF(window.FB_DB,'proByEmail/'+emailKey),d3); }catch(e2){}
@@ -11495,13 +11501,23 @@ async function checkProFromFirebase(){
       return;
     }
 
-    const s4 = await window.FB_GET(window.FB_REF(window.FB_DB, 'users/'+uid+'/pro'));
-    if(s4.exists()){ _save(s4.val()); return; }
+    // 4. users/{uid}/pro (legacy)
+    let s4 = null;
+    try{ s4 = await window.FB_GET(window.FB_REF(window.FB_DB, 'users/'+uid+'/pro')); }
+    catch(e){ console.warn('checkPro s4 error:', e.message); anyError = true; }
+    if(s4 && s4.exists()){ _save(s4.val()); return; }
 
-    // ✅ Koi bhi pro record nahi mila Firebase pe — localStorage clear karo
+    // ✅ FIX: Agar koi Firebase error aaya toh localStorage mat chhedo
+    // Network ya permission error se Pro wrongly clear hone se bachao
+    if(anyError){
+      console.warn('checkProFromFirebase: Firebase errors the, localStorage unchanged');
+      return;
+    }
+
+    // Koi bhi pro record nahi mila — clear karo
     _clearPro();
 
-  } catch(e){}
+  } catch(e){ console.warn('checkProFromFirebase outer error:', e); }
 }
 
 function showProPopup(dayNum){
