@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SpeakUp — Admin Panel</title>
@@ -9,8 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SpeakUp Admin">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&amp;family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+<script src="https://apis.google.com/_/scs/abc-static/_/js/k=gapi.lb.en.gSqfLc8WnvU.O/m=gapi_iframes/rt=j/sv=1/d=1/ed=1/rs=AHpOoo_cXXGArE2dtw6vkGR2NQ_1f5L3AQ/cb=gapi.loaded_0?le=scs" async=""></script><script>
 // PWA install code removed — admin panel installable nahi hai
 </script>
 
@@ -412,14 +410,14 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
 .cfm-msg{font-size:14px;color:var(--mut);margin-bottom:20px;line-height:1.5;}
 .cfm-btns{display:flex;gap:10px;}
 </style>
-</head>
+<script src="https://apis.google.com/js/api.js?onload=__iframefcb650821" type="text/javascript" charset="UTF-8" gapi_processed="true"></script></head>
 <body>
 
 <!-- ══ AUTH LOADING SCREEN ══ -->
 <div id="authLoadingScreen" style="display:none;"></div>
 
 <!-- ══ LOGIN SCREEN ══ -->
-<div id="loginScreen" style="display:flex;">
+<div id="loginScreen" style="display: none;">
   <div class="login-logo">🛡️</div>
   <div class="login-title">Admin Panel</div>
   <div class="login-sub">SpeakUp Admin — Sirf authorized access</div>
@@ -449,21 +447,21 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
 </div>
 
 <!-- ══ ADMIN PANEL (hidden until login) ══ -->
-<div id="adminPanelWrap" style="display:none;">
+<div id="adminPanelWrap" style="display: block;">
 
 <!-- ADMIN HEADER -->
 <div class="admin-header">
   <div class="admin-badge">🛡️ Admin Panel</div>
   <div class="admin-title">SpeakUp <span style="color:var(--admin)">Admin</span></div>
-  <div class="admin-sub" id="adminUserEmail">Lessons · Users · Languages · Settings</div>
+  <div class="admin-sub" id="adminUserEmail">👤 2211787awan1@gmail.com</div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
     <button onclick="doAdminLogout()" style="background:rgba(255,107,157,.15);border:1.5px solid rgba(255,107,157,.35);border-radius:30px;padding:7px 18px;color:var(--admin);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">↩ Logout</button>
-    <button id="deployBtn" onclick="deployToGitHub()" style="display:none;background:linear-gradient(135deg,#238636,#2ea043);border:none;border-radius:30px;padding:7px 18px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">🚀 Deploy to GitHub</button>
+    <button id="deployBtn" onclick="deployToGitHub()" style="display: inline-block; background: linear-gradient(135deg, rgb(35, 134, 54), rgb(46, 160, 67)); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; border-radius: 30px; padding: 7px 18px; color: rgb(255, 255, 255); font-family: &quot;Fredoka One&quot;, sans-serif; font-size: 13px; cursor: pointer;">🚀 Deploy to GitHub</button>
   </div>
 </div>
 
 <!-- DEPLOY MODAL -->
-<div id="deployModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;">
+<div id="deployModal" style="display: none; position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
   <div style="background:var(--card);border-radius:20px;padding:24px;max-width:340px;width:90%;border:1px solid var(--bdr);">
     <div style="font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--txt);margin-bottom:8px;">🚀 Deploy to GitHub</div>
     <div style="font-size:13px;color:var(--mut);margin-bottom:16px;">Yeh current admin panel file <b style="color:#2ea043">hazelprojects/Speakup/admin.html</b> pe push ho jaayegi. GitHub Pages automatically update ho jaayega.</div>
@@ -486,8 +484,8 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
 <!-- CLOUD SYNC BAR -->
 <div id="cloudSyncBar">
   <div style="display:flex;align-items:center;gap:8px;">
-    <div id="cloudDot" style="width:10px;height:10px;border-radius:50%;background:var(--g);flex-shrink:0;"></div>
-    <div id="cloudStatus" style="font-size:12px;color:var(--g);font-weight:700;">✅ Cloud Sync — Sab devices updated!</div>
+    <div id="cloudDot" style="width: 10px; height: 10px; border-radius: 50%; background: rgb(46, 229, 157); flex-shrink: 0;"></div>
+    <div id="cloudStatus" style="font-size: 12px; color: rgb(46, 229, 157); font-weight: 700;">✅ Cloud Sync — Sab devices updated!</div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;">
     <div id="onlineCountBadge" style="display:flex;align-items:center;gap:5px;background:rgba(46,229,157,.1);border:1px solid rgba(46,229,157,.3);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:800;color:rgba(255,255,255,.3);">
@@ -507,7 +505,7 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
   <button class="nav-tab" onclick="showPage('languages',this)">🌍 Languages</button>
   <button class="nav-tab" onclick="showPage('pastpapers-admin',this)">📄 Past Papers</button>
   <button class="nav-tab" onclick="showPage('users',this)">👥 Users</button>
-  <button class="nav-tab" id="adminAccessTab" onclick="showPage('admin-access',this)" style="display:none;">🔐 Access</button>
+  <button class="nav-tab active" id="adminAccessTab" onclick="showPage('admin-access',this)" style="display: block;">🔐 Access</button>
   <button class="nav-tab" onclick="showPage('pro-management',this);loadProPageData();" style="color:#FFD700;font-weight:800;">👑 Pro</button>
   <button class="nav-tab" onclick="showPage('payment',this)">💳 Payment</button>
   <button class="nav-tab" onclick="showPage('phase3',this);loadPhase3Data();" style="background:linear-gradient(135deg,rgba(255,100,0,.12),rgba(255,50,0,.08));color:#FF9500;font-weight:800;">🔥 Phase 3</button>
@@ -518,10 +516,10 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
 <!-- ════════════════════════════
      PAGE: DASHBOARD
 ════════════════════════════ -->
-<div class="page active" id="page-dashboard">
+<div class="page" id="page-dashboard">
   <div class="stat-grid" id="statsGrid">
     <div class="stat-box">
-      <div class="stat-num" style="color:var(--g)" id="statUsers">2</div>
+      <div class="stat-num" style="color:var(--g)" id="statUsers">4</div>
       <div class="stat-lbl">Total Users</div>
     </div>
     <div class="stat-box">
@@ -537,23 +535,23 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
       <div class="stat-lbl">Total XP Earned</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num" style="color:var(--o)" id="statLessons">0</div>
+      <div class="stat-num" style="color:var(--o)" id="statLessons">1</div>
       <div class="stat-lbl">Total Lessons</div>
     </div>
     <div class="stat-box" style="cursor:pointer;" onclick="showPage('pro-management',document.querySelector('[onclick*=pro-management]'));loadProPageData();">
-      <div class="stat-num" style="color:#FFD700;" id="statProUsers">—</div>
+      <div class="stat-num" style="color:#FFD700;" id="statProUsers">1</div>
       <div class="stat-lbl">👑 Pro Users</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num" style="color:#FF9500;font-size:18px;" id="statProRevenue">—</div>
+      <div class="stat-num" style="color:#FF9500;font-size:18px;" id="statProRevenue">Rs.500</div>
       <div class="stat-lbl">💰 Est. Revenue</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num" style="color:var(--r);font-size:22px;" id="statProExpiring">—</div>
+      <div class="stat-num" style="color:var(--r);font-size:22px;" id="statProExpiring">0</div>
       <div class="stat-lbl">⚠️ Expiring Soon</div>
     </div>
     <div class="stat-box" style="cursor:pointer;" onclick="showPage('pro-management',document.querySelector('[onclick*=pro-management]'));loadProPageData();">
-      <div class="stat-num" style="color:var(--o);font-size:22px;" id="statPendingPay">—</div>
+      <div class="stat-num" style="color:var(--o);font-size:22px;" id="statPendingPay">0</div>
       <div class="stat-lbl">📥 Pending Pay</div>
     </div>
     <div class="stat-box" style="border-color:rgba(46,229,157,.4);background:rgba(46,229,157,.05);position:relative;overflow:hidden;">
@@ -593,7 +591,199 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
       <button onclick="refreshLessonStatus()" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:10px;padding:5px 12px;color:var(--g);font-size:11px;font-weight:800;cursor:pointer;">🔄 Refresh</button>
     </div>
     <div class="card-sub">Har language mein kitne din ka lesson Firebase mein hai (AD se live)</div>
-    <div id="lessonStatus" style="margin-top:10px;"><div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">⏳ Load ho raha hai...</div></div>
+    <div id="lessonStatus" style="margin-top:10px;"><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇬🇧</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">English</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--y);">⚠️ 1 Din (Incomplete)</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:3%;background:#FFD166;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">1 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">3%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇫🇷</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">French</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇨🇳</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Chinese</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇸🇦</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Arabic</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇰🇷</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Korean</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇯🇵</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Japanese</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇹🇷</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Turkish</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇮🇪</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Irish</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇪🇸</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Spanish</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇩🇪</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">German</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">🇷🇺</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Russian</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 30 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div><div style="padding:10px 0;border-bottom:1px solid var(--bdr);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:18px;">♟️</span>
+          <span style="font-size:13px;font-weight:800;color:var(--txt);">Chess ♟️</span>
+          <span style="font-size:9px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);color:var(--g);border-radius:6px;padding:1px 5px;margin-left:4px;">ON</span>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:var(--r);">❌ Koi Lesson Nahi</span>
+      </div>
+      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:0%;background:#FF6B6B;border-radius:6px;transition:width .4s;"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px;">
+        <span style="font-size:10px;color:var(--mut);">0 / 7 din ka content</span>
+        <span style="font-size:10px;color:var(--mut);">0%</span>
+      </div>
+    </div></div>
   </div>
 
   <!-- ── Analytics Charts ── -->
@@ -608,7 +798,7 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <div style="margin-top:16px;">
       <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">👥 Daily Active Users (Signups Proxy)</div>
       <div style="position:relative;height:180px;">
-        <canvas id="chartDAU"></canvas>
+        <canvas id="chartDAU" width="879" height="540" style="display: block; box-sizing: border-box; height: 180px; width: 293px;"></canvas>
       </div>
     </div>
 
@@ -616,7 +806,7 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <div style="margin-top:20px;">
       <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">🆕 New Signups Per Day</div>
       <div style="position:relative;height:180px;">
-        <canvas id="chartSignups"></canvas>
+        <canvas id="chartSignups" width="879" height="540" style="display: block; box-sizing: border-box; height: 180px; width: 293px;"></canvas>
       </div>
     </div>
 
@@ -624,13 +814,11 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <div style="margin-top:20px;">
       <div style="font-size:13px;font-weight:800;color:var(--txt);margin-bottom:8px;">📚 Lessons Completed Per Day</div>
       <div style="position:relative;height:180px;">
-        <canvas id="chartLessons"></canvas>
+        <canvas id="chartLessons" width="879" height="540" style="display: block; box-sizing: border-box; height: 180px; width: 293px;"></canvas>
       </div>
     </div>
 
-    <div id="analyticsStatus" style="text-align:center;color:var(--mut);font-size:12px;padding:8px 0 0;">
-      ⏳ Dashboard load pe auto-refresh hoga...
-    </div>
+    <div id="analyticsStatus" style="text-align:center;color:var(--mut);font-size:12px;padding:8px 0 0;">✅ Firebase data loaded — 4 users</div>
   </div>
 
   <!-- ── Retention Chart ── -->
@@ -644,17 +832,17 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <!-- Retention % pills -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:14px 0 16px;">
       <div style="background:rgba(199,125,255,.1);border:1.5px solid rgba(199,125,255,.25);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#C77DFF;" id="retD1Pct">—</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#C77DFF;" id="retD1Pct">0%</div>
         <div style="font-size:10px;color:var(--mut);margin-top:2px;">D1 Retention</div>
         <div style="font-size:9px;color:rgba(199,125,255,.5);margin-top:1px;">Next day wapas aaye</div>
       </div>
       <div style="background:rgba(91,141,239,.1);border:1.5px solid rgba(91,141,239,.25);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#5B8DEF;" id="retD7Pct">—</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#5B8DEF;" id="retD7Pct">0%</div>
         <div style="font-size:10px;color:var(--mut);margin-top:2px;">D7 Retention</div>
         <div style="font-size:9px;color:rgba(91,141,239,.5);margin-top:1px;">7 din baad active</div>
       </div>
       <div style="background:rgba(46,229,157,.1);border:1.5px solid rgba(46,229,157,.25);border-radius:14px;padding:12px 8px;text-align:center;">
-        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#2EE59D;" id="retD30Pct">—</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:24px;color:#2EE59D;" id="retD30Pct">0%</div>
         <div style="font-size:10px;color:var(--mut);margin-top:2px;">D30 Retention</div>
         <div style="font-size:9px;color:rgba(46,229,157,.5);margin-top:1px;">30 din baad active</div>
       </div>
@@ -662,13 +850,20 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
 
     <!-- Retention bar chart -->
     <div style="position:relative;height:160px;">
-      <canvas id="chartRetention"></canvas>
+      <canvas id="chartRetention" width="879" height="480" style="display: block; box-sizing: border-box; height: 160px; width: 293px;"></canvas>
     </div>
 
     <!-- Cohort breakdown text -->
-    <div id="retentionBreakdown" style="margin-top:14px;font-size:12px;color:var(--mut);line-height:1.8;background:rgba(255,255,255,.03);border-radius:12px;padding:10px 14px;display:none;"></div>
+    <div id="retentionBreakdown" style="margin-top: 14px; font-size: 12px; color: var(--mut); line-height: 1.8; background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 10px 14px; display: block;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span style="background:rgba(255,255,255,.06);border-radius:8px;padding:3px 9px;">👥 Total cohort: <b style="color:var(--txt);">4</b></span>
+        <span style="background:rgba(199,125,255,.1);border-radius:8px;padding:3px 9px;">D1: <b style="color:#C77DFF;">0</b> users</span>
+        <span style="background:rgba(91,141,239,.1);border-radius:8px;padding:3px 9px;">D7: <b style="color:#5B8DEF;">0</b> users</span>
+        <span style="background:rgba(46,229,157,.1);border-radius:8px;padding:3px 9px;">D30: <b style="color:#2EE59D;">0</b> users</span>
+      </div>
+      <div style="margin-top:6px;font-size:11px;opacity:.6;">D1 = signup ke agle din active · D7 = 7 din mein wapas aaya · D30 = 30 din mein wapas aaya</div></div>
 
-    <div id="retentionStatus" style="text-align:center;color:var(--mut);font-size:11px;padding:8px 0 0;">⏳ Load hoga...</div>
+    <div id="retentionStatus" style="text-align:center;color:var(--mut);font-size:11px;padding:8px 0 0;">✅ 4 users ka retention analyze kiya</div>
   </div>
 
 </div>
@@ -685,36 +880,20 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <div class="card-sub">Language choose karo, phir days lock/unlock aur edit karo</div>
 
     <div class="inp-label">Language Select</div>
-    <select class="inp" id="lessonLangSel" onchange="currentLang=this.value;loadDaysList()">
-      <option value="en">🇬🇧 English</option>
-      <option value="fr">🇫🇷 French</option>
-      <option value="zh">🇨🇳 Chinese</option>
-      <option value="ar">🇸🇦 Arabic</option>
-      <option value="ko">🇰🇷 Korean</option>
-      <option value="ja">🇯🇵 Japanese</option>
-      <option value="tr">🇹🇷 Turkish</option>
-      <option value="es">🇪🇸 Spanish</option>
-      <option value="de">🇩🇪 German</option>
-      <option value="ie">🇮🇪 Irish (Gaeilge)</option>
-      <option value="chess">♟️ Chess</option>
-    </select>
+    <select class="inp" id="lessonLangSel" onchange="currentLang=this.value;loadDaysList()"><option value="en">🇬🇧 English</option><option value="fr">🇫🇷 French</option><option value="zh">🇨🇳 Chinese</option><option value="ar">🇸🇦 Arabic</option><option value="ko">🇰🇷 Korean</option><option value="ja">🇯🇵 Japanese</option><option value="tr">🇹🇷 Turkish</option><option value="ie">🇮🇪 Irish</option><option value="es">🇪🇸 Spanish</option><option value="de">🇩🇪 German</option><option value="ru">🇷🇺 Russian</option><option value="chess">♟️ Chess ♟️</option></select>
 
     <!-- Real Lesson Data Info Box -->
-    <div id="realLessonInfo" style="margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border-color: var(--y); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-        <span style="font-size:22px;">⚠️</span>
-        <div>
-          <div style="font-size:13px;font-weight:800;color:var(--y);">
-            🇬🇧 English: 5 din ka actual lesson
-          </div>
-          <div style="font-size:11px;color:var(--mut);margin-top:2px;">Sirf 5 din ka lesson code mein hai. Baqi 25 din ke liye "Jald aayega" dikhega.</div>
-        </div>
+    <div id="realLessonInfo" style="margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); border-color: var(--y); border-top-style: ; border-top-width: ; border-right-style: ; border-right-width: ; border-bottom-style: ; border-bottom-width: ; border-left-style: ; border-left-width: ; border-image-source: ; border-image-slice: ; border-image-width: ; border-image-outset: ; border-image-repeat: ;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:22px;">🇬🇧</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:var(--y);">🇬🇧 English: 3 din ka lesson data</div>
+        <div style="font-size:11px;color:var(--mut);margin-top:2px;"><span style="color:#58CC02;">📦 3 built-in</span></div>
       </div>
-      <div style="background:rgba(255,255,255,.08);border-radius:6px;height:5px;overflow:hidden;">
-        <div style="height:100%;width:17%;background:var(--y);border-radius:6px;"></div>
-      </div>
-      <div style="font-size:10px;color:var(--mut);margin-top:3px;">Days ready: 1, 2, 3, 4, 5</div>
     </div>
+    <div style="background:rgba(255,255,255,.08);border-radius:6px;height:5px;overflow:hidden;">
+      <div style="height:100%;width:10%;background:var(--g);border-radius:6px;"></div>
+    </div>
+    <div style="font-size:10px;color:var(--mut);margin-top:3px;">Total: 3 days available</div></div>
   </div>
 
   <div class="card">
@@ -722,8 +901,172 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
       <span>📅 Days List</span>
       <button class="btn btn-blue btn-small" onclick="addNewDay()" style="position: relative; overflow: hidden;">＋ Add Day</button>
     </div>
-    <div id="dayListContainer" class="day-list">
+    <div id="dayListContainer" class="day-list"><div style="background:linear-gradient(135deg,rgba(255,149,0,.12),rgba(255,107,107,.08));border:1.5px solid rgba(255,149,0,.4);border-radius:14px;padding:12px 14px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:800;color:var(--o);letter-spacing:1px;margin-bottom:6px;">📚 DAY 0 — ALPHABET PRE-CLASS</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--txt);">English Alphabet</div>
+          <div style="font-size:11px;color:var(--mut);">26 letters · 🔓 Always first</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="editAlphabetDay('en')" style="background:rgba(255,149,0,.15);border:1px solid rgba(255,149,0,.4);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--o);">✏️</button>
+          <button onclick="deleteAlphabetDay('en')" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🗑️</button>
+        </div>
+      </div>
     </div>
+    <div style="margin-bottom:12px;border-radius:14px;overflow:hidden;border:2px solid rgba(88,204,2,.3);">
+      <div onclick="toggleCourseAccordion('acc-days-30-en','acc-arrow-30-en')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(88,204,2,.08);cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Fredoka One',sans-serif;font-size:15px;color:#58CC02;">⚡ 30 Days</span>
+          <span style="font-size:11px;color:var(--mut);">2 hr/day — Fast Track</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;font-weight:800;color:#58CC02;">3 days · 🔒0</span>
+          <button onclick="event.stopPropagation();lockAllCourse('en','30','locked')" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:3px 8px;color:#FF6B6B;font-size:10px;cursor:pointer;font-weight:800;">🔒 All</button>
+          <button onclick="event.stopPropagation();lockAllCourse('en','30','unlocked')" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:8px;padding:3px 8px;color:#2EE59D;font-size:10px;cursor:pointer;font-weight:800;">🔓 All</button>
+          <span id="acc-arrow-30-en" style="color:#58CC02;font-size:14px;transition:transform .2s;">▲</span>
+        </div>
+      </div>
+      <div id="acc-days-30-en" style="display:block;padding:10px;">
+        <div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',1)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">1</div>
+      <div class="day-info">
+        <div class="day-title">👋 Basic Introductions</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',1)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',1,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',2)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">2</div>
+      <div class="day-info">
+        <div class="day-title">🌅 Daily Greetings &amp; Farewells</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',2)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',2,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',3)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">3</div>
+      <div class="day-info">
+        <div class="day-title">🔢 Numbers &amp; Time</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',3)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',3,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div>
+        
+      </div>
+    </div>
+    <div style="margin-bottom:12px;border-radius:14px;overflow:hidden;border:2px solid rgba(28,176,246,.3);">
+      <div onclick="toggleCourseAccordion('acc-days-60-en','acc-arrow-60-en')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(28,176,246,.08);cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Fredoka One',sans-serif;font-size:15px;color:#1CB0F6;">🎯 60 Days</span>
+          <span style="font-size:11px;color:var(--mut);">1 hr/day — Balanced</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;font-weight:800;color:#1CB0F6;">3 days · 🔒0</span>
+          <button onclick="event.stopPropagation();lockAllCourse('en','60','locked')" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:3px 8px;color:#FF6B6B;font-size:10px;cursor:pointer;font-weight:800;">🔒 All</button>
+          <button onclick="event.stopPropagation();lockAllCourse('en','60','unlocked')" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:8px;padding:3px 8px;color:#2EE59D;font-size:10px;cursor:pointer;font-weight:800;">🔓 All</button>
+          <span id="acc-arrow-60-en" style="color:#1CB0F6;font-size:14px;transition:transform .2s;">▼</span>
+        </div>
+      </div>
+      <div id="acc-days-60-en" style="display:none;padding:10px;">
+        <div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',1)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">1</div>
+      <div class="day-info">
+        <div class="day-title">👋 Basic Introductions</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',1)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',1,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',2)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">2</div>
+      <div class="day-info">
+        <div class="day-title">🌅 Daily Greetings &amp; Farewells</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',2)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',2,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',3)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">3</div>
+      <div class="day-info">
+        <div class="day-title">🔢 Numbers &amp; Time</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',3)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',3,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div>
+        
+      </div>
+    </div>
+    <div style="margin-bottom:12px;border-radius:14px;overflow:hidden;border:2px solid rgba(206,130,255,.3);">
+      <div onclick="toggleCourseAccordion('acc-days-90-en','acc-arrow-90-en')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(206,130,255,.08);cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-family:'Fredoka One',sans-serif;font-size:15px;color:#CE82FF;"> 🐢 90 Days</span>
+          <span style="font-size:11px;color:var(--mut);">30 min/day — Easy</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;font-weight:800;color:#CE82FF;">3 days · 🔒0</span>
+          <button onclick="event.stopPropagation();lockAllCourse('en','90','locked')" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:3px 8px;color:#FF6B6B;font-size:10px;cursor:pointer;font-weight:800;">🔒 All</button>
+          <button onclick="event.stopPropagation();lockAllCourse('en','90','unlocked')" style="background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:8px;padding:3px 8px;color:#2EE59D;font-size:10px;cursor:pointer;font-weight:800;">🔓 All</button>
+          <span id="acc-arrow-90-en" style="color:#CE82FF;font-size:14px;transition:transform .2s;">▼</span>
+        </div>
+      </div>
+      <div id="acc-days-90-en" style="display:none;padding:10px;">
+        <div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',1)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">1</div>
+      <div class="day-info">
+        <div class="day-title">👋 Basic Introductions</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',1)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',1,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',2)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">2</div>
+      <div class="day-info">
+        <div class="day-title">🌅 Daily Greetings &amp; Farewells</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',2)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',2,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div><div class="day-item" style="cursor:pointer;margin-bottom:8px;" onclick="editDay('en',3)">
+      <div class="day-num" style="background:rgba(88,204,2,.12);color:#58CC02">3</div>
+      <div class="day-info">
+        <div class="day-title">🔢 Numbers &amp; Time</div>
+        <div class="day-meta">40 words · 🔓 Unlocked · <span style="color:#58CC02;font-weight:700;">📦 Built-in</span></div>
+      </div>
+      <div class="day-actions">
+        <button onclick="event.stopPropagation();editDay('en',3)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--b);">✏️</button>
+        <button onclick="event.stopPropagation();toggleBuiltinDayLock('en',3,false)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--r);">🔒</button>
+        
+      </div>
+    </div>
+        
+      </div>
+    </div></div>
   </div>
 
 </div>
@@ -870,8 +1213,7 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
 
       <!-- Prompt Preview -->
-      <textarea id="pgPromptText" readonly
-        style="width:100%;height:220px;background:rgba(0,0,0,.3);border:1px solid var(--bdr);border-radius:10px;padding:12px;font-size:10px;color:var(--mut);font-family:monospace;resize:none;box-sizing:border-box;line-height:1.5;"></textarea>
+      <textarea id="pgPromptText" readonly="" style="width:100%;height:220px;background:rgba(0,0,0,.3);border:1px solid var(--bdr);border-radius:10px;padding:12px;font-size:10px;color:var(--mut);font-family:monospace;resize:none;box-sizing:border-box;line-height:1.5;"></textarea>
 
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <button onclick="pgCopyPrompt()" class="btn btn-blue" style="flex:1;min-width:120px;">
@@ -897,7 +1239,121 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
   <div class="card">
     <div class="card-title">🌍 Language Manager</div>
     <div class="card-sub">Koi bhi language enable/disable karo, name ya flag change karo</div>
-    <div id="langManagerList"><div style="color:var(--mut);font-size:13px;text-align:center;padding:12px;">⏳ Load ho raha hai...</div></div>
+    <div id="langManagerList"><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇬🇧 English <span style="font-size:11px;color:var(--mut)">(1 days)</span></div>
+          <div class="toggle-desc">Code: en · Color: <span style="color:#58CC02">#58CC02</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('en',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇫🇷 French <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: fr · Color: <span style="color:#4A90E2">#4A90E2</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('fr',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇨🇳 Chinese <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: zh · Color: <span style="color:#E74C3C">#E74C3C</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('zh',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇸🇦 Arabic <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: ar · Color: <span style="color:#9B59B6">#9B59B6</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('ar',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇰🇷 Korean <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: ko · Color: <span style="color:#FF6B9D">#FF6B9D</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('ko',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇯🇵 Japanese <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: ja · Color: <span style="color:#FF8C42">#FF8C42</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('ja',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇹🇷 Turkish <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: tr · Color: <span style="color:#E84142">#E84142</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('tr',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇮🇪 Irish <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: ie · Color: <span style="color:#169B62">#169B62</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('ie',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇪🇸 Spanish <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: es · Color: <span style="color:#F5A623">#F5A623</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('es',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇩🇪 German <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: de · Color: <span style="color:#5B9BD5">#5B9BD5</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('de',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div><div class="toggle-row">
+        <div class="toggle-info">
+          <div class="toggle-name">🇷🇺 Russian <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+          <div class="toggle-desc">Code: ru · Color: <span style="color:#E53935">#E53935</span></div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked="" onchange="toggleLang('ru',this.checked)">
+          <div class="toggle-slider"></div>
+        </label>
+      </div>
+      <div style="margin-top:20px;padding:14px;background:rgba(46,229,157,.06);border:2px solid rgba(46,229,157,.25);border-radius:16px;">
+        <div style="font-size:12px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+          ♟️ Chess Section <span style="font-size:10px;font-weight:700;color:var(--mut);text-transform:none;letter-spacing:0;">(Language se alag hai)</span>
+        </div>
+        <div class="toggle-row" style="border-bottom:none;padding:0;">
+          <div class="toggle-info">
+            <div class="toggle-name">♟️ Chess ♟️ <span style="font-size:11px;color:var(--mut)">(0 days)</span></div>
+            <div class="toggle-desc">Code: chess · Color: <span style="color:#2ECC71">#2ECC71</span></div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" checked="" onchange="toggleLang('chess',this.checked)">
+            <div class="toggle-slider"></div>
+          </label>
+        </div>
+      </div></div>
   </div>
 
   <!-- ══ PROGRAMMING LANGUAGES SECTION ══ -->
@@ -914,9 +1370,85 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
       </div>
     </div>
 
-    <div id="progLangAdminList">
-      <!-- Rendered by renderProgLangAdmin() -->
-    </div>
+    <div id="progLangAdminList"><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🐍</span>
+          <span style="color:var(--txt);">Python</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">AI, Web, Automation — Sabse popular language · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('python',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">☕</span>
+          <span style="color:var(--txt);">Java</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Android + Enterprise — Industry standard · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('java',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">💛</span>
+          <span style="color:var(--txt);">JavaScript</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Web Frontend + Backend — Browser ki zubaan · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('javascript',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🦀</span>
+          <span style="color:var(--txt);">Rust</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">System Programming — Fastest &amp; Memory Safe · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('rust',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🔷</span>
+          <span style="color:var(--txt);">Kotlin</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Android Dev — Google Official Language · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('kotlin',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🍎</span>
+          <span style="color:var(--txt);">Swift</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">iOS / Mac Apps — Apple Official Language · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('swift',this.checked,'prog')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div></div>
 
     <button onclick="saveProgLangSettings()" class="btn btn-blue" style="margin-top:12px;">
       💾 Programming Languages Save Karo
@@ -929,9 +1461,59 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
     <div class="card-title" style="color:#CE82FF;">🎨 Arts &amp; Skills</div>
     <div class="card-sub">Music, Art, Math, Photography — enable karo jab ready ho.</div>
 
-    <div id="artsSkillsAdminList">
-      <!-- Rendered by renderArtsSkillsAdmin() -->
-    </div>
+    <div id="artsSkillsAdminList"><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🎵</span>
+          <span style="color:var(--txt);">Music</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Theory, Instruments, Production · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('music',this.checked,'arts')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🎨</span>
+          <span style="color:var(--txt);">Art &amp; Design</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Drawing, Colors, Digital Art · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('art',this.checked,'arts')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">🧮</span>
+          <span style="color:var(--txt);">Math</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Algebra, Calculus, Concepts · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('math',this.checked,'arts')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div><div class="toggle-row" style="background:var(--card2);border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--bdr);">
+      <div class="toggle-info">
+        <div class="toggle-name" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;">📸</span>
+          <span style="color:var(--txt);">Photography</span>
+          <span style="font-size:10px;background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;">Disabled 🔒</span>
+        </div>
+        <div class="toggle-desc">Camera, Composition, Editing · 60 Levels</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" onchange="toggleProgLang('photography',this.checked,'arts')">
+        <div class="toggle-slider" style=""></div>
+      </label>
+    </div></div>
 
     <button onclick="saveArtsSkillsSettings()" class="btn" style="margin-top:12px;background:linear-gradient(135deg,#CE82FF,#9B40E8);box-shadow:0 5px 0 #6B1FA0;">
       💾 Arts &amp; Skills Save Karo
@@ -1037,7 +1619,7 @@ ZAROORI RULES:
       </select>
 
       <div class="inp-label">Subject</div>
-      <select class="inp" id="ppJsonSubject"></select>
+      <select class="inp" id="ppJsonSubject"><option value="English">English</option><option value="Urdu">Urdu</option><option value="Mathematics">Mathematics</option><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Biology">Biology</option><option value="Computer Science">Computer Science</option><option value="Pak Studies">Pak Studies</option><option value="Islamiyat">Islamiyat</option></select>
       
 
       <div class="inp-label">Board</div>
@@ -1060,7 +1642,7 @@ ZAROORI RULES:
         <option value="2020">2020</option>
         <option value="2021">2021</option>
         <option value="2022">2022</option>
-        <option value="2023" selected>2023</option>
+        <option value="2023" selected="">2023</option>
         <option value="2024">2024</option>
         <option value="2025">2025</option>
         <option value="2026">2026</option>
@@ -1075,7 +1657,7 @@ ZAROORI RULES:
 
       <div class="inp-label" style="margin-top:10px;">Sections ka JSON paste karo</div>
       <div style="font-size:11px;color:var(--mut);margin-bottom:6px;">Sirf <b style="color:var(--b);">sections</b> array paste karo — upar se class/year/board/subject/session select ho chuki hai</div>
-      <textarea class="inp lesson-textarea" id="ppFullJson" placeholder='[{"type":"mcq","title":"Section A — MCQs","instructions":"...","questions":[{"q":"...","opts":["A","B","C","D"],"ans":0,"exp":"..."}]}]' style="min-height:130px;font-size:11px;" oninput="ppValidateFullJson()"></textarea>
+      <textarea class="inp lesson-textarea" id="ppFullJson" placeholder="[{&quot;type&quot;:&quot;mcq&quot;,&quot;title&quot;:&quot;Section A — MCQs&quot;,&quot;instructions&quot;:&quot;...&quot;,&quot;questions&quot;:[{&quot;q&quot;:&quot;...&quot;,&quot;opts&quot;:[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;],&quot;ans&quot;:0,&quot;exp&quot;:&quot;...&quot;}]}]" style="min-height:130px;font-size:11px;" oninput="ppValidateFullJson()"></textarea>
       <div id="ppFullJsonStatus" style="font-size:12px;margin-top:6px;display:none;padding:8px 12px;border-radius:8px;"></div>
       <div style="display:flex;gap:8px;margin-top:10px;">
         <button class="btn btn-green" onclick="ppSaveFullJson()" style="flex:1;">✅ Save Karo</button>
@@ -1106,7 +1688,7 @@ ZAROORI RULES:
       <option value="Sahiwal">Sahiwal Board</option><option value="AJK">AJK Board</option>
     </select>
     <div class="inp-label">Subject</div>
-    <select class="inp" id="ppAdminSubject"></select>
+    <select class="inp" id="ppAdminSubject"><option value="English">English</option><option value="Urdu">Urdu</option><option value="Mathematics">Mathematics</option><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Biology">Biology</option><option value="Computer Science">Computer Science</option><option value="Pak Studies">Pak Studies</option><option value="Islamiyat">Islamiyat</option></select>
     
     <div class="inp-label">Session</div>
     <select class="inp" id="ppAdminSession">
@@ -1115,13 +1697,13 @@ ZAROORI RULES:
       <option value="supply">🔄 Supply / Supplementary</option>
     </select>
     <div class="inp-label">MCQ Section (JSON)</div>
-    <textarea class="inp lesson-textarea" id="ppAdminMcq" placeholder='[{"q":"sawaal","opts":["A","B","C","D"],"ans":0,"exp":"wajah"}]' style="min-height:80px;font-size:11px;"></textarea>
+    <textarea class="inp lesson-textarea" id="ppAdminMcq" placeholder="[{&quot;q&quot;:&quot;sawaal&quot;,&quot;opts&quot;:[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;],&quot;ans&quot;:0,&quot;exp&quot;:&quot;wajah&quot;}]" style="min-height:80px;font-size:11px;"></textarea>
     <div class="inp-label">Fill in Blanks (JSON) — Optional</div>
-    <textarea class="inp lesson-textarea" id="ppAdminFill" placeholder='[{"q":"She ___ (go/goes)","ans":"goes","opts":["go","goes"],"exp":"wajah"}]' style="min-height:60px;font-size:11px;"></textarea>
+    <textarea class="inp lesson-textarea" id="ppAdminFill" placeholder="[{&quot;q&quot;:&quot;She ___ (go/goes)&quot;,&quot;ans&quot;:&quot;goes&quot;,&quot;opts&quot;:[&quot;go&quot;,&quot;goes&quot;],&quot;exp&quot;:&quot;wajah&quot;}]" style="min-height:60px;font-size:11px;"></textarea>
     <div class="inp-label">Short Q&amp;A (JSON) — Optional</div>
-    <textarea class="inp lesson-textarea" id="ppAdminQA" placeholder='[{"q":"Q1. Sawaal?","ans":"Jawab","hint":"Hint"}]' style="min-height:60px;font-size:11px;"></textarea>
+    <textarea class="inp lesson-textarea" id="ppAdminQA" placeholder="[{&quot;q&quot;:&quot;Q1. Sawaal?&quot;,&quot;ans&quot;:&quot;Jawab&quot;,&quot;hint&quot;:&quot;Hint&quot;}]" style="min-height:60px;font-size:11px;"></textarea>
     <div class="inp-label">Long Questions (JSON) — Optional</div>
-    <textarea class="inp lesson-textarea" id="ppAdminLong" placeholder='[{"q":"Q5. Sawaal?","ans":"Guide","hint":"Hint"}]' style="min-height:60px;font-size:11px;"></textarea>
+    <textarea class="inp lesson-textarea" id="ppAdminLong" placeholder="[{&quot;q&quot;:&quot;Q5. Sawaal?&quot;,&quot;ans&quot;:&quot;Guide&quot;,&quot;hint&quot;:&quot;Hint&quot;}]" style="min-height:60px;font-size:11px;"></textarea>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <button class="btn btn-green" id="ppAdminSaveBtn" onclick="ppAdminSavePaper()" style="flex:1;">✅ Save Karo</button>
       <button class="btn btn-outline btn-small" onclick="ppAdminCancelEdit()" style="padding:12px;">✕</button>
@@ -1162,10 +1744,41 @@ ZAROORI RULES:
       </select>
       <button onclick="ppFilterClear()" style="padding:10px 14px;border-radius:10px;border:1px solid var(--bdr);background:rgba(255,255,255,.06);color:var(--mut);font-size:13px;cursor:pointer;white-space:nowrap;">🔄 Clear</button>
     </div>
-    <div id="ppAdminListCount" style="font-size:11px;color:var(--mut);margin-bottom:8px;"></div>
-    <div id="ppAdminList" style="display:flex;flex-direction:column;gap:8px;">
-      <div style="text-align:center;color:var(--mut);padding:20px;font-size:13px;">Loading...</div>
-    </div>
+    <div id="ppAdminListCount" style="font-size:11px;color:var(--mut);margin-bottom:8px;">3 papers mile</div>
+    <div id="ppAdminList" style="display:flex;flex-direction:column;gap:8px;"><div style="background:var(--card2);border:1.5px solid rgba(46,229,157,.2);border-radius:12px;padding:12px 14px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:14px;color:var(--txt);">9th English — Rawalpindi Board 2021</div>
+          <div style="font-size:11px;color:var(--mut);margin-top:3px;">🌅 Morning · 4 sections · 📌 Built-in</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button onclick="ppEditAnyPaper(0)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:#5B8DEF;">✏️</button>
+          <button onclick="ppDeleteAnyPaper(0)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:var(--r);">🗑️</button>
+        </div>
+      </div>
+    </div><div style="background:var(--card2);border:1.5px solid rgba(46,229,157,.2);border-radius:12px;padding:12px 14px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:14px;color:var(--txt);">9th English — Faisalabad Board 2022</div>
+          <div style="font-size:11px;color:var(--mut);margin-top:3px;">🌅 Morning · 3 sections · 📌 Built-in</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button onclick="ppEditAnyPaper(1)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:#5B8DEF;">✏️</button>
+          <button onclick="ppDeleteAnyPaper(1)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:var(--r);">🗑️</button>
+        </div>
+      </div>
+    </div><div style="background:var(--card2);border:1.5px solid rgba(46,229,157,.2);border-radius:12px;padding:12px 14px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:14px;color:var(--txt);">9th Urdu — Lahore Board 2023</div>
+          <div style="font-size:11px;color:var(--mut);margin-top:3px;">🌅 Morning · 2 sections · 📌 Built-in</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button onclick="ppEditAnyPaper(2)" style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:#5B8DEF;">✏️</button>
+          <button onclick="ppDeleteAnyPaper(2)" style="background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;color:var(--r);">🗑️</button>
+        </div>
+      </div>
+    </div></div>
   </div>
 
 </div>
@@ -1173,7 +1786,7 @@ ZAROORI RULES:
 <!-- ════════════════════════════
      PAGE: ADMIN ACCESS MANAGER
 ════════════════════════════ -->
-<div class="page" id="page-admin-access">
+<div class="page active" id="page-admin-access">
   <div class="card">
     <div class="card-title">🔐 Admin Access Manager</div>
     <div class="card-sub">Sirf main admin (2211787awan1@gmail.com) yeh section dekh sakta hai</div>
@@ -1206,7 +1819,17 @@ ZAROORI RULES:
     </div>
 
     <div style="font-size:13px;font-weight:800;margin:16px 0 10px;">📋 Active Sub-Admins</div>
-    <div id="adminAccessList"><div style="color:var(--mut);font-size:13px;">Loading...</div></div>
+    <div id="adminAccessList"><div style="background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--bdr);">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:13px">2211787awan4@gmail.com</div>
+            <div style="font-size:12px;font-weight:700;color:#FFD166;margin-top:2px;">👑 Level 1 — Pro Management</div>
+            <div style="font-size:11px;color:var(--mut);margin-top:2px;">📅 16/05/2026 (2 din baaki)</div>
+            <div style="font-size:11px;font-weight:700;margin-top:2px;color:var(--g);">✅ Active</div>
+          </div>
+          <button onclick="removeSubAdmin('2211787awan4@gmail.com')" style="background:rgba(255,75,75,.15);border:1px solid rgba(255,75,75,.3);border-radius:8px;padding:5px 12px;color:var(--r);font-size:12px;cursor:pointer;font-family:Fredoka One,sans-serif">🗑️ Remove</button>
+        </div>
+      </div></div>
   </div>
 
   <!-- ══════════════════════════════════════ -->
@@ -1232,7 +1855,7 @@ ZAROORI RULES:
     </div>
 
     <div style="font-size:13px;font-weight:800;margin:16px 0 10px;">📋 Active Demo Accounts</div>
-    <div id="demoAccountsList"><div style="color:var(--mut);font-size:13px;text-align:center;padding:16px;">⏳ Loading...</div></div>
+    <div id="demoAccountsList"><div style="color:var(--mut);font-size:13px;text-align:center;padding:16px;">🧪 Koi demo account nahi</div></div>
   </div>
 
   <!-- ══════════════════════════════════════ -->
@@ -1256,7 +1879,7 @@ ZAROORI RULES:
         <input id="ghTokenSaved" type="password" placeholder="ghp_... (ek baar save hoga)" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--bdr);background:var(--bg);color:var(--txt);font-size:13px;">
         <button onclick="saveGhToken()" style="padding:10px 14px;background:rgba(46,229,157,.15);border:1px solid rgba(46,229,157,.3);border-radius:10px;color:#2EE59D;font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">💾 Save</button>
       </div>
-      <div id="ghTokenStatus" style="font-size:11px;color:var(--mut);margin-top:4px;"></div>
+      <div id="ghTokenStatus" style="font-size: 11px; color: rgb(46, 229, 157); margin-top: 4px;">✅ Token saved!</div>
     </div>
 
     <div style="margin-bottom:16px;">
@@ -1264,11 +1887,11 @@ ZAROORI RULES:
       <input id="ghCommitMsgAccess" type="text" value="Update" placeholder="Update admin panel" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--bdr);background:var(--bg);color:var(--txt);font-size:13px;box-sizing:border-box;">
     </div>
 
-    <div id="deployAccessStatus" style="display:none;font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:12px;"></div>
+    <div id="deployAccessStatus" style="display: block; font-size: 12px; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; background: rgba(255, 209, 102, 0.15); color: rgb(255, 209, 102); border: 1px solid rgba(255, 209, 102, 0.3);">📦 File encode ho rahi hai...</div>
 
     <div style="display:flex;gap:8px;">
-      <button onclick="deployFile('admin.html')" id="deployAdminBtn" style="flex:1;padding:12px;background:linear-gradient(135deg,#238636,#2ea043);border:none;border-radius:12px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;">🛡️ Deploy Admin</button>
-      <button onclick="deployFile('index.html')" id="deployAppBtn" style="flex:1;padding:12px;background:linear-gradient(135deg,#1a7abf,#2196f3);border:none;border-radius:12px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;">📱 Deploy App</button>
+      <button onclick="deployFile('admin.html')" id="deployAdminBtn" style="flex:1;padding:12px;background:linear-gradient(135deg,#238636,#2ea043);border:none;border-radius:12px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;" disabled="">⏳ Deploying...</button>
+      <button onclick="deployFile('index.html')" id="deployAppBtn" style="flex:1;padding:12px;background:linear-gradient(135deg,#1a7abf,#2196f3);border:none;border-radius:12px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;" disabled="">📱 Deploy App</button>
     </div>
     <div style="font-size:11px;color:var(--mut);margin-top:8px;text-align:center;">Deploy ke baad GitHub Pages 1-2 min mein live ho jaata hai</div>
   </div>
@@ -1285,7 +1908,63 @@ ZAROORI RULES:
     <div class="card-sub">Sab registered users — Ban/Unban/Reset Progress</div>
     <button onclick="renderFirebaseUsers()" style="width:100%;padding:10px;background:rgba(46,229,157,.12);border:1px solid rgba(46,229,157,.3);border-radius:10px;color:var(--g);font-family:'Fredoka One',sans-serif;font-size:14px;cursor:pointer;margin-bottom:12px;">🔄 Refresh Users</button>
     <input class="inp" id="fbUserSearch" placeholder="🔍 Email ya username se search..." style="margin:0 0 12px 0;width:100%;box-sizing:border-box;" oninput="filterFirebaseUsers()">
-    <div id="fbUsersList"><div style="color:var(--mut);text-align:center;padding:20px;">Refresh karo users dekhne ke liye</div></div>
+    <div id="fbUsersList"><div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--bdr);">
+    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:28px">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;">2211787awan1</div>
+        <div style="font-size:11px;color:var(--mut);">2211787awan1@gmail.com</div>
+        <div style="font-size:11px;color:var(--mut);">Signup: 04/05/2026</div>
+        <div style="font-size:12px;color:var(--g);font-weight:800;">✅ Active</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      
+      
+    </div>
+  </div><div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--bdr);">
+    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:28px">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;">2211787awan20</div>
+        <div style="font-size:11px;color:var(--mut);">2211787awan20@gmail.com</div>
+        <div style="font-size:11px;color:var(--mut);">Signup: 06/05/2026</div>
+        <div style="font-size:12px;color:var(--g);font-weight:800;">✅ Active</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      
+      
+    </div>
+  </div><div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--bdr);">
+    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:28px">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;">2211787awan4</div>
+        <div style="font-size:11px;color:var(--mut);">2211787awan4@gmail.com</div>
+        <div style="font-size:11px;color:var(--mut);">Signup: 04/05/2026</div>
+        <div style="font-size:12px;color:var(--g);font-weight:800;">✅ Active</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      
+      
+    </div>
+  </div><div style="background:var(--card);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid var(--bdr);">
+    <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div style="font-size:28px">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;">adeelmakhial</div>
+        <div style="font-size:11px;color:var(--mut);">adeelmakhial@gmail.com</div>
+        <div style="font-size:11px;color:var(--mut);">Signup: 05/05/2026</div>
+        <div style="font-size:12px;color:var(--g);font-weight:800;">✅ Active</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+      
+      
+    </div>
+  </div></div>
   </div>
 
   <div class="card">
@@ -1295,31 +1974,48 @@ ZAROORI RULES:
       <input class="inp" id="userSearch" placeholder="Search user..." style="margin:0;flex:1;" oninput="renderUsers()">
       <button class="btn btn-outline btn-small" onclick="exportUsers()" style="position: relative; overflow: hidden;">📥 Export</button>
     </div>
-    <div id="usersList"><div class="user-item" onclick="showUserDetail('p_1777308965294_hzt3')">
+    <div id="usersList"><div class="user-item" onclick="showUserDetail('9uqyaG2SJ9fb9j9JKgYBV9jH4ia2')">
         <div class="user-row">
           <div class="user-avatar">😊</div>
           <div style="flex:1">
-            <div class="user-name">Ha</div>
+            <div class="user-name">Unknown</div>
             <div class="user-meta">
               <span>🇬🇧 English</span>
               <span>🔥 0 streak</span>
-              <span>⭐ 0 XP</span>
+              <span>⭐ 50 XP</span>
               <span>📅 0 days done</span>
             </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"><span style="background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.3);border-radius:10px;padding:2px 7px;font-size:10px;color:#C77DFF;font-weight:800;">📖 2 Pre-Class</span></div>
           </div>
           <span style="color:var(--mut);font-size:18px">›</span>
         </div>
-      </div><div class="user-item" onclick="showUserDetail('p_1777643506035_qr2v')">
+      </div><div class="user-item" onclick="showUserDetail('uOIzREml15eh9WdceFpBVV5ZWv22')">
         <div class="user-row">
-          <div class="user-avatar">🔐</div>
+          <div class="user-avatar">🐨</div>
           <div style="flex:1">
-            <div class="user-name">Hazelawan@22</div>
+            <div class="user-name">Adeel</div>
             <div class="user-meta">
               <span>🇬🇧 English</span>
               <span>🔥 0 streak</span>
               <span>⭐ 0 XP</span>
               <span>📅 0 days done</span>
             </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"><span style="background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.3);border-radius:10px;padding:2px 7px;font-size:10px;color:#C77DFF;font-weight:800;">📖 2 Pre-Class</span></div>
+          </div>
+          <span style="color:var(--mut);font-size:18px">›</span>
+        </div>
+      </div><div class="user-item" onclick="showUserDetail('p_1778810636649_z52r')">
+        <div class="user-row">
+          <div class="user-avatar">🐨</div>
+          <div style="flex:1">
+            <div class="user-name">Adeel</div>
+            <div class="user-meta">
+              <span>🇬🇧 English</span>
+              <span>🔥 0 streak</span>
+              <span>⭐ 0 XP</span>
+              <span>📅 0 days done</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;"><span style="background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.3);border-radius:10px;padding:2px 7px;font-size:10px;color:#C77DFF;font-weight:800;">📖 2 Pre-Class</span></div>
           </div>
           <span style="color:var(--mut);font-size:18px">›</span>
         </div>
@@ -1351,7 +2047,7 @@ ZAROORI RULES:
     <div id="streakAnalytics"><div style="margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
         <span>🔥 0 day streak</span>
-        <span style="color:var(--mut)">2 users (100%)</span>
+        <span style="color:var(--mut)">3 users (100%)</span>
       </div>
       <div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div>
     </div><div style="margin-bottom:10px;">
@@ -1391,19 +2087,19 @@ ZAROORI RULES:
   <!-- ── Pro Stats Summary ── -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
     <div class="stat-box" style="border-color:rgba(255,215,0,.3);background:rgba(255,215,0,.05);">
-      <div class="stat-num" style="color:#FFD700;" id="pm_statTotal">—</div>
+      <div class="stat-num" style="color:#FFD700;" id="pm_statTotal">1</div>
       <div class="stat-lbl">👑 Total Pro</div>
     </div>
     <div class="stat-box" style="border-color:rgba(46,229,157,.3);background:rgba(46,229,157,.05);">
-      <div class="stat-num" style="color:var(--g);" id="pm_statActive">—</div>
+      <div class="stat-num" style="color:var(--g);" id="pm_statActive">1</div>
       <div class="stat-lbl">✅ Active</div>
     </div>
     <div class="stat-box" style="border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.05);">
-      <div class="stat-num" style="color:var(--r);font-size:20px;" id="pm_statExpiring">—</div>
+      <div class="stat-num" style="color:var(--r);font-size:20px;" id="pm_statExpiring">0</div>
       <div class="stat-lbl">⚠️ Expiring 7 din</div>
     </div>
     <div class="stat-box" style="border-color:rgba(255,154,60,.3);background:rgba(255,154,60,.05);">
-      <div class="stat-num" style="color:var(--o);font-size:18px;" id="pm_statRevenue">—</div>
+      <div class="stat-num" style="color:var(--o);font-size:18px;" id="pm_statRevenue">Rs.500</div>
       <div class="stat-lbl">💰 Est. Revenue</div>
     </div>
   </div>
@@ -1420,9 +2116,7 @@ ZAROORI RULES:
         <button onclick="openAddPendingModal()" style="padding:7px 12px;background:linear-gradient(135deg,var(--o),var(--o2));border:none;border-radius:10px;color:#fff;font-size:11px;font-weight:800;cursor:pointer;">+ Add</button>
       </div>
     </div>
-    <div id="pm_pendingList">
-      <div style="color:var(--mut);text-align:center;padding:24px;font-size:13px;">⏳ Load ho raha hai...</div>
-    </div>
+    <div id="pm_pendingList"><div style="color:var(--mut);text-align:center;padding:24px;font-size:13px;">✅ Koi pending payment nahi</div></div>
   </div>
 
   <!-- ── Quick Activate ── -->
@@ -1470,17 +2164,51 @@ ZAROORI RULES:
     <!-- Search -->
     <input class="inp" id="pm_searchInp" placeholder="🔍 Email se dhundho..." oninput="pm_filterUsers()" style="margin-bottom:12px;">
 
-    <div id="pm_proUsersList">
-      <div style="color:var(--mut);text-align:center;padding:20px;font-size:13px;">Refresh karo dekhne ke liye</div>
-    </div>
+    <div id="pm_proUsersList"><div class="pro-user-card active-pro">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:38px;height:38px;border-radius:11px;background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.25);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👑</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">2211787awan1@gmail.com</div>
+          <div style="font-size:11px;color:var(--mut);margin-top:2px;">⭐ 1 Mahina · Added: 15/05/2026</div>
+          <div style="margin-top:3px;"><span style="color:var(--g);font-size:11px;">✅ 30 din baaki — 14/06/2026</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;">
+          <button onclick="pm_quickFill('2211787awan1@gmail.com');pm_selectPlan('month');" style="padding:5px 10px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:8px;color:#FFD700;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap;">🔄 Renew</button>
+          <button onclick="pm_quickRemove('2211787awan1@gmail.com');" style="padding:5px 10px;background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);border-radius:8px;color:var(--r);font-size:10px;font-weight:800;cursor:pointer;">❌ Hatao</button>
+        </div>
+      </div>
+    </div></div>
   </div>
 
   <!-- ── Pro Revenue Breakdown ── -->
   <div class="card">
     <div class="card-title">💰 Revenue Breakdown</div>
     <div id="pm_revenueBreakdown">
-      <div style="color:var(--mut);text-align:center;padding:16px;font-size:13px;">Pro users load karo</div>
-    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:700;">🔥 15 Din (0 users)</span>
+            <span style="font-size:12px;color:var(--y);font-weight:800;">Rs.0</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" style="width:0%;background:linear-gradient(90deg,#FFD700,#FF9500);"></div></div>
+        </div><div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:700;">⭐ 1 Mahina (1 users)</span>
+            <span style="font-size:12px;color:var(--y);font-weight:800;">Rs.500</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" style="width:100%;background:linear-gradient(90deg,#FFD700,#FF9500);"></div></div>
+        </div><div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:12px;font-weight:700;">👑 1 Saal (0 users)</span>
+            <span style="font-size:12px;color:var(--y);font-weight:800;">Rs.0</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" style="width:0%;background:linear-gradient(90deg,#FFD700,#FF9500);"></div></div>
+        </div>
+      <div style="margin-top:8px;padding:12px;background:rgba(255,215,0,.08);border:1.5px solid rgba(255,215,0,.25);border-radius:12px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-family:'Fredoka One',sans-serif;font-size:15px;color:#FFD700;">💰 Total Revenue</span>
+        <span style="font-family:'Fredoka One',sans-serif;font-size:22px;color:#FFD700;">Rs.500</span>
+      </div>
+    </div></div>
   </div>
 
 </div>
@@ -1574,8 +2302,18 @@ ZAROORI RULES:
       <button onclick="openAddAccountModal()" style="padding:8px 14px;background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:10px;color:#000;font-size:12px;font-weight:800;cursor:pointer;">➕ Add</button>
     </div>
     <div id="payAccountsList" style="display:flex;flex-direction:column;gap:8px;">
-      <div style="color:var(--mut);text-align:center;padding:16px;font-size:13px;">Loading...</div>
-    </div>
+    <div style="background:var(--card2);border:1px solid var(--bdr);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;color:var(--mut);margin-bottom:2px;">📱 JazzCash</div>
+        <div style="font-size:14px;font-weight:800;color:var(--txt);">Adeel Younas</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:17px;color:var(--y);">03410101415</div>
+        <div style="font-size:11px;color:var(--mut);margin-top:2px;">WA: +923410101415</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button onclick="openEditAccountModal(0)" style="padding:7px 12px;background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:8px;color:var(--b);font-size:12px;cursor:pointer;">✏️ Edit</button>
+        <button onclick="deleteAccount(0)" style="padding:7px 12px;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.25);border-radius:8px;color:#FF6B6B;font-size:12px;cursor:pointer;">🗑️ Delete</button>
+      </div>
+    </div></div>
   </div>
 
   <!-- Add/Edit Account Modal -->
@@ -1827,7 +2565,7 @@ ZAROORI RULES:
         <div class="toggle-desc">Naye users ko onboarding dikhao</div>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="ob_settingEnabled" checked onchange="saveObSettings()">
+        <input type="checkbox" id="ob_settingEnabled" checked="" onchange="saveObSettings()">
         <div class="toggle-slider"></div>
       </label>
     </div>
@@ -1838,7 +2576,7 @@ ZAROORI RULES:
         <div class="toggle-desc">Onboarding ke end mein pricing screen show ho</div>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="ob_settingPaywall" checked onchange="saveObSettings()">
+        <input type="checkbox" id="ob_settingPaywall" checked="" onchange="saveObSettings()">
         <div class="toggle-slider"></div>
       </label>
     </div>
@@ -1849,7 +2587,7 @@ ZAROORI RULES:
         <div class="toggle-desc">Onboarding complete karne pe +25 XP milenge</div>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="ob_settingXPBonus" checked onchange="saveObSettings()">
+        <input type="checkbox" id="ob_settingXPBonus" checked="" onchange="saveObSettings()">
         <div class="toggle-slider"></div>
       </label>
     </div>
@@ -1860,7 +2598,7 @@ ZAROORI RULES:
         <div class="toggle-desc">User onboarding skip kar sake</div>
       </div>
       <label class="toggle-switch">
-        <input type="checkbox" id="ob_settingSkip" checked onchange="saveObSettings()">
+        <input type="checkbox" id="ob_settingSkip" checked="" onchange="saveObSettings()">
         <div class="toggle-slider"></div>
       </label>
     </div>
@@ -2073,7 +2811,79 @@ ZAROORI RULES:
     <div class="card-sub">Event ke hisab se poori app ki theme change karo — heavy animations aur special effects ke sath!</div>
 
     <!-- Built-in themes grid -->
-    <div id="themeGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;"></div>
+    <div id="themeGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;"><div onclick="applyTheme('default')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#1E1C35,#0F0E17);border:3px solid #2EE59D;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 0 24px rgba(255,255,255,.3),0 4px 20px rgba(0,0,0,.3);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🌙</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Default</div>
+    
+    
+    <div style="position:absolute;bottom:5px;right:5px;font-size:9px;background:rgba(0,0,0,.35);color:#fff;padding:2px 6px;border-radius:8px;font-weight:800;backdrop-filter:blur(4px);">✅</div>
+  </div><div onclick="applyTheme('eid')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#1B5E20,#2E7D32,#388E3C);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🌙</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Eid ul Fitr</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('eidadha')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#BF360C,#E64A19,#FF5722);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🐑</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Eid ul Adha</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('ramadan')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#1A0050,#4A148C,#6A1B9A);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🕌</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Ramadan</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('halloween')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#3E0D00,#6D1F00,#7B1FA2);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🎃</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Halloween</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('christmas')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#B71C1C,#1B5E20,#C62828);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🎄</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Christmas</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('newyear')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#0D0D3B,#1A237E,#4A148C);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🎆</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">New Year</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('easter')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#F8BBD0,#E1BEE7,#BBDEFB);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🥚</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Easter</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('independence')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#1B5E20,#2E7D32);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🇵🇰</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Yom-e-Azadi 🇵🇰</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('diwali')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#7B2D00,#BF360C,#FF6D00);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🪔</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Diwali</div>
+    <div style="position:absolute;top:5px;right:5px;font-size:8px;background:rgba(0,0,0,.35);color:#FFD740;padding:2px 4px;border-radius:5px;font-weight:800;backdrop-filter:blur(4px);">✨</div>
+    
+    
+  </div><div onclick="applyTheme('spring')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#F1F8E9,#E8F5E9,#FFF9C4);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">🌸</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Spring / Basant</div>
+    
+    
+    
+  </div><div onclick="applyTheme('winter')" style="cursor:pointer;border-radius:16px;padding:14px 10px;background:linear-gradient(135deg,#E3F2FD,#BBDEFB,#E8EAF6);border:3px solid transparent;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.2);" onmouseenter="this.style.transform='scale(1.06)'" onmouseleave="this.style.transform=''">
+    <div style="font-size:28px;margin-bottom:5px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));">❄️</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:11px;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);line-height:1.2;">Winter / Baraf</div>
+    
+    
+    
+  </div></div>
 
     <!-- Custom themes grid (dynamically populated) -->
     <div id="customThemeGrid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px;"></div>
@@ -2082,7 +2892,7 @@ ZAROORI RULES:
       <button class="btn btn-outline" style="flex:1; border-color:rgba(255,255,255,.2);" onclick="applyTheme('default')">🔄 Default</button>
       <button class="btn" style="flex:1; background:linear-gradient(135deg,#C77DFF,#5B8DEF); border:none; color:#fff;" onclick="previewTheme(AD.settings?.activeTheme||'default')">👁️ Preview</button>
     </div>
-    <div id="themeCurrentBadge" style="margin-top:12px; text-align:center; font-size:13px; color:var(--mut);"></div>
+    <div id="themeCurrentBadge" style="margin-top:12px; text-align:center; font-size:13px; color:var(--mut);">Current: <span style="color:#2EE59D;font-weight:800;">🌙 Default</span></div>
   </div>
 
   <!-- ➕ CUSTOM THEME BUILDER -->
@@ -2094,20 +2904,60 @@ ZAROORI RULES:
     <div style="background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.25);border-radius:14px;padding:14px;margin-bottom:14px;">
       <div style="font-family:'Fredoka One',sans-serif;font-size:13px;color:#FFD166;margin-bottom:8px;">📋 Step 1 — Gemini Prompt Copy Karo</div>
       <div style="font-size:11px;color:var(--mut);margin-bottom:10px;line-height:1.6;">Ye prompt Gemini mein paste karo aur batao kaun sa event chahiye (e.g. Shab-e-Barat, Iqbal Day, Muharram etc.)</div>
-      <div id="geminiPromptBox" style="background:rgba(0,0,0,.3);border-radius:10px;padding:12px;font-size:10.5px;color:#A8E6CF;font-family:monospace;line-height:1.7;user-select:all;cursor:text;max-height:140px;overflow-y:auto;"></div>
+      <div id="geminiPromptBox" style="background:rgba(0,0,0,.3);border-radius:10px;padding:12px;font-size:10.5px;color:#A8E6CF;font-family:monospace;line-height:1.7;user-select:all;cursor:text;max-height:140px;overflow-y:auto;">You are a theme designer for a Urdu language learning app called SpeakUp.
+Create a festival/event theme JSON object. Output ONLY valid JSON, nothing else.
+
+The JSON must follow EXACTLY this structure:
+{
+  "key": "unique_id_no_spaces",
+  "name": "Theme Display Name",
+  "icon": "🎯",
+  "desc": "Chhoti description Urdu/English mein",
+  "color": "#HEXCOLOR",
+  "bg": "CSS gradient string e.g. linear-gradient(160deg, #color1 0%, #color2 50%, #color3 100%)",
+  "banner": {
+    "text": "🎯 Banner text with emojis!",
+    "bg": "linear-gradient(90deg, #color1, #color2)",
+    "color": "#textcolor"
+  },
+  "particles": ["emoji1","emoji2","emoji3","emoji4","emoji5","emoji6","emoji7","emoji8"],
+  "heavy": true,
+  "glowColor": "rgba(R,G,B,0.7)",
+  "particleCount": 40,
+  "snow": false,
+  "fireworks": false,
+  "colorful": true,
+  "cssBody": "CSS rules for body background — must NOT use black. Use bright vibrant colors matching the event.",
+  "cssDh": "CSS for header bar e.g. background: linear-gradient(135deg,#color1,#color2) !important;",
+  "cssDhText": "CSS text color for header e.g. color:#ffffff !important; -webkit-text-fill-color:#ffffff !important;",
+  "cssBn": "CSS for bottom nav e.g. background: rgba(10,20,10,.97) !important; border-top-color:#GOLD !important;",
+  "cssNbOn": "Active nav icon color e.g. color:#FFD700 !important;",
+  "cssNbOff": "Inactive nav icon color e.g. color:rgba(255,255,255,.4) !important;"
+}
+
+RULES:
+- NO BLACK backgrounds (#000, #111, #222, #333 etc.) — use deep rich colors of the event
+- Colors must match the event's cultural identity
+- 'key' must be lowercase letters/numbers/underscores only, no spaces
+- 'particles' array: 8-12 thematic emojis
+- 'bg' must be a complete CSS gradient
+- All CSS values must be complete valid CSS
+- Output ONLY the JSON object, no explanation, no markdown backticks
+
+EVENT TO DESIGN: [YAHAN APNA EVENT LIKHO — jaise: Shab-e-Barat, Muharram, Iqbal Day, Basant Panchami, Holi, etc.]</div>
       <button onclick="copyGeminiPrompt()" style="margin-top:10px;width:100%;padding:10px;border-radius:10px;border:1.5px solid #FFD166;background:rgba(255,209,102,.12);color:#FFD166;font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform=''">📋 Prompt Copy Karo</button>
     </div>
 
     <!-- Step 2: Paste JSON -->
     <div style="background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.25);border-radius:14px;padding:14px;margin-bottom:14px;">
       <div style="font-family:'Fredoka One',sans-serif;font-size:13px;color:#5B8DEF;margin-bottom:8px;">📥 Step 2 — Gemini ka JSON Yahan Paste Karo</div>
-      <textarea id="customThemeJSON" placeholder='Gemini se mila hua JSON yahan paste karo...
+      <textarea id="customThemeJSON" placeholder="Gemini se mila hua JSON yahan paste karo...
 {
-  "key": "shabbarat",
-  "name": "Shab-e-Barat",
-  "icon": "🌕",
+  &quot;key&quot;: &quot;shabbarat&quot;,
+  &quot;name&quot;: &quot;Shab-e-Barat&quot;,
+  &quot;icon&quot;: &quot;🌕&quot;,
   ...
-}' style="width:100%;min-height:130px;background:rgba(0,0,0,.25);border:1.5px solid rgba(91,141,239,.3);border-radius:10px;padding:12px;color:#E0E0E0;font-size:11px;font-family:monospace;resize:vertical;outline:none;line-height:1.6;" oninput="liveValidateThemeJSON(this.value)"></textarea>
+}" style="width:100%;min-height:130px;background:rgba(0,0,0,.25);border:1.5px solid rgba(91,141,239,.3);border-radius:10px;padding:12px;color:#E0E0E0;font-size:11px;font-family:monospace;resize:vertical;outline:none;line-height:1.6;" oninput="liveValidateThemeJSON(this.value)"></textarea>
       <div id="jsonValidMsg" style="font-size:11px;margin-top:6px;min-height:18px;transition:all .2s;"></div>
     </div>
 
@@ -2118,7 +2968,7 @@ ZAROORI RULES:
     </div>
 
     <!-- Saved Custom Themes List -->
-    <div id="customThemesList" style="margin-top:16px;"></div>
+    <div id="customThemesList" style="margin-top:16px;"><div style="text-align:center;padding:14px;color:var(--mut);font-size:12px;">Abhi koi custom theme nahi. Upar se add karo! 👆</div></div>
   </div>
 
   <!-- ❤️ Hearts Control -->
@@ -2128,8 +2978,8 @@ ZAROORI RULES:
     <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding:20px 0;">
       <button onclick="adjustHearts(-1)" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--r);background:rgba(255,107,107,.15);color:var(--r);font-size:28px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''">−</button>
       <div style="text-align:center;">
-        <div style="font-size:42px;line-height:1;" id="heartsDisplay">❤️❤️❤️❤️❤️❤️❤️</div>
-        <div style="font-family:'Fredoka One',sans-serif;font-size:32px;color:var(--r);line-height:1.2;" id="heartsValue">7</div>
+        <div style="font-size:42px;line-height:1;" id="heartsDisplay">❤️❤️❤️❤️❤️</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:32px;color:var(--r);line-height:1.2;" id="heartsValue">5</div>
         <div style="font-size:11px;color:var(--mut);margin-top:4px;">Hearts per lesson</div>
       </div>
       <button onclick="adjustHearts(1)" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--g);background:rgba(46,229,157,.15);color:var(--g);font-size:28px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''">+</button>
@@ -2318,8 +3168,8 @@ How much are the tomatoes? | ٹماٹر کتنے کے ہیں؟"></textarea>
     </div>
     <div id="lpanel-json" style="display:none;">
       <div class="inp-label">Lesson JSON (AI generated paste karo)</div>
-      <textarea class="inp" id="edJsonInp" style="min-height:160px;font-size:12px;font-family:monospace;" placeholder='{"themeEn":"...","vocab":[...],"sentences":[...],"quizzes":[]}'></textarea>
-      <button class="btn btn-blue btn-small" onclick="parseJsonLesson()" style="margin-bottom:10px;">📋 Parse & Save JSON</button>
+      <textarea class="inp" id="edJsonInp" style="min-height:160px;font-size:12px;font-family:monospace;" placeholder="{&quot;themeEn&quot;:&quot;...&quot;,&quot;vocab&quot;:[...],&quot;sentences&quot;:[...],&quot;quizzes&quot;:[]}"></textarea>
+      <button class="btn btn-blue btn-small" onclick="parseJsonLesson()" style="margin-bottom:10px;">📋 Parse &amp; Save JSON</button>
     </div>
     <div style="display:flex;gap:10px;margin-top:8px;">
       <button class="btn btn-outline" onclick="closeEditDay()" style="flex:1;">Cancel</button>
@@ -2333,7 +3183,7 @@ How much are the tomatoes? | ٹماٹر کتنے کے ہیں؟"></textarea>
 
 <!-- FLOAT SAVE -->
 <button id="floatSave" onclick="saveAdminData()">💾 Save Changes</button>
-</div>
+
 
 <!-- ══════════════════════════════════════════════
      FIREBASE HELPER FUNCTIONS
@@ -12099,5 +12949,6 @@ window.saveOnboardingToFirebase = function(data){
   </div>
 </div>
 
-</body>
-</html>
+
+
+<iframe ng-non-bindable="" frameborder="0" hspace="0" marginheight="0" marginwidth="0" scrolling="no" tabindex="-1" vspace="0" width="100%" aria-hidden="true" id="I0_1778814957953" name="I0_1778814957953" src="https://speakup-8fa2a.firebaseapp.com/__/auth/iframe?apiKey=AIzaSyDOvvwpwfsd8sMXpTmTNZkIBdYjy_mt3zU&amp;appName=%5BDEFAULT%5D&amp;v=10.12.0&amp;eid=p&amp;usegapi=1&amp;jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.gSqfLc8WnvU.O%2Fd%3D1%2Frs%3DAHpOoo_cXXGArE2dtw6vkGR2NQ_1f5L3AQ%2Fm%3D__features__#id=I0_1778814957953&amp;_gfid=I0_1778814957953&amp;parent=https%3A%2F%2Fhazelprojects.github.io&amp;pfname=&amp;rpctoken=27463933" style="position: absolute; top: -100px; width: 1px; height: 1px;"></iframe></body></html>
