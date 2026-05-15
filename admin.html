@@ -5802,17 +5802,30 @@ async function activateProUser(){
     await window.FB_SET(ref2, proData);
     // ✅ FIX: User ka UID dhundho aur directly users/{uid}/proSub mein bhi save karo
     // Isse app restart pe bina logout/login ke turant Pro mil jaayega
+    // ✅ FIX: Saare possible email fields check karo
     try{
       const usersSnap = await window.FB_GET(window.FB_REF(window.FB_DB, 'users'));
       if(usersSnap.exists()){
         const usersData = usersSnap.val();
+        let foundUid = null;
         for(const uid in usersData){
           const uData = usersData[uid];
-          const uEmail = (uData.email || uData.proSub?.email || '').toLowerCase();
-          if(uEmail === email.toLowerCase()){
-            await window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub'), proData);
+          // ✅ FIX: email, proSub.email, aur profile email — sab check karo
+          const emails = [
+            uData.email,
+            uData.proSub && uData.proSub.email,
+            uData.profile && uData.profile.email,
+          ].filter(Boolean).map(e=>e.toLowerCase());
+          if(emails.includes(email.toLowerCase())){
+            foundUid = uid;
             break;
           }
+        }
+        if(foundUid){
+          await window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+foundUid+'/proSub'), proData);
+          console.log('✅ UID mila aur proSub save hua:', foundUid);
+        } else {
+          console.warn('⚠️ UID nahi mila users node mein — sirf proByEmail/proUsers mein save hua. App login pe check karega.');
         }
       }
     } catch(uidErr){ console.warn('UID lookup failed:', uidErr); }
@@ -11134,13 +11147,25 @@ async function pm_activatePro(){
       const usersSnap = await window.FB_GET(window.FB_REF(window.FB_DB, 'users'));
       if(usersSnap.exists()){
         const usersData = usersSnap.val();
+        let foundUid = null;
         for(const uid in usersData){
           const uData = usersData[uid];
-          const uEmail = (uData.email || (uData.proSub && uData.proSub.email) || '').toLowerCase();
-          if(uEmail === email.toLowerCase()){
-            await window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub'), data);
+          // ✅ FIX: Saare possible email fields check karo
+          const emails = [
+            uData.email,
+            uData.proSub && uData.proSub.email,
+            uData.profile && uData.profile.email,
+          ].filter(Boolean).map(e=>e.toLowerCase());
+          if(emails.includes(email.toLowerCase())){
+            foundUid = uid;
             break;
           }
+        }
+        if(foundUid){
+          await window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+foundUid+'/proSub'), data);
+          console.log('✅ pm_activatePro: UID mila, proSub save hua:', foundUid);
+        } else {
+          console.warn('⚠️ pm_activatePro: UID nahi mila — proByEmail/proUsers mein save hua. App login pe detect karega.');
         }
       }
     } catch(uidErr){ console.warn('UID lookup failed:', uidErr); }
