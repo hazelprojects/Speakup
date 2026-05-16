@@ -11421,26 +11421,31 @@ async function checkProFromFirebase(){
     const email = user.email || getLoggedInUser() || '';
     const emailKey = email.toLowerCase().replace(/[.@]/g,'_');
 
-    // ✅ FIX: localStorage nahi — sirf in-memory cache
+    // ✅ FIX: localStorage nahi — sirf in-memory cache, render sirf status change pe
     function _save(data){
       if(!data.uid) data = Object.assign({}, data, {uid: uid});
+      // Sirf update karo agar data change hua
+      var sameData = window._PRO_CACHE &&
+        window._PRO_CACHE.expiry === data.expiry &&
+        window._PRO_CACHE.plan === data.plan;
+      if(sameData) return; // koi change nahi — render mat karo
       window._PRO_CACHE = data;
-      // emailToUid Firebase mein save karo (admin ke liye)
       try{ window.FB_SET(window.FB_REF(window.FB_DB,'emailToUid/'+emailKey), uid).catch(function(){}); }catch(e2){}
       setTimeout(function(){
         try{ if(typeof renderDash==='function') renderDash(); }catch(e){}
         try{ if(typeof renderProf==='function') renderProf(); }catch(e){}
         const pop=document.getElementById('proLockPopup');
         if(pop) pop.remove();
-      }, 100);
+      }, 300);
     }
 
     function _clearPro(){
+      if(window._PRO_CACHE === null) return; // pehle se null — render mat karo
       window._PRO_CACHE = null;
       setTimeout(function(){
         try{ if(typeof renderDash==='function') renderDash(); }catch(e){}
         try{ if(typeof renderProf==='function') renderProf(); }catch(e){}
-      }, 100);
+      }, 300);
     }
 
     // ✅ FIX: Har Firebase call alag try/catch mein — ek fail ho toh baaki check hote rahein
@@ -15964,46 +15969,62 @@ function onFirebaseAuthChange(user){
         if(window._proWatcherUnsubscribe2){ try{ window._proWatcherUnsubscribe2(); }catch(e){} }
 
         // Helper: Pro data mile toh save karo aur UI refresh karo
+        var _renderDebounceTimer = null; // ✅ Debounce — double render rokne ke liye
         function _applyProSnap(snap, source){
           const uid = window.FB_AUTH && window.FB_AUTH.currentUser ? window.FB_AUTH.currentUser.uid : null;
           if(!uid) return;
+
+          var wasProBefore = !!window._PRO_CACHE;
+          var isProNow = false;
+
           if(snap.exists()){
             const proData = snap.val();
-            // ✅ FIX: localStorage nahi — sirf in-memory cache
             if(proData.expiry && Date.now() > proData.expiry){
-              // Expired — cache clear karo aur Firebase se bhi hatao
+              // Expired — cache clear karo
               window._PRO_CACHE = null;
+              isProNow = false;
               try{ window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub'), null).catch(function(){}); }catch(e2){}
             } else {
-              // ✅ In-memory cache update karo
-              window._PRO_CACHE = Object.assign({}, proData, {uid: uid});
-              // Agar proSub nahi tha toh wahan bhi sync karo
+              // ✅ Sirf update karo agar naya data alag ho (blink rokne ke liye)
+              var newCache = Object.assign({}, proData, {uid: uid});
+              var sameData = window._PRO_CACHE &&
+                window._PRO_CACHE.expiry === newCache.expiry &&
+                window._PRO_CACHE.plan === newCache.plan;
+              if(!sameData){
+                window._PRO_CACHE = newCache;
+              }
+              isProNow = true;
+              // Sirf proByEmail se aaya toh proSub mein bhi sync karo
               if(source !== 'proSub'){
                 try{ window.FB_SET(window.FB_REF(window.FB_DB, 'users/'+uid+'/proSub'), proData).catch(function(){}); }catch(e2){}
               }
             }
           } else if(source === 'proSub'){
-            // ✅ FIX: Admin ne proSub hataya — cache clear karo
             window._PRO_CACHE = null;
-            // ✅ FIX: proByEmail bhi Firebase se hatao taake watcher 2 wapas inject na kare
+            isProNow = false;
             if(_proWatchEmail){
               try{ window.FB_SET(window.FB_REF(window.FB_DB, 'proByEmail/'+_proWatchEmail), null).catch(function(){}); }catch(e2){}
-            }
-            // ✅ FIX: proUsers/{emailKey} bhi hatao
-            if(_proWatchEmail){
               try{ window.FB_SET(window.FB_REF(window.FB_DB, 'proUsers/'+_proWatchEmail), null).catch(function(){}); }catch(e2){}
             }
+          } else {
+            // proByEmail empty — ignore, proSub watcher handle karega
+            return;
           }
-          // UI foran refresh karo
-          setTimeout(function(){
-            try{ if(typeof renderDash==='function') renderDash(); }catch(e){}
-            try{ if(typeof renderProf==='function') renderProf(); }catch(e){}
-            // Pro mil gaya toh lock popup hatao
-            if(snap.exists()){
-              const pop = document.getElementById('proLockPopup');
-              if(pop) pop.remove();
-            }
-          }, 150);
+
+          // ✅ Sirf tab render karo jab Pro status change hua ho
+          // Debounce: 300ms mein ek hi render
+          if(wasProBefore !== isProNow || !wasProBefore){
+            if(_renderDebounceTimer) clearTimeout(_renderDebounceTimer);
+            _renderDebounceTimer = setTimeout(function(){
+              _renderDebounceTimer = null;
+              try{ if(typeof renderDash==='function') renderDash(); }catch(e){}
+              try{ if(typeof renderProf==='function') renderProf(); }catch(e){}
+              if(isProNow){
+                const pop = document.getElementById('proLockPopup');
+                if(pop) pop.remove();
+              }
+            }, 300);
+          }
         }
 
         // Watcher 1: users/{uid}/proSub — primary source (Pro dena aur hatana dono)
