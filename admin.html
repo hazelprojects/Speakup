@@ -458,7 +458,6 @@ textarea.inp{resize:vertical;min-height:80px;line-height:1.6;}
   <div class="admin-sub" id="adminUserEmail">Lessons · Users · Languages · Settings</div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;">
     <button onclick="doAdminLogout()" style="background:rgba(255,107,157,.15);border:1.5px solid rgba(255,107,157,.35);border-radius:30px;padding:7px 18px;color:var(--admin);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">↩ Logout</button>
-    <button id="deployBtn" onclick="deployToGitHub()" style="display:none;background:linear-gradient(135deg,#238636,#2ea043);border:none;border-radius:30px;padding:7px 18px;color:#fff;font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">🚀 Deploy to GitHub</button>
   </div>
 </div>
 
@@ -5673,10 +5672,6 @@ async function onAdminAuthChange(user){
   // Show/hide access tab — sirf main admin
   const accessTab = document.getElementById('adminAccessTab');
   if(accessTab) accessTab.style.display = (email === MAIN_ADMIN_EMAIL) ? 'block' : 'none';
-  // ✅ Deploy button — sirf main admin
-  const deployBtn = document.getElementById('deployBtn');
-  if(deployBtn) deployBtn.style.display = (email === MAIN_ADMIN_EMAIL) ? 'inline-block' : 'none';
-
   // ── Tab access by level ──
   const allTabs = document.querySelectorAll('.nav-tab');
 
