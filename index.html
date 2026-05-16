@@ -13603,6 +13603,123 @@ var _pcTotal = 0;
 var _pcWrongLetters = [];
 
 // ── Inbuilt Alphabets ──
+// ══════════════════════════════════════════════════════════
+//  PRE-CLASS HEART SYSTEM — Free users: 5 hearts, 3 min regen
+// ══════════════════════════════════════════════════════════
+var _pcHearts = 5;
+var _pcMaxHearts = 5;
+var _pcHeartRegenTimer = null;
+var _pcHeartBrokenTimes = []; // timestamps when hearts broke
+var _pcInProgress = false;
+
+function _pcIsFreeUser(){
+  return !isPro();
+}
+
+function _pcInitHearts(){
+  if(!_pcIsFreeUser()){ _pcHearts = 999; return; }
+  // Check localStorage for saved heart state
+  try{
+    var saved = JSON.parse(localStorage.getItem('su_pc_hearts')||'null');
+    if(saved && saved.ts){
+      var elapsed = Date.now() - saved.ts;
+      var regenMs = 3*60*1000;
+      var regened = Math.floor(elapsed / regenMs);
+      _pcHearts = Math.min(_pcMaxHearts, (saved.hearts||0) + regened);
+      _pcHeartBrokenTimes = (saved.broken||[]).filter(function(t){ return Date.now()-t < regenMs; });
+    } else {
+      _pcHearts = _pcMaxHearts;
+      _pcHeartBrokenTimes = [];
+    }
+  } catch(e){ _pcHearts = _pcMaxHearts; _pcHeartBrokenTimes = []; }
+}
+
+function _pcSaveHearts(){
+  try{ localStorage.setItem('su_pc_hearts', JSON.stringify({hearts:_pcHearts, ts:Date.now(), broken:_pcHeartBrokenTimes})); } catch(e){}
+}
+
+function _pcLoseHeart(){
+  if(!_pcIsFreeUser()) return true; // pro = unlimited
+  if(_pcHearts <= 0) return false; // no hearts left
+  _pcHearts--;
+  _pcHeartBrokenTimes.push(Date.now());
+  _pcSaveHearts();
+  _pcUpdateHeartsUI();
+  if(_pcHearts <= 0){
+    _pcShowNoHeartsScreen();
+    return false;
+  }
+  // Heart break animation
+  var hEl = document.getElementById('pcHeartsBar');
+  if(hEl){ hEl.style.animation='none'; hEl.offsetHeight; hEl.style.animation='pcHeartShake .4s ease'; }
+  return true;
+}
+
+function _pcUpdateHeartsUI(){
+  var el = document.getElementById('pcHeartsBar');
+  if(!el) return;
+  if(!_pcIsFreeUser()){ el.innerHTML='<span style="font-size:13px;color:#C77DFF;font-family:Fredoka One,sans-serif;">✨ Pro</span>'; return; }
+  var html = '';
+  for(var i=0;i<_pcMaxHearts;i++){
+    html += i < _pcHearts
+      ? '<span style="font-size:18px;filter:drop-shadow(0 0 4px #FF4B4B);">❤️</span>'
+      : '<span style="font-size:18px;opacity:.3;">🖤</span>';
+  }
+  el.innerHTML = html;
+}
+
+function _pcShowNoHeartsScreen(){
+  var bd = document.getElementById('lBd'); if(!bd) return;
+  // Find next regen time
+  var regenMs = 3*60*1000;
+  var oldest = _pcHeartBrokenTimes.length > 0 ? Math.min.apply(null,_pcHeartBrokenTimes) : Date.now();
+  var nextRegen = oldest + regenMs;
+  var secLeft = Math.max(0, Math.ceil((nextRegen - Date.now())/1000));
+
+  bd.innerHTML = '<div class="a" style="text-align:center;padding:30px 16px;">'
+    + '<div style="font-size:64px;margin-bottom:12px;animation:heartbeat 1s ease infinite;">💔</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#FF4B4B;margin-bottom:8px;">Hearts Khatam!</div>'
+    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">3 minute mein ek heart wapas aata hai.<br>Thodi der baad dobara aao! 💪</div>'
+    + '<div style="background:rgba(255,75,75,.1);border:2px solid rgba(255,75,75,.3);border-radius:18px;padding:20px;margin-bottom:20px;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;">Agla heart milega:</div>'
+    + '<div id="pcHeartTimer" style="font-family:Fredoka One,sans-serif;font-size:28px;color:#FF4B4B;">--:--</div>'
+    + '</div>'
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(91,141,239,.1));border:1.5px solid rgba(199,125,255,.4);border-radius:18px;padding:16px;margin-bottom:20px;">'
+    + '<div style="font-size:20px;margin-bottom:6px;">👑</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:16px;color:#C77DFF;margin-bottom:4px;">Pro lo — Unlimited Hearts!</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);">Pro users ke liye koi limit nahi</div>'
+    + '</div>'
+    + '<button onclick="exitLesson()" style="width:100%;padding:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;color:#fff;font-family:Fredoka One,sans-serif;font-size:15px;cursor:pointer;">← Baad Mein Aao</button>'
+    + '</div>';
+
+  // Countdown timer
+  var _pcHtInterval = setInterval(function(){
+    var s2 = Math.max(0, Math.ceil((nextRegen - Date.now())/1000));
+    var el2 = document.getElementById('pcHeartTimer');
+    if(el2) el2.textContent = Math.floor(s2/60) + ':' + ('0'+s2%60).slice(-2);
+    if(s2 <= 0){
+      clearInterval(_pcHtInterval);
+      _pcHearts = 1; _pcSaveHearts();
+      // Regen happened — allow retry
+      var bd2 = document.getElementById('lBd'); if(!bd2) return;
+      bd2.innerHTML = '<div class="a" style="text-align:center;padding:40px 16px;">'
+        + '<div style="font-size:56px;margin-bottom:12px;">❤️</div>'
+        + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#58CC02;margin-bottom:16px;">Heart wapas aa gaya!</div>'
+        + '<button class="bg" onclick="renderPCStep()" style="width:100%;padding:16px;">▶️ Dobara Shuru Karo</button>'
+        + '</div>';
+    }
+  }, 1000);
+}
+
+// CSS for heart shake animation - inject once
+(function(){
+  if(document.getElementById('pcHeartCSS')) return;
+  var s = document.createElement('style');
+  s.id = 'pcHeartCSS';
+  s.textContent = '@keyframes pcHeartShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}} @keyframes pcCardPop{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}} @keyframes pcShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}} @keyframes pcBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}} @keyframes pcPulseGlow{0%,100%{box-shadow:0 0 12px rgba(199,125,255,.3)}50%{box-shadow:0 0 28px rgba(199,125,255,.7)}} #pcHeartsBar{display:flex;align-items:center;gap:3px;}';
+  document.head.appendChild(s);
+})();
+
 var PC_ALPHABETS = {
   en: [
     {"char":"A","upper":"A","lower":"a","name":"A","pronunciation":"ay","example":"Apple","meaning":"Seb","sound_hint":"Jaise 'ey' kehte hain"},
@@ -13684,6 +13801,10 @@ function launchPreClassLesson(lang, isRevision){
 
   // Score reset
   _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
+  _pcSkippedSpeaking = []; // speaking skip track
+
+  // Hearts init
+  _pcInitHearts();
 
   // Letters priority: 1) Firebase/Admin 2) Inbuilt 3) Empty
   var letters = [];
@@ -13693,8 +13814,11 @@ function launchPreClassLesson(lang, isRevision){
     letters = PC_ALPHABETS[lang];
   }
 
+  // ✅ FIX: Poore 26 letters — shuffle karke use karo
+  var shuffled = letters.slice().sort(function(){ return Math.random()-.5; });
+
   // Steps build karo
-  _pcLS = buildPreClassSteps(lang, nfo, letters, adPc, isRevision);
+  _pcLS = buildPreClassSteps(lang, nfo, shuffled, adPc, isRevision);
   _pcSI = 0;
   _pcLang = lang;
   _pcIsRevision = isRevision || false;
@@ -13703,15 +13827,22 @@ function launchPreClassLesson(lang, isRevision){
   showScreen('lesson');
   // Progress bar reset
   var pb = document.getElementById('lPf'); if(pb) pb.style.width = '0%';
-  // Hearts hide (pre-class mein hearts nahi)
-  var ht = document.getElementById('lHt'); if(ht) ht.textContent = '✨ Pre-Class';
+  // Hearts bar replace karo
+  var ht = document.getElementById('lHt');
+  if(ht){
+    ht.innerHTML = '<span id="pcHeartsBar" style="display:flex;align-items:center;gap:3px;"></span>';
+    _pcUpdateHeartsUI();
+  }
   setTimeout(function(){ renderPCStep(); }, 160);
 }
 
+var _pcSkippedSpeaking = []; // letters jinka speaking skip hua
+
 // ── Build pre-class lesson steps from letters ──
+// ✅ FIX: Poore 26 letters, random order, advanced quizzes
 function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
   var steps = [];
-  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke basic characters seekhenge.');
+  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke tamam ' + letters.length + ' characters seekhenge.');
 
   // STEP 1: Welcome header
   steps.push({t:'pc_header', nfo:nfo, desc:desc, isRevision:isRevision, total:letters.length});
@@ -13722,64 +13853,84 @@ function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
     return steps;
   }
 
-  // STEP 2: Letter cards — har letter alag card
-  letters.forEach(function(l, i){
-    steps.push({t:'pc_letter', letter:l, num:i+1, total:letters.length});
-  });
-
-  // STEP 3: Listening practice — sound suno, letter dhundo
-  if(letters.length >= 4){
-    var listenPool = letters.slice(0, Math.min(letters.length, 8));
-    listenPool.forEach(function(l){
-      steps.push({t:'pc_quiz', letters:listenPool, fixedLetter:l, label:'Listening', qType:'char'});
+  // ✅ FIX: Poore 26 (ya jitne bhi) letters — random order mein
+  // Letters 6-6 ke batches mein dikhao to avoid overwhelm
+  var batchSize = 6;
+  for(var bi=0; bi < letters.length; bi += batchSize){
+    var batch = letters.slice(bi, bi+batchSize);
+    // STEP 2: Letter cards
+    batch.forEach(function(l, i){
+      steps.push({t:'pc_letter', letter:l, num:bi+i+1, total:letters.length});
     });
+    // Mini quiz after each batch (4+ letters)
+    if(batch.length >= 4){
+      // Listening quiz
+      var lPool = batch;
+      batch.forEach(function(l){
+        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Listening', qType:'char'});
+      });
+      // Recognition quiz
+      batch.forEach(function(l){
+        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Recognition', qType:'meaning'});
+      });
+      // Upper-Lower match
+      var shuf = batch.slice().sort(function(){ return Math.random()-.5; });
+      steps.push({t:'pc_match', letters:shuf.slice(0,4)});
+    }
   }
 
-  // STEP 4: Recognition quiz — letter dikhao, naam dhundo
-  if(letters.length >= 3){
-    var quizPool = letters.slice(0, Math.min(letters.length, 10));
-    quizPool.forEach(function(l){
-      steps.push({t:'pc_quiz', letters:quizPool, fixedLetter:l, label:'Recognition', qType:'meaning'});
-    });
-  }
-
-  // STEP 5: Speaking practice
-  var spkLetters = letters.slice(0, Math.min(letters.length, 8));
-  if(spkLetters.length > 0){
+  // STEP 3: Speaking practice (all letters, skip if mic fails)
+  if(letters.length > 0){
     steps.push({t:'pc_speaking_intro'});
-    spkLetters.forEach(function(l){
+    letters.forEach(function(l){
       steps.push({t:'pc_speaking', letter:l});
     });
+    // Speaking retry ke liye — skipped letters baad mein (handled in renderPCDone)
+    steps.push({t:'pc_speaking_review'});
   }
 
-  // STEP 6: Upper-Lower match (4 letters)
-  if(letters.length >= 4){
-    var shuffled = letters.slice().sort(function(){ return Math.random()-.5; });
-    steps.push({t:'pc_match', letters:shuffled.slice(0,4)});
+  // STEP 4: Advanced quizzes on full letter set
+  var fullPool = letters;
+
+  // ExMatch: Is word ka pehla letter kaunsa hai?
+  var exLetters = fullPool.filter(function(l){ return l.example; });
+  exLetters.forEach(function(l){
+    steps.push({t:'pc_exmatch', letters:fullPool, fixedLetter:l});
+  });
+
+  // ✅ NEW: Meaning match — Urdu meaning dikhao, letter dhundo
+  fullPool.forEach(function(l){
+    if(l.meaning) steps.push({t:'pc_meaning_match', letters:fullPool, fixedLetter:l});
+  });
+
+  // ✅ NEW: Next letter — "A ke baad kaunsa letter hai?"
+  if(fullPool.length >= 4){
+    var orderedLetters = PC_ALPHABETS[lang] || letters; // original order
+    for(var ni=0; ni<orderedLetters.length-1; ni++){
+      var cur = orderedLetters[ni];
+      var nxt = orderedLetters[ni+1];
+      steps.push({t:'pc_nextletter', letters:orderedLetters, current:cur, answer:nxt});
+    }
   }
 
-  // STEP 7: Example word match
-  if(letters.length >= 4){
-    var exPool = letters.slice(0, Math.min(letters.length, 8));
-    exPool.forEach(function(l){
-      if(l.example) steps.push({t:'pc_exmatch', letters:exPool, fixedLetter:l});
-    });
-  }
+  // Fill in the blank (advanced — middle letter bhi)
+  var blankPool = fullPool;
+  blankPool.forEach(function(l){
+    if(l.example && l.example.length >= 3){
+      steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'first'});
+      if(l.example.length >= 4)
+        steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'middle'});
+    } else if(l.example && l.example.length > 1){
+      steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'first'});
+    }
+  });
 
-  // STEP 8: Fill in the blank
-  if(letters.length >= 4){
-    var blankPool = letters.slice(0, Math.min(letters.length, 8));
-    blankPool.forEach(function(l){
-      if(l.example && l.example.length > 1) steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l});
-    });
-  }
-
-  // STEP 9: Speed round — 10 random questions
+  // STEP 5: Final speed round — 15 sawal, poore 26 se
   if(letters.length >= 4){
     steps.push({t:'pc_speed', letters:letters, lang:lang});
   }
 
-  // STEP 10: Final results
+  // STEP 6: Final results
   steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
   return steps;
 }
@@ -13796,17 +13947,20 @@ function renderPCStep(){
   bd.style.transition = 'opacity .15s ease,transform .15s ease';
   bd.style.opacity = '0'; bd.style.transform = 'translateX(-12px)';
   setTimeout(function(){
-    if(step.t==='pc_header')         renderPCHeader(step, bd);
-    else if(step.t==='pc_nodata')    renderPCNoData(step, bd);
-    else if(step.t==='pc_letter')    renderPCLetter(step, bd);
-    else if(step.t==='pc_quiz')      renderPCQuiz(step, bd);
+    if(step.t==='pc_header')              renderPCHeader(step, bd);
+    else if(step.t==='pc_nodata')         renderPCNoData(step, bd);
+    else if(step.t==='pc_letter')         renderPCLetter(step, bd);
+    else if(step.t==='pc_quiz')           renderPCQuiz(step, bd);
     else if(step.t==='pc_speaking_intro') renderPCSpeakingIntro(bd);
-    else if(step.t==='pc_speaking')  renderPCSpeaking(step, bd);
-    else if(step.t==='pc_match')     renderPCMatch(step, bd);
-    else if(step.t==='pc_exmatch')   renderPCExMatch(step, bd);
-    else if(step.t==='pc_blank')     renderPCBlank(step, bd);
-    else if(step.t==='pc_speed')     renderPCSpeed(step, bd);
-    else if(step.t==='pc_done')      renderPCDone(step, bd);
+    else if(step.t==='pc_speaking')       renderPCSpeaking(step, bd);
+    else if(step.t==='pc_speaking_review') renderPCSpeakingReview(bd);
+    else if(step.t==='pc_match')          renderPCMatch(step, bd);
+    else if(step.t==='pc_exmatch')        renderPCExMatch(step, bd);
+    else if(step.t==='pc_meaning_match')  renderPCMeaningMatch(step, bd);
+    else if(step.t==='pc_nextletter')     renderPCNextLetter(step, bd);
+    else if(step.t==='pc_blank')          renderPCBlank(step, bd);
+    else if(step.t==='pc_speed')          renderPCSpeed(step, bd);
+    else if(step.t==='pc_done')           renderPCDone(step, bd);
     else pcNx();
     bd.style.transform = 'translateX(14px)';
     requestAnimationFrame(function(){requestAnimationFrame(function(){
@@ -13860,7 +14014,7 @@ function renderPCNoData(s, b){
     + '</div>';
 }
 
-// ── STEP: Letter card ──
+// ── STEP: Letter card (Advanced UI) ──
 function renderPCLetter(s, b){
   var l = s.letter;
   var char = l.char || l.character || l.letter || '?';
@@ -13872,33 +14026,59 @@ function renderPCLetter(s, b){
   var lower = l.lower || l.lowercase || char.toLowerCase();
   var sound_hint = l.sound_hint || '';
 
-  // TTS ke liye
   var ttsText = pron || name || char;
   var tid = _storeTTS ? _storeTTS(ttsText, example) : 0;
 
-  b.innerHTML = '<div class="a">'
-    + '<div style="text-align:center;margin-bottom:8px;font-size:11px;color:rgba(255,255,255,.4);">'
-    + 'Letter ' + s.num + ' / ' + s.total + '</div>'
-    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(199,125,255,.05));border:1.5px solid rgba(199,125,255,.35);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:14px;">'
-    + '<div style="font-size:80px;font-weight:700;color:#C77DFF;line-height:1;font-family:serif;">' + upper + '</div>'
-    + '<div style="font-size:36px;color:rgba(199,125,255,.6);margin-bottom:10px;font-family:serif;">' + lower + '</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#fff;margin-bottom:4px;">' + name + '</div>'
-    + (pron ? '<div style="font-size:15px;color:rgba(255,255,255,.55);margin-bottom:8px;">/ ' + pron + ' /</div>' : '')
-    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:10px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;">&#128483; ' + sound_hint + '</div>' : '')
+  // Gradient color per letter (cycle through colors)
+  var colors = ['#C77DFF','#5B8DEF','#58CC02','#FFD166','#FF6B9D','#2EE59D','#FF9A3C','#4FC3F7'];
+  var ci = (char.charCodeAt(0) - 65) % colors.length;
+  var col = colors[Math.max(0,ci)] || '#C77DFF';
+  var colLight = col + '22';
+  var colBorder = col + '55';
+
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .4s cubic-bezier(.34,1.56,.64,1) both;">'
+    // Progress indicator
+    + '<div style="text-align:center;margin-bottom:10px;">'
+    + '<span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + s.num + ' / ' + s.total + '</span>'
     + '</div>'
-    + (example ? '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.25);border-radius:14px;padding:14px;margin-bottom:14px;">'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px;">&#128218; Misal (Example):</div>'
-      + '<div style="font-size:18px;color:#58CC02;font-weight:700;">' + example + '</div>'
-      + (meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;">' + meaning + '</div>' : '')
+    // Big letter card
+    + '<div style="background:linear-gradient(135deg,' + colLight + ',rgba(255,255,255,.02));border:2px solid ' + colBorder + ';border-radius:24px;padding:28px 20px 20px;text-align:center;margin-bottom:14px;box-shadow:0 8px 32px ' + col + '22;animation:pcPulseGlow 3s ease infinite;">'
+    // Upper + Lower side by side (✅ FIX)
+    + '<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;">'
+    + '<div style="text-align:center;">'
+    + '<div style="font-size:88px;font-weight:700;color:' + col + ';line-height:1;font-family:serif;text-shadow:0 0 30px ' + col + '44;">' + upper + '</div>'
+    + '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">Capital</div>'
+    + '</div>'
+    + '<div style="width:1px;height:60px;background:rgba(255,255,255,.1);"></div>'
+    + '<div style="text-align:center;">'
+    + '<div style="font-size:72px;color:' + col + '99;line-height:1;font-family:serif;margin-top:8px;">' + lower + '</div>'
+    + '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">Small</div>'
+    + '</div>'
+    + '</div>'
+    // Name + pronunciation
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#fff;margin-bottom:4px;">' + name + '</div>'
+    + (pron ? '<div style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:8px;">/ ' + pron + ' /</div>' : '')
+    // Sound hint in Urdu style
+    + (sound_hint ? '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,.65);margin-top:6px;">💡 ' + sound_hint + '</div>' : '')
+    + '</div>'
+    // Example word card with Urdu
+    + (example ? '<div style="background:rgba(88,204,2,.1);border:1.5px solid rgba(88,204,2,.3);border-radius:16px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">'
+      + '<div style="font-size:30px;min-width:36px;text-align:center;animation:pcBounce 2s ease infinite;">📗</div>'
+      + '<div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:2px;">Misal (Example)</div>'
+      + '<div style="font-size:20px;color:#58CC02;font-weight:700;">' + example + '</div>'
+      + (meaning ? '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-top:2px;">🇵🇰 ' + meaning + '</div>' : '')
+      + '</div>'
       + '</div>' : '')
+    // Listen buttons
     + '<div class="spk-bar" style="margin-bottom:16px;">'
-    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="padding:14px 20px;">&#128266; Suno</button>'
-           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="padding:14px 20px;">&#128034; Dheere Suno</button>'
-           : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')" style="padding:14px 20px;">&#128266; Suno</button>')
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="flex:1;padding:14px 16px;">🔊 Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="flex:1;padding:14px 16px;">🐢 Dheere</button>'
+           : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')" style="width:100%;padding:14px;">🔊 Suno</button>')
     + '</div>'
-    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#10003; Samajh Gaya! &#8594;</button>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;font-size:16px;animation:none;">✓ Samajh Gaya! →</button>'
     + '</div>';
-  // Auto-play pronunciation
+
   setTimeout(function(){
     if(tid && window.ttsPlay) ttsPlay(tid);
     else if(window.spk) spk(ttsText);
@@ -13910,56 +14090,64 @@ function renderPCQuiz(s, b){
   var letters = s.letters;
   if(!letters || letters.length < 2){ pcNx(); return; }
 
-  // fixedLetter ya random
   var correct = s.fixedLetter || letters[Math.floor(Math.random() * letters.length)];
   var char = correct.char || correct.character || correct.letter || '?';
   var upper = correct.upper || char;
+  var lower = correct.lower || char.toLowerCase();
   var name = correct.name || correct.letterName || char;
   var pron = correct.pronunciation || correct.sound || '';
+  var meaning = correct.meaning || '';
+  var example = correct.example || '';
 
-  // Options banao (correct + 3 random wrong)
   var pool = letters.filter(function(l){ return l !== correct; });
   pool.sort(function(){ return Math.random()-.5; });
   var wrongs = pool.slice(0,3);
   var options = [correct].concat(wrongs).sort(function(){ return Math.random()-.5; });
 
   var quizId = 'pcquiz_' + _pcSI;
-  _pcTotal++;
 
   if(s.qType === 'meaning'){
-    // Char dikhao, naam dhundo (Recognition)
+    // Char dikhao (upper+lower), naam dhundo
     var correctAnswer = name;
-    b.innerHTML = '<div class="a">'
-      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
-      + '<div style="font-size:80px;font-weight:700;color:#C77DFF;line-height:1;font-family:serif;">' + upper + '</div>'
-      + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:10px;">Is letter ka naam kya hai?</div>'
+    b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+      + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+      + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;">'
+      + '<span style="font-family:serif;font-size:72px;color:#C77DFF;line-height:1;">' + upper + '</span>'
+      + '<span style="font-family:serif;font-size:48px;color:rgba(199,125,255,.5);line-height:1;">' + lower + '</span>'
+      + '</div>'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.5);">Is letter ka naam kya hai?</div>'
+      + (meaning ? '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:3px;">🇵🇰 ' + meaning + '</div>' : '')
       + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
       + options.map(function(o){
           var ans = o.name || o.letterName || o.char || '?';
           var lChar = o.char || o.character || '?';
           return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAnswer.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 10px;font-family:Fredoka One,sans-serif;font-size:14px;color:#fff;cursor:pointer;">'
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 10px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;">'
             + ans + '</button>';
         }).join('')
       + '</div></div>';
   } else {
-    // Awaaz suno, letter dhundo (Listening)
+    // Awaaz suno, letter dhundo (upper+lower options)
     var tid2 = _storeTTS ? _storeTTS(pron || name, '') : 0;
     var correctChar = upper;
-    b.innerHTML = '<div class="a">'
-      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
-      + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:12px;">&#128266; Kaunsa letter yeh awaaz hai?</div>'
-      + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:15px;padding:14px 28px;">&#128266; Awaaz Suno</button>'
-              : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+name+'\')" style="font-size:15px;padding:14px 28px;">&#128266; Awaaz Suno</button>')
+    b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+      + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;">🔊 Kaunsa letter yeh awaaz hai?</div>'
+      + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:15px;padding:12px 28px;">🔊 Awaaz Suno</button>'
+              : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+name+'\')" style="font-size:15px;padding:12px 28px;">🔊 Awaaz Suno</button>')
+      + (example ? '<div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:6px;">Jaise: ' + example + (meaning ? ' — ' + meaning : '') + '</div>' : '')
       + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
       + options.map(function(o){
           var ans = o.upper || o.char || o.character || '?';
           var lChar = o.char || o.character || '?';
+          var low = o.lower || (o.char||'?').toLowerCase();
           return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctChar.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
-            + ans + '</button>';
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:16px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+            + '<span style="font-family:serif;font-size:36px;color:#fff;">' + ans + '</span>'
+            + '<span style="font-family:serif;font-size:22px;color:rgba(255,255,255,.4);">' + low + '</span>'
+            + '</button>';
         }).join('')
       + '</div></div>';
     setTimeout(function(){
@@ -13975,13 +14163,22 @@ function pcQuizAnswer(btn, selected, correct, containerId, letterChar){
   var btns = container.querySelectorAll('button');
   btns.forEach(function(b){ b.disabled = true; });
   var isCorrect = (selected === correct);
-  if(isCorrect){ _pcScore++; } else { if(letterChar) _pcWrongLetters.push(letterChar); }
+
+  if(isCorrect){
+    _pcScore++;
+  } else {
+    if(letterChar) _pcWrongLetters.push(letterChar);
+    // ✅ Heart system
+    var canContinue = _pcLoseHeart();
+    if(!canContinue) return; // hearts khatam
+  }
+
   btn.style.background = isCorrect ? 'rgba(88,204,2,.3)' : 'rgba(255,75,75,.3)';
   btn.style.borderColor = isCorrect ? '#58CC02' : '#FF4B4B';
   btn.style.color = isCorrect ? '#58CC02' : '#FF4B4B';
   if(!isCorrect){
     btns.forEach(function(b2){
-      if(b2.textContent.trim() === correct){
+      if(b2.textContent.trim() === correct || b2.textContent.trim().indexOf(correct) !== -1){
         b2.style.background = 'rgba(88,204,2,.3)';
         b2.style.borderColor = '#58CC02';
         b2.style.color = '#58CC02';
@@ -13990,44 +14187,126 @@ function pcQuizAnswer(btn, selected, correct, containerId, letterChar){
   }
   var fb = document.createElement('div');
   fb.style.cssText = 'text-align:center;padding:12px;font-family:Fredoka One,sans-serif;font-size:16px;color:' + (isCorrect?'#58CC02':'#FF4B4B') + ';';
-  fb.innerHTML = isCorrect ? '&#10003; Sahi Jawab! Shabaash! &#127881;' : '&#10007; Galat — Sahi: <b>' + correct + '</b>';
+  fb.innerHTML = isCorrect ? '✓ Sahi Jawab! Shabaash! 🎉' : '✗ Galat — Sahi: <b>' + correct + '</b>';
   var nextBtn = document.createElement('button');
   nextBtn.className = 'bg';
   nextBtn.style.cssText = 'width:100%;margin-top:10px;padding:14px;';
-  nextBtn.textContent = 'Agla \u2192';
+  nextBtn.textContent = 'Agla →';
   nextBtn.onclick = pcNx;
   container.parentNode.appendChild(fb);
   container.parentNode.appendChild(nextBtn);
+  _pcTotal++;
 }
 
-// ── STEP: Example word match ──
+// ── STEP: Example word match (improved) ──
 function renderPCExMatch(s, b){
   var letters = s.letters;
   var correct = s.fixedLetter;
   if(!correct || !correct.example){ pcNx(); return; }
-  var pool = letters.filter(function(l){ return l !== correct; });
+  var pool = letters.filter(function(l){ return l !== correct && l.example; });
+  // If not enough pool, use all letters
+  if(pool.length < 3) pool = letters.filter(function(l){ return l !== correct; });
   pool.sort(function(){ return Math.random()-.5; });
   var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
   var qId = 'pcex_' + _pcSI;
   var correctUpper = correct.upper || correct.char || '?';
   _pcTotal++;
-  b.innerHTML = '<div class="a">'
-    + '<div style="background:rgba(88,204,2,.08);border:1px solid rgba(88,204,2,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;">Is word ka pehla letter kaunsa hai?</div>'
-    + '<div style="font-size:32px;font-weight:700;color:#58CC02;">' + correct.example + '</div>'
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="background:rgba(88,204,2,.08);border:1.5px solid rgba(88,204,2,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">📝 Is word ka pehla letter kaunsa hai?</div>'
+    + '<div style="font-size:36px;font-weight:700;color:#58CC02;letter-spacing:2px;">' + correct.example + '</div>'
+    + (correct.meaning ? '<div style="font-size:14px;color:rgba(255,255,255,.5);margin-top:4px;">🇵🇰 ' + correct.meaning + '</div>' : '')
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
         var ans = o.upper || o.char || '?';
         var lChar = o.char || '?';
+        var low = o.lower || ans.toLowerCase();
         return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
-          + ans + '</button>';
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
+          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
+          + '</button>';
       }).join('')
     + '</div></div>';
 }
 
-// ── STEP: Fill in the blank ──
+// ── STEP: Meaning match — Urdu meaning dikhao, letter dhundo ──
+function renderPCMeaningMatch(s, b){
+  var letters = s.letters;
+  var correct = s.fixedLetter;
+  if(!correct || !correct.meaning){ pcNx(); return; }
+  var pool = letters.filter(function(l){ return l !== correct; });
+  pool.sort(function(){ return Math.random()-.5; });
+  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+  var qId = 'pcmm_' + _pcSI;
+  var correctUpper = correct.upper || correct.char || '?';
+  _pcTotal++;
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="background:rgba(255,209,102,.08);border:1.5px solid rgba(255,209,102,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">🇵🇰 Is Urdu meaning ka letter kaunsa hai?</div>'
+    + '<div style="font-size:28px;font-weight:700;color:#FFD166;">' + correct.meaning + '</div>'
+    + (correct.example ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;">(' + correct.example + ')</div>' : '')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
+    + options.map(function(o){
+        var ans = o.upper || o.char || '?';
+        var lChar = o.char || '?';
+        var low = o.lower || ans.toLowerCase();
+        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
+          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
+          + '</button>';
+      }).join('')
+    + '</div></div>';
+}
+
+// ── STEP: Next Letter quiz — "A ke baad kaunsa aata hai?" ──
+function renderPCNextLetter(s, b){
+  var allLetters = s.letters;
+  var current = s.current;
+  var answer = s.answer;
+  if(!current || !answer){ pcNx(); return; }
+  // Options: correct + 3 random wrong
+  var pool = allLetters.filter(function(l){ return l !== answer && l !== current; });
+  pool.sort(function(){ return Math.random()-.5; });
+  var options = [answer].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+  var qId = 'pcnl_' + _pcSI;
+  var correctUpper = answer.upper || answer.char || '?';
+  _pcTotal++;
+  var curUpper = current.upper || current.char || '?';
+  var curLower = current.lower || curUpper.toLowerCase();
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">🔡 Is letter ke baad kaunsa aata hai?</div>'
+    + '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">'
+    + '<div style="background:rgba(91,141,239,.15);border:1.5px solid rgba(91,141,239,.4);border-radius:14px;padding:10px 18px;text-align:center;">'
+    + '<div style="font-family:serif;font-size:52px;color:#5B8DEF;line-height:1;">' + curUpper + '</div>'
+    + '<div style="font-family:serif;font-size:28px;color:rgba(91,141,239,.5);">' + curLower + '</div>'
+    + '</div>'
+    + '<div style="font-size:28px;color:rgba(255,255,255,.4);">→</div>'
+    + '<div style="background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:10px 18px;text-align:center;">'
+    + '<div style="font-family:serif;font-size:52px;color:rgba(255,255,255,.2);line-height:1;">?</div>'
+    + '<div style="font-family:serif;font-size:28px;color:rgba(255,255,255,.1);">?</div>'
+    + '</div>'
+    + '</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
+    + options.map(function(o){
+        var ans = o.upper || o.char || '?';
+        var lChar = o.char || '?';
+        var low = o.lower || ans.toLowerCase();
+        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
+          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
+          + '</button>';
+      }).join('')
+    + '</div></div>';
+}
+
+// ── STEP: Fill in the blank (advanced) ──
 function renderPCBlank(s, b){
   var letters = s.letters;
   var correct = s.fixedLetter;
@@ -14037,97 +14316,228 @@ function renderPCBlank(s, b){
   var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
   var qId = 'pcblank_' + _pcSI;
   var correctUpper = correct.upper || correct.char || '?';
-  var blanked = '_' + correct.example.slice(1);
+  var word = correct.example;
+  var blankPos = s.blankPos || 'first';
+  var blanked, blankIdx;
+  if(blankPos === 'middle' && word.length >= 4){
+    blankIdx = Math.floor(word.length/2);
+    blanked = word.slice(0,blankIdx) + '_' + word.slice(blankIdx+1);
+    correctUpper = (correct.upper || correct.char || word[blankIdx]).toUpperCase();
+    // find the letter for middle char
+    var midChar = word[blankIdx].toUpperCase();
+    var midLetter = letters.find(function(l){ return (l.upper||l.char||'').toUpperCase()===midChar; });
+    if(midLetter){
+      correctUpper = midLetter.upper || midLetter.char || midChar;
+      var midPool = letters.filter(function(l){ return l !== midLetter; }).sort(function(){ return Math.random()-.5; });
+      options = [midLetter].concat(midPool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+    } else {
+      blanked = '_' + word.slice(1);
+      correctUpper = correct.upper || correct.char || '?';
+      options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+    }
+  } else {
+    blanked = '_' + word.slice(1);
+  }
   _pcTotal++;
-  b.innerHTML = '<div class="a">'
-    + '<div style="background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;">Kaunsa letter missing hai?</div>'
-    + '<div style="font-size:32px;font-weight:700;color:#5B8DEF;letter-spacing:4px;">' + blanked + '</div>'
+  // Format blanked word nicely
+  var blankedHtml = blanked.split('').map(function(c){
+    return c === '_'
+      ? '<span style="color:#5B8DEF;font-size:40px;border-bottom:3px solid #5B8DEF;padding:0 6px;margin:0 2px;">_</span>'
+      : '<span style="font-size:36px;color:#fff;margin:0 1px;">' + c + '</span>';
+  }).join('');
+
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">✏️ Kaunsa letter missing hai?</div>'
+    + '<div style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;margin-bottom:8px;">' + blankedHtml + '</div>'
+    + (correct.meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;">🇵🇰 ' + correct.meaning + '</div>' : '')
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
         var ans = o.upper || o.char || '?';
         var lChar = o.char || '?';
+        var low = o.lower || ans.toLowerCase();
         return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
-          + ans + '</button>';
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
+          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
+          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
+          + '</button>';
       }).join('')
     + '</div></div>';
 }
 
-// ── STEP: Speed Round ──
+// ── STEP: Speed Round (15 sawal, poore 26 se, diverse types) ──
 function renderPCSpeed(s, b){
   var letters = s.letters;
   if(!letters || letters.length < 4){ pcNx(); return; }
-  var total = 10;
+  var total = Math.min(15, letters.length * 2); // max 15
   var qIdx = 0;
   var correct_count = 0;
   var speedWrong = [];
+  var usedTypes = []; // avoid same type in a row
+
+  // Shuffle letters for variety
+  var shuffledForSpeed = letters.slice().sort(function(){ return Math.random()-.5; });
+  var letterCycle = []; // ensure all letters get covered
+  while(letterCycle.length < total){
+    letterCycle = letterCycle.concat(shuffledForSpeed.slice().sort(function(){ return Math.random()-.5; }));
+  }
+  letterCycle = letterCycle.slice(0, total);
+
+  // Question types
+  var allTypes = ['name_from_letter','letter_from_sound','letter_from_example','letter_from_meaning','next_letter'];
 
   function buildQ(){
     if(qIdx >= total){
-      // Results
       _pcScore += correct_count; _pcTotal += total;
-      b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0;">'
-        + '<div style="font-size:56px;margin-bottom:12px;">&#9889;</div>'
+      var speedPct = Math.round(correct_count/total*100);
+      var col = speedPct>=80?'#58CC02':speedPct>=50?'#FFD166':'#FF4B4B';
+      b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0;animation:pcCardPop .4s ease both;">'
+        + '<div style="font-size:56px;margin-bottom:12px;">⚡</div>'
         + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#FFD166;margin-bottom:8px;">Speed Round Mukammal!</div>'
-        + '<div style="font-size:32px;font-family:Fredoka One,sans-serif;color:#58CC02;margin-bottom:16px;">' + correct_count + ' / ' + total + ' sahi jawab!</div>'
-        + (speedWrong.length > 0 ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.7);">Practice karo: <b>' + speedWrong.join(', ') + '</b></div>' : '')
-        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey &#8594;</button>'
+        + '<div style="font-size:40px;font-family:Fredoka One,sans-serif;color:'+col+';margin-bottom:16px;">' + correct_count + ' / ' + total + '</div>'
+        + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:12px;margin-bottom:16px;">'
+        + '<div style="height:10px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;">'
+        + '<div style="height:100%;width:' + speedPct + '%;background:linear-gradient(90deg,'+col+','+col+'88);border-radius:6px;transition:width 1s ease;"></div>'
+        + '</div>'
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">' + speedPct + '% sahi jawab</div>'
+        + '</div>'
+        + (speedWrong.length > 0 ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:16px;">'
+          + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">⚠️ Practice karo:</div>'
+          + '<div style="font-family:serif;font-size:28px;color:#FF4B4B;letter-spacing:8px;">' + speedWrong.join(' ') + '</div>'
+          + '</div>' : '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.2);border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:#58CC02;">🌟 Sab sahi! Khabardar raho!</div>')
+        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey →</button>'
         + '</div>';
       return;
     }
-    var types = ['meaning','char'];
-    var qType = types[Math.floor(Math.random()*2)];
-    var correct = letters[Math.floor(Math.random()*letters.length)];
-    var pool = letters.filter(function(l){ return l !== correct; }).sort(function(){ return Math.random()-.5; });
-    var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+
+    var correct = letterCycle[qIdx];
+    // Pick question type — avoid same as last
+    var availTypes = allTypes.filter(function(t){
+      return t !== usedTypes[usedTypes.length-1];
+    });
+    // letter_from_sound needs TTS, check
+    if(availTypes.indexOf('letter_from_sound') !== -1 && !_storeTTS){
+      availTypes = availTypes.filter(function(t){ return t !== 'letter_from_sound'; });
+    }
+    // next_letter needs ordered letters
+    var ordLetters = PC_ALPHABETS[_pcLang] || letters;
+    var curIdx = ordLetters.findIndex ? ordLetters.findIndex(function(l){ return l.char===correct.char; })
+                                      : (function(){ for(var i=0;i<ordLetters.length;i++) if(ordLetters[i].char===correct.char) return i; return -1; })();
+    if(curIdx < 0 || curIdx >= ordLetters.length-1){
+      availTypes = availTypes.filter(function(t){ return t !== 'next_letter'; });
+    }
+    // needs meaning
+    if(!correct.meaning) availTypes = availTypes.filter(function(t){ return t!=='letter_from_meaning'; });
+    // needs example
+    if(!correct.example) availTypes = availTypes.filter(function(t){ return t!=='letter_from_example'; });
+
+    if(availTypes.length === 0) availTypes = ['name_from_letter'];
+    var qType = availTypes[Math.floor(Math.random()*availTypes.length)];
+    usedTypes.push(qType);
+
+    var pool = letters.filter(function(l){ return l.char !== correct.char; }).sort(function(){ return Math.random()-.5; });
     var qId = 'pcspeed_q';
     var answered = false;
-    var timerEl, countBar;
+    var questionHtml, correctAns, optionsFn;
 
-    var questionHtml, correctAns, optBtn;
-    if(qType === 'meaning'){
-      var upper = correct.upper || correct.char || '?';
+    if(qType === 'name_from_letter'){
+      // Show letter (upper+lower), pick name
       correctAns = correct.name || correct.char || '?';
-      questionHtml = '<div style="font-size:72px;font-family:serif;color:#C77DFF;text-align:center;line-height:1;">' + upper + '</div>'
-        + '<div style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin:8px 0;">Is letter ka naam kya hai?</div>';
-      optBtn = function(o){ return o.name || o.char || '?'; };
-      var optStyle = 'font-family:Fredoka One,sans-serif;font-size:14px;';
-    } else {
+      questionHtml = '<div style="text-align:center;">'
+        + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;">'
+        + '<span style="font-family:serif;font-size:70px;color:#C77DFF;line-height:1;">' + (correct.upper||correct.char) + '</span>'
+        + '<span style="font-family:serif;font-size:48px;color:rgba(199,125,255,.5);line-height:1;">' + (correct.lower||(correct.char||'?').toLowerCase()) + '</span>'
+        + '</div>'
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;">Is letter ka naam kya hai?</div>'
+        + '</div>';
+      var nameOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+      optionsFn = function(){ return nameOpts.map(function(o){
+        var ans = o.name||o.char||'?';
+        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 8px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;">'+ans+'</button>';
+      }).join(''); };
+
+    } else if(qType === 'letter_from_sound'){
       var pron = correct.pronunciation || correct.name || correct.char || '?';
-      var tid3 = _storeTTS ? _storeTTS(pron, '') : 0;
+      var tid3 = _storeTTS ? _storeTTS(pron,'') : 0;
       correctAns = correct.upper || correct.char || '?';
       questionHtml = '<div style="text-align:center;margin-bottom:8px;">'
-        + (tid3 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid3+')" style="padding:10px 20px;">&#128266; Awaaz Suno</button>'
-                : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+pron+'\')" style="padding:10px 20px;">&#128266; Awaaz Suno</button>')
-        + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:8px;">Kaunsa letter hai?</div>'
+        + (tid3 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid3+')" style="padding:10px 24px;">🔊 Awaaz Suno</button>'
+                : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+pron+'\')" style="padding:10px 24px;">🔊 Awaaz Suno</button>')
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;">Kaunsa letter hai? / '+pron+' /</div>'
         + '</div>';
-      optBtn = function(o){ return o.upper || o.char || '?'; };
-      var optStyle = 'font-family:serif;font-size:30px;';
-      setTimeout(function(){
-        if(tid3 && window.ttsPlay) ttsPlay(tid3); else if(window.spk) spk(pron);
-      }, 200);
+      setTimeout(function(){ if(tid3&&window.ttsPlay) ttsPlay(tid3); else if(window.spk) spk(pron); }, 200);
+      var sndOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+      optionsFn = function(){ return sndOpts.map(function(o){
+        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
+        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
+      }).join(''); };
+
+    } else if(qType === 'letter_from_example'){
+      correctAns = correct.upper || correct.char || '?';
+      questionHtml = '<div style="text-align:center;">'
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">📝 Is word ka pehla letter kaunsa?</div>'
+        + '<div style="font-size:32px;font-weight:700;color:#58CC02;">' + correct.example + '</div>'
+        + (correct.meaning ? '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">🇵🇰 ' + correct.meaning + '</div>' : '')
+        + '</div>';
+      var exOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+      optionsFn = function(){ return exOpts.map(function(o){
+        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
+        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
+      }).join(''); };
+
+    } else if(qType === 'letter_from_meaning'){
+      correctAns = correct.upper || correct.char || '?';
+      questionHtml = '<div style="text-align:center;">'
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">🇵🇰 Is Urdu meaning ka letter kaunsa?</div>'
+        + '<div style="font-size:28px;font-weight:700;color:#FFD166;">' + correct.meaning + '</div>'
+        + (correct.example ? '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">(' + correct.example + ')</div>' : '')
+        + '</div>';
+      var mmOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+      optionsFn = function(){ return mmOpts.map(function(o){
+        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
+        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
+      }).join(''); };
+
+    } else { // next_letter
+      var nextL = ordLetters[curIdx+1];
+      correctAns = nextL ? (nextL.upper||nextL.char||'?') : '?';
+      var curUp = correct.upper||correct.char||'?'; var curLow = correct.lower||(correct.char||'?').toLowerCase();
+      questionHtml = '<div style="text-align:center;">'
+        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">🔡 Is letter ke baad kaunsa aata hai?</div>'
+        + '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">'
+        + '<div style="background:rgba(91,141,239,.15);border:1.5px solid rgba(91,141,239,.3);border-radius:10px;padding:8px 14px;text-align:center;">'
+        + '<div style="font-family:serif;font-size:40px;color:#5B8DEF;line-height:1;">' + curUp + '</div>'
+        + '<div style="font-family:serif;font-size:22px;color:rgba(91,141,239,.5);">' + curLow + '</div>'
+        + '</div>'
+        + '<span style="font-size:20px;color:rgba(255,255,255,.3);">→ ?</span>'
+        + '</div>'
+        + '</div>';
+      var nlPool = [nextL].concat(pool.filter(function(l){ return l.char!==nextL.char; }).slice(0,3)).sort(function(){ return Math.random()-.5; });
+      optionsFn = function(){ return nlPool.map(function(o){
+        if(!o) return '';
+        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
+        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
+      }).join(''); };
     }
 
-    b.innerHTML = '<div class="a">'
-      + '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;">Sawal ' + (qIdx+1) + ' / ' + total + '</div>'
-      + '<div style="height:6px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:12px;overflow:hidden;">'
+    // Progress bar color
+    var prog = Math.round(qIdx/total*100);
+    b.innerHTML = '<div class="a" style="animation:pcCardPop .25s ease both;">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+      + '<span style="font-size:11px;color:rgba(255,255,255,.4);">⚡ Sawal ' + (qIdx+1) + ' / ' + total + '</span>'
+      + '<span style="font-size:11px;color:#58CC02;">✓ ' + correct_count + '</span>'
+      + '</div>'
+      + '<div style="height:5px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:12px;overflow:hidden;">'
       + '<div id="pcSpeedBar" style="height:100%;background:linear-gradient(90deg,#C77DFF,#FF4B4B);border-radius:4px;width:100%;transition:width 5s linear;"></div>'
       + '</div>'
-      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:20px;margin-bottom:14px;">'
+      + '<div style="background:rgba(199,125,255,.06);border:1px solid rgba(199,125,255,.15);border-radius:16px;padding:18px 16px;margin-bottom:14px;">'
       + questionHtml + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-      + options.map(function(o){
-          var ans = optBtn(o);
-          var lChar = o.char || '?';
-          return '<button onclick="pcSpeedAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAns.replace(/'/g,"\\'") + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:18px 10px;' + optStyle + 'color:#fff;cursor:pointer;">'
-            + ans + '</button>';
-        }).join('')
+      + optionsFn()
       + '</div></div>';
 
-    // Timer countdown
+    // Start timer
     setTimeout(function(){
       var bar = document.getElementById('pcSpeedBar');
       if(bar) bar.style.width = '0%';
@@ -14140,18 +14550,35 @@ function renderPCSpeed(s, b){
       var container = document.getElementById(qId);
       if(container){ container.querySelectorAll('button').forEach(function(bt){ bt.disabled=true; }); }
       var ok = (selected === corr);
-      if(ok){ correct_count++; btn.style.background='rgba(88,204,2,.3)'; btn.style.borderColor='#58CC02'; }
-      else { speedWrong.push(lChar); btn.style.background='rgba(255,75,75,.3)'; btn.style.borderColor='#FF4B4B';
+      if(ok){
+        correct_count++;
+        btn.style.background='rgba(88,204,2,.3)'; btn.style.borderColor='#58CC02'; btn.style.color='#58CC02';
+      } else {
+        speedWrong.push(lChar||'?');
+        btn.style.background='rgba(255,75,75,.3)'; btn.style.borderColor='#FF4B4B'; btn.style.color='#FF4B4B';
+        // Show correct
         if(container) container.querySelectorAll('button').forEach(function(bt){
-          if(bt.textContent.trim()===corr){ bt.style.background='rgba(88,204,2,.3)'; bt.style.borderColor='#58CC02'; }
+          var btTxt = bt.querySelector('span') ? bt.querySelector('span').textContent.trim() : bt.textContent.trim();
+          if(btTxt === corr || bt.textContent.indexOf(corr) !== -1){
+            bt.style.background='rgba(88,204,2,.3)'; bt.style.borderColor='#58CC02';
+          }
         });
+        // Heart system in speed round
+        _pcLoseHeart();
       }
       qIdx++;
-      setTimeout(buildQ, 800);
+      setTimeout(buildQ, 700);
     };
 
     window._pcSpeedTimer = setTimeout(function(){
-      if(!answered){ answered=true; speedWrong.push(correct.char||'?'); qIdx++; setTimeout(buildQ,300); }
+      if(!answered){
+        answered = true;
+        speedWrong.push(correct.char||'?');
+        // Time out = wrong
+        _pcLoseHeart();
+        qIdx++;
+        setTimeout(buildQ, 300);
+      }
     }, 5100);
   }
 
@@ -14164,18 +14591,22 @@ function pcSpeedAnswer(btn, selected, correct, lChar){
 
 // ── STEP: Speaking intro ──
 function renderPCSpeakingIntro(b){
-  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
-    + '<div style="font-size:56px;margin-bottom:12px;">&#127908;</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:8px;">Ab tum bologe! &#127908;</div>'
+  var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;animation:pcCardPop .4s ease both;">'
+    + '<div style="font-size:60px;margin-bottom:12px;animation:pcBounce 2s ease infinite;">🎤</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:8px;">Ab tum bologe! 🎤</div>'
     + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.7;">Har letter ki awaaz suno, phir mic mein bolo. Score milega!</div>'
-    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:20px;">'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:2.2;">&#128266; Pehle awaaz suno<br>&#127906; Phir mic mein bolo<br>&#128218; Score dekho (0-100%)<br>&#128994; 80%+ = Shabaash!</div>'
+    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:20px;text-align:left;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.6);line-height:2.2;">🔊 Pehle awaaz suno<br>🎤 Phir mic mein bolo<br>📊 Score dekho (0–100%)<br>✅ 80%+ = Shabaash!<br>⏭️ Mic nahi? Skip hoga, baad mein dobara</div>'
     + '</div>'
-    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#127908; Shuru Karo</button>'
+    + (micSupported
+      ? '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">🎤 Shuru Karo</button>'
+      : '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;color:#FF4B4B;">⚠️ Mic is device pe support nahi — speaking skip ho jayegi</div>'
+        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey →</button>')
     + '</div>';
 }
 
-// ── STEP: Speaking practice ──
+// ── STEP: Speaking practice (mic-skip supported) ──
 function renderPCSpeaking(s, b){
   var l = s.letter;
   var char = l.char || l.character || l.letter || '?';
@@ -14192,36 +14623,97 @@ function renderPCSpeaking(s, b){
   var resId = 'pcres_' + _pcSI;
   var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
-  b.innerHTML = '<div class="a">'
-    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.12),rgba(199,125,255,.04));border:1.5px solid rgba(199,125,255,.3);border-radius:20px;padding:20px;text-align:center;margin-bottom:14px;">'
-    + '<div style="font-size:64px;font-weight:700;color:#C77DFF;font-family:serif;line-height:1;">' + upper + '</div>'
-    + '<div style="font-size:28px;color:rgba(199,125,255,.5);font-family:serif;">' + lower + '</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#fff;margin-top:6px;">' + name + '</div>'
+  // ✅ FIX: If mic not supported, skip this step and track it
+  if(!micSupported){
+    _pcSkippedSpeaking.push(l);
+    pcNx();
+    return;
+  }
+
+  // Gradient color
+  var colors = ['#C77DFF','#5B8DEF','#58CC02','#FFD166','#FF6B9D','#2EE59D'];
+  var ci = (char.charCodeAt(0)-65) % colors.length;
+  var col = colors[Math.max(0,ci)] || '#C77DFF';
+
+  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="background:linear-gradient(135deg,' + col + '14,' + col + '04);border:2px solid ' + col + '44;border-radius:22px;padding:22px 20px;text-align:center;margin-bottom:14px;">'
+    // Upper + Lower
+    + '<div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">'
+    + '<div style="text-align:center;">'
+    + '<div style="font-size:72px;font-weight:700;color:' + col + ';font-family:serif;line-height:1;">' + upper + '</div>'
+    + '<div style="font-size:10px;color:rgba(255,255,255,.3);">Capital</div>'
+    + '</div>'
+    + '<div style="width:1px;height:50px;background:rgba(255,255,255,.1);"></div>'
+    + '<div style="text-align:center;">'
+    + '<div style="font-size:52px;color:' + col + '88;font-family:serif;line-height:1;margin-top:8px;">' + lower + '</div>'
+    + '<div style="font-size:10px;color:rgba(255,255,255,.3);">Small</div>'
+    + '</div>'
+    + '</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#fff;margin-bottom:4px;">' + name + '</div>'
     + (pron !== name ? '<div style="font-size:13px;color:rgba(255,255,255,.5);">/ ' + pron + ' /</div>' : '')
-    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:6px 10px;font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;">&#128483; ' + sound_hint + '</div>' : '')
-    + (example ? '<div style="font-size:13px;color:#58CC02;margin-top:8px;">' + example + (meaning ? ' — ' + meaning : '') + '</div>' : '')
+    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:6px 10px;font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;">💡 ' + sound_hint + '</div>' : '')
+    + (example ? '<div style="font-size:13px;color:#58CC02;margin-top:8px;">' + example + (meaning ? ' — 🇵🇰 ' + meaning : '') + '</div>' : '')
     + '</div>'
     + '<div class="spk-bar" style="margin-bottom:14px;">'
-    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="padding:14px 20px;">&#128266; Suno</button>'
-           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="padding:14px 20px;">&#128034; Dheere Suno</button>'
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="flex:1;padding:12px 16px;">🔊 Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="flex:1;padding:12px 16px;">🐢 Dheere</button>'
            : '')
     + '</div>'
     + '<div class="sn-mic-wrap" style="margin-bottom:14px;">'
-    + (micSupported
-        ? '<button class="sn-mic-btn" id="'+micId+'" onclick="pcMicSpeak(\''+micId+'\',\''+resId+'\',\''+pron+'\')">&#127908; Bol ke Dekho</button>'
-          + '<span style="font-size:12px;color:var(--mut);flex:1;">"' + pron + '" bolo</span>'
-        : '<span style="font-size:12px;color:var(--mut);">&#127908; Chrome mein mic available hai</span>')
+    + '<button class="sn-mic-btn" id="'+micId+'" onclick="pcMicSpeak(\''+micId+'\',\''+resId+'\',\''+pron.replace(/'/g,"\\'")+'\')">🎤 Bol ke Dekho</button>'
+    + '<span style="font-size:12px;color:var(--mut);flex:1;">"' + pron + '" bolo</span>'
     + '</div>'
     + '<div id="' + resId + '" style="margin-bottom:12px;"></div>'
-    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#10003; Agla Letter &#8594;</button>'
+    + '<div style="display:flex;gap:8px;">'
+    + '<button class="bg" onclick="pcNx()" style="flex:1;padding:14px;">✓ Agla Letter →</button>'
+    + '<button onclick="pcSkipSpeaking(\''+char+'\')" style="padding:14px 16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.5);font-size:13px;cursor:pointer;">⏭ Skip</button>'
+    + '</div>'
     + '</div>';
 
-  // Auto-play
   setTimeout(function(){
     if(tid && window.ttsPlay) ttsPlay(tid);
     else if(window.spk) spk(pron);
   }, 400);
 }
+
+function pcSkipSpeaking(charName){
+  // Track this letter as skipped
+  var letters = PC_ALPHABETS[_pcLang] || [];
+  var l = letters.find(function(x){ return x.char===charName || x.upper===charName; });
+  if(l && _pcSkippedSpeaking.indexOf(l)===-1) _pcSkippedSpeaking.push(l);
+  pcNx();
+}
+
+// ── STEP: Speaking review — skipped letters dobara ──
+function renderPCSpeakingReview(b){
+  if(!_pcSkippedSpeaking || _pcSkippedSpeaking.length === 0){
+    // No skips — go to next
+    pcNx(); return;
+  }
+  var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+  var names = _pcSkippedSpeaking.map(function(l){ return l.upper||l.char||'?'; }).join(', ');
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 24px;animation:pcCardPop .4s ease both;">'
+    + '<div style="font-size:50px;margin-bottom:10px;">🔁</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#FFD166;margin-bottom:8px;">Dobara Koshish Karo!</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.6;">Ye letters skip hue the. Ab mic mein bolo:</div>'
+    + '<div style="background:rgba(255,209,102,.1);border:1.5px solid rgba(255,209,102,.3);border-radius:14px;padding:14px;margin-bottom:20px;">'
+    + '<div style="font-family:serif;font-size:32px;color:#FFD166;letter-spacing:8px;">' + names + '</div>'
+    + '</div>'
+    + (micSupported
+      ? '<button class="bg" onclick="pcStartSkippedReview()" style="width:100%;padding:16px;">🎤 Retry Shuru Karo</button>'
+        + '<br><button onclick="pcNx()" style="width:100%;margin-top:10px;padding:12px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;">Chhod Do, Aagey Chalo →</button>'
+      : '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey Chalo →</button>')
+    + '</div>';
+}
+
+window.pcStartSkippedReview = function(){
+  if(!_pcSkippedSpeaking || _pcSkippedSpeaking.length === 0){ pcNx(); return; }
+  // Insert retry steps right after current position
+  var retrySteps = _pcSkippedSpeaking.map(function(l){ return {t:'pc_speaking', letter:l}; });
+  _pcSkippedSpeaking = []; // reset
+  _pcLS = _pcLS.slice(0, _pcSI+1).concat(retrySteps).concat(_pcLS.slice(_pcSI+1));
+  pcNx();
+};
 
 function pcMicSpeak(micId, resId, expected){
   var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
