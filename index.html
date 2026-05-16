@@ -4164,6 +4164,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
     <button class="lc" onclick="exitLesson()" style="position: relative; overflow: hidden;">✕</button>
     <div class="lpb"><div class="lpf" id="lPf" style="width: 2%;"></div></div>
     <div class="lhts" id="lHt">❤️❤️❤️❤️❤️❤️❤️</div>
+    <button id="pcPauseBtn" onclick="pcShowPauseMenu()" style="display:none;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:6px 10px;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;margin-left:4px;">⏸</button>
   </div>
   <div class="lb" id="lBd" style="opacity: 1; transform: translateX(0px);"><div class="vc a observed anim-entrance" id="vc3" style="animation-delay: 0s; position: relative; overflow: hidden;"><div class="vct"><div class="vcn">2</div><div><div class="vcw">Bread</div><div class="vcu">روٹی / ڈبل روٹی</div><div class="vcp">/BRED/</div></div></div><div class="vcb"><div class="vce">"Give me some bread."</div></div><div class="vcp2">💡 Naan, chapati, aur double roti sab ke liye</div><div class="vmcard" style="border-color:#FF6B35;background:linear-gradient(135deg,#FF6B3518,#FF6B3508);"><div class="vmcard-emoji">🍞</div><div class="vmcard-body"><div class="vmcard-scene">Roti / Slice</div><div class="vmcard-trick" style="color:#FF6B35">🧠 Bread = Roti</div></div></div><div class="vsits"><div class="vsits-title">📍 Kahaan Use Karein:</div><div class="vsit"><span class="vsit-em">🍳</span><div><div class="vsit-pl">Breakfast</div><div class="vsit-ex">"Bread and butter."</div></div></div><div class="vsit"><span class="vsit-em">🍽️</span><div><div class="vsit-pl">Dinner</div><div class="vsit-ex">"Eat with bread."</div></div></div><div class="vsit"><span class="vsit-em">🛒</span><div><div class="vsit-pl">Market</div><div class="vsit-ex">"Buy some bread."</div></div></div></div><div class="vmistake">⚠️ ⚠️ Galti: Bread qabil-e-ginti nahi, "a bread" ghalat hai, "a piece of bread" kahein.</div><div class="spk-bar"><button class="spk-btn spk-listen" onclick="ttsPlay(3)" style="position: relative; overflow: hidden;">🔊 Word + Example</button><button class="spk-btn spk-slow" onclick="ttsSlow(3)">🐢 Dheere Suno</button></div><div id="ram_container_2"><div class="ram-box"><div class="ram-title">🎤 Repeat After Me</div><div class="ram-word" id="ram_word_2">Bread</div><div class="ram-pron" id="ram_pron_2">/BRED/</div><div class="ram-steps" id="ram_steps_2"><div class="ram-step active" id="ram_s1_2">🔊 Step 1: Pehle suno</div><div class="ram-step" id="ram_s2_2">🎤 Step 2: Mic mein bolo</div><div class="ram-step" id="ram_s3_2">📊 Step 3: Score dekho</div></div><div style="display:flex;gap:8px;margin-top:12px;"><button class="spk-btn spk-listen" data-ramid="2" onclick="ramListenById(this)">🔊 Suno</button><button class="spk-btn spk-mic" id="ram_micbtn_2" data-ramid="2" onclick="ramRecordById(this)">🎤 Bolo</button><button class="spk-btn spk-slow" data-ramid="2" onclick="ramSlowById(this)">🐢 Dheere</button></div><div id="ram_result_2"></div></div></div></div><div class="a" style="padding:8px 0 20px;"><button class="bg" onclick="markL(3)">✅ Samajh Gaya! →</button><button class="bo" onclick="ttsPlay(3)">🔊 Dobara Suno</button></div></div>
 </div>
@@ -13668,28 +13669,43 @@ function _pcUpdateHeartsUI(){
   el.innerHTML = html;
 }
 
+// Save current progress step index for resume
+var _pcResumeStepIndex = 0;
+
 function _pcShowNoHeartsScreen(){
   var bd = document.getElementById('lBd'); if(!bd) return;
-  // Find next regen time
+  // Save where we left off for resume
+  _pcResumeStepIndex = _pcSI;
+
   var regenMs = 3*60*1000;
   var oldest = _pcHeartBrokenTimes.length > 0 ? Math.min.apply(null,_pcHeartBrokenTimes) : Date.now();
   var nextRegen = oldest + regenMs;
-  var secLeft = Math.max(0, Math.ceil((nextRegen - Date.now())/1000));
 
-  bd.innerHTML = '<div class="a" style="text-align:center;padding:30px 16px;">'
+  bd.innerHTML = '<div class="a" style="text-align:center;padding:28px 16px;animation:pcCardPop .4s ease both;">'
     + '<div style="font-size:64px;margin-bottom:12px;animation:heartbeat 1s ease infinite;">💔</div>'
     + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#FF4B4B;margin-bottom:8px;">Hearts Khatam!</div>'
-    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">3 minute mein ek heart wapas aata hai.<br>Thodi der baad dobara aao! 💪</div>'
-    + '<div style="background:rgba(255,75,75,.1);border:2px solid rgba(255,75,75,.3);border-radius:18px;padding:20px;margin-bottom:20px;">'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;">Agla heart milega:</div>'
-    + '<div id="pcHeartTimer" style="font-family:Fredoka One,sans-serif;font-size:28px;color:#FF4B4B;">--:--</div>'
+    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">Koi baat nahi! Wahan se dobara shuru karo jahan ruke the, ya bilkul shuru se. 💪</div>'
+
+    // ── Resume button ──
+    + '<button onclick="pcResumeFromSave()" style="width:100%;padding:16px;margin-bottom:10px;background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:16px;font-family:Fredoka One,sans-serif;font-size:16px;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(46,229,157,.3);">▶️ Wahan se Shuru Karo — Jahan Ruke The</button>'
+
+    // ── Restart button ──
+    + '<button onclick="pcRestartFromBeginning()" style="width:100%;padding:14px;margin-bottom:16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:16px;font-family:Fredoka One,sans-serif;font-size:15px;color:rgba(255,255,255,.8);cursor:pointer;">🔄 Bilkul Shuru Se Shuru Karo</button>'
+
+    // ── Timer for next heart ──
+    + '<div style="background:rgba(255,75,75,.08);border:1.5px solid rgba(255,75,75,.2);border-radius:14px;padding:14px;margin-bottom:16px;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">Agla heart milega:</div>'
+    + '<div id="pcHeartTimer" style="font-family:Fredoka One,sans-serif;font-size:26px;color:#FF4B4B;">--:--</div>'
     + '</div>'
-    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(91,141,239,.1));border:1.5px solid rgba(199,125,255,.4);border-radius:18px;padding:16px;margin-bottom:20px;">'
-    + '<div style="font-size:20px;margin-bottom:6px;">👑</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:16px;color:#C77DFF;margin-bottom:4px;">Pro lo — Unlimited Hearts!</div>'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.5);">Pro users ke liye koi limit nahi</div>'
+
+    // ── Pro promo ──
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.12),rgba(91,141,239,.08));border:1.5px solid rgba(199,125,255,.3);border-radius:16px;padding:14px;margin-bottom:16px;">'
+    + '<div style="font-size:18px;margin-bottom:4px;">👑</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:15px;color:#C77DFF;margin-bottom:3px;">Pro lo — Unlimited Hearts!</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.45);">Pro users ke liye koi limit nahi</div>'
     + '</div>'
-    + '<button onclick="exitLesson()" style="width:100%;padding:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;color:#fff;font-family:Fredoka One,sans-serif;font-size:15px;cursor:pointer;">← Baad Mein Aao</button>'
+
+    + '<button onclick="exitLesson()" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;">← Dashboard Pe Wapas</button>'
     + '</div>';
 
   // Countdown timer
@@ -13700,16 +13716,34 @@ function _pcShowNoHeartsScreen(){
     if(s2 <= 0){
       clearInterval(_pcHtInterval);
       _pcHearts = 1; _pcSaveHearts();
-      // Regen happened — allow retry
       var bd2 = document.getElementById('lBd'); if(!bd2) return;
       bd2.innerHTML = '<div class="a" style="text-align:center;padding:40px 16px;">'
         + '<div style="font-size:56px;margin-bottom:12px;">❤️</div>'
-        + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#58CC02;margin-bottom:16px;">Heart wapas aa gaya!</div>'
-        + '<button class="bg" onclick="renderPCStep()" style="width:100%;padding:16px;">▶️ Dobara Shuru Karo</button>'
+        + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#58CC02;margin-bottom:12px;">Heart wapas aa gaya!</div>'
+        + '<button class="bg" onclick="pcResumeFromSave()" style="width:100%;margin-bottom:10px;padding:16px;">▶️ Wahan se Shuru Karo</button>'
+        + '<button onclick="pcRestartFromBeginning()" style="width:100%;padding:14px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;color:rgba(255,255,255,.7);font-family:Fredoka One,sans-serif;font-size:14px;cursor:pointer;">🔄 Shuru Se</button>'
         + '</div>';
     }
   }, 1000);
 }
+
+// ── Resume from saved step ──
+window.pcResumeFromSave = function(){
+  _pcInitHearts();
+  _pcUpdateHeartsUI();
+  _pcSI = Math.max(0, _pcResumeStepIndex);
+  renderPCStep();
+};
+
+// ── Restart from beginning ──
+window.pcRestartFromBeginning = function(){
+  _pcSI = 0;
+  _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
+  _pcSkippedSpeaking = [];
+  _pcInitHearts();
+  _pcUpdateHeartsUI();
+  renderPCStep();
+};
 
 // CSS for heart shake animation - inject once
 (function(){
@@ -13794,6 +13828,28 @@ function openPreClassContent(lang){
   launchPreClassLesson(lang, true);
 }
 
+// ── Pause menu (resume/restart) ──
+function pcShowPauseMenu(){
+  var bd = document.getElementById('lBd'); if(!bd) return;
+  _pcResumeStepIndex = _pcSI;
+  var pauseDiv = document.createElement('div');
+  pauseDiv.id = 'pcPauseOverlay';
+  pauseDiv.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99998;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
+  pauseDiv.innerHTML = '<div style="background:linear-gradient(135deg,#1a0f3a,#0f0e17);border:2px solid rgba(199,125,255,.4);border-radius:28px;padding:32px 24px;text-align:center;max-width:320px;width:90%;animation:pcCardPop .35s ease both;">'
+    + '<div style="font-size:48px;margin-bottom:12px;">⏸️</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:6px;">Ruk Gaye!</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:24px;">Kya karna chahte ho?</div>'
+    + '<button onclick="pcClosePause()" style="width:100%;padding:15px;margin-bottom:10px;background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:14px;font-family:Fredoka One,sans-serif;font-size:16px;color:#fff;cursor:pointer;">▶️ Jaari Rakho</button>'
+    + '<button onclick="pcRestartFromBeginning();pcClosePause();" style="width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:14px;font-family:Fredoka One,sans-serif;font-size:15px;color:rgba(255,255,255,.8);cursor:pointer;">🔄 Shuru Se Shuru Karo</button>'
+    + '<button onclick="exitLesson();pcClosePause();" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;">← Dashboard Pe Wapas</button>'
+    + '</div>';
+  document.body.appendChild(pauseDiv);
+}
+
+window.pcClosePause = function(){
+  var ol = document.getElementById('pcPauseOverlay'); if(ol) ol.remove();
+};
+
 // ── Main entry: Pre-class lesson launch karo ──
 function launchPreClassLesson(lang, isRevision){
   var nfo = PRE_CLASS_INFO[lang]; if(!nfo) return;
@@ -13814,8 +13870,8 @@ function launchPreClassLesson(lang, isRevision){
     letters = PC_ALPHABETS[lang];
   }
 
-  // ✅ FIX: Poore 26 letters — shuffle karke use karo
-  var shuffled = letters.slice().sort(function(){ return Math.random()-.5; });
+  // ✅ FIX: Poore 26 letters — A se Z order mein (shuffle nahi)
+  var shuffled = letters.slice(); // A→B→C...Z order maintain karo
 
   // Steps build karo
   _pcLS = buildPreClassSteps(lang, nfo, shuffled, adPc, isRevision);
@@ -13825,6 +13881,8 @@ function launchPreClassLesson(lang, isRevision){
 
   // Lesson screen kholo
   showScreen('lesson');
+  // Show pause button during pre-class
+  var pauseBtn = document.getElementById('pcPauseBtn'); if(pauseBtn) pauseBtn.style.display = 'block';
   // Progress bar reset
   var pb = document.getElementById('lPf'); if(pb) pb.style.width = '0%';
   // Hearts bar replace karo
@@ -13862,16 +13920,18 @@ function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
     batch.forEach(function(l, i){
       steps.push({t:'pc_letter', letter:l, num:bi+i+1, total:letters.length});
     });
-    // Mini quiz after each batch (4+ letters)
+    // Mini quiz after each batch (4+ letters) — sirf is batch ke letters se random
     if(batch.length >= 4){
-      // Listening quiz
       var lPool = batch;
-      batch.forEach(function(l){
-        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Listening', qType:'char'});
+      // Shuffle batch for random order in quizzes
+      var shuffledBatch = batch.slice().sort(function(){ return Math.random()-.5; });
+      // Listening quiz (random from batch)
+      shuffledBatch.forEach(function(l){
+        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Listening', qType:'char', sessionLetters:lPool});
       });
-      // Recognition quiz
-      batch.forEach(function(l){
-        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Recognition', qType:'meaning'});
+      // Recognition quiz (random from batch)
+      shuffledBatch.slice().sort(function(){ return Math.random()-.5; }).forEach(function(l){
+        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Recognition', qType:'meaning', sessionLetters:lPool});
       });
       // Upper-Lower match
       var shuf = batch.slice().sort(function(){ return Math.random()-.5; });
@@ -14106,10 +14166,19 @@ function renderPCQuiz(s, b){
 
   var quizId = 'pcquiz_' + _pcSI;
 
+  // Session counter and listen button
+  var sessionLetters = s.sessionLetters || letters;
+  var sessionTotal = sessionLetters.length;
+  var sessionIdx = 0;
+  for(var si=0;si<sessionLetters.length;si++){ if(sessionLetters[si].char===char){ sessionIdx=si; break; } }
+  var tid_listen = _storeTTS ? _storeTTS(pron || name, example) : 0;
+  var listenBtnHtml = '<button class="spk-btn spk-listen" onclick="if(tid_listen&&window.ttsPlay)ttsPlay(tid_listen);else if(window.spk)spk(name);" style="padding:8px 20px;font-size:13px;margin-top:8px;">🔊 Suno</button>';
+
   if(s.qType === 'meaning'){
     // Char dikhao (upper+lower), naam dhundo
     var correctAnswer = name;
     b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+      + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + (sessionIdx+1) + ' / ' + sessionTotal + '</span></div>'
       + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
       + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;">'
       + '<span style="font-family:serif;font-size:72px;color:#C77DFF;line-height:1;">' + upper + '</span>'
@@ -14117,6 +14186,7 @@ function renderPCQuiz(s, b){
       + '</div>'
       + '<div style="font-size:12px;color:rgba(255,255,255,.5);">Is letter ka naam kya hai?</div>'
       + (meaning ? '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:3px;">🇵🇰 ' + meaning + '</div>' : '')
+      + listenBtnHtml
       + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
       + options.map(function(o){
@@ -14132,6 +14202,7 @@ function renderPCQuiz(s, b){
     var tid2 = _storeTTS ? _storeTTS(pron || name, '') : 0;
     var correctChar = upper;
     b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+      + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🔊 ' + (sessionIdx+1) + ' / ' + sessionTotal + '</span></div>'
       + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
       + '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;">🔊 Kaunsa letter yeh awaaz hai?</div>'
       + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:15px;padding:12px 28px;">🔊 Awaaz Suno</button>'
@@ -14211,11 +14282,18 @@ function renderPCExMatch(s, b){
   var qId = 'pcex_' + _pcSI;
   var correctUpper = correct.upper || correct.char || '?';
   _pcTotal++;
+  // ExMatch counter
+  var exPool = letters.filter(function(l){ return l.example; });
+  var exIdx = 0; for(var ei=0;ei<exPool.length;ei++){ if(exPool[ei].char===correct.char){ exIdx=ei; break; } }
+  var tid_ex = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
+  var exListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_ex&&window.ttsPlay)ttsPlay(tid_ex);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
   b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + (exIdx+1) + ' / ' + exPool.length + '</span></div>'
     + '<div style="background:rgba(88,204,2,.08);border:1.5px solid rgba(88,204,2,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
     + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">📝 Is word ka pehla letter kaunsa hai?</div>'
     + '<div style="font-size:36px;font-weight:700;color:#58CC02;letter-spacing:2px;">' + correct.example + '</div>'
     + (correct.meaning ? '<div style="font-size:14px;color:rgba(255,255,255,.5);margin-top:4px;">🇵🇰 ' + correct.meaning + '</div>' : '')
+    + exListenHtml
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
@@ -14242,11 +14320,18 @@ function renderPCMeaningMatch(s, b){
   var qId = 'pcmm_' + _pcSI;
   var correctUpper = correct.upper || correct.char || '?';
   _pcTotal++;
+  // MeaningMatch counter + listen
+  var mmPool = letters.filter(function(l){ return l.meaning; });
+  var mmIdx = 0; for(var mi=0;mi<mmPool.length;mi++){ if(mmPool[mi].char===correct.char){ mmIdx=mi; break; } }
+  var tid_mm = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
+  var mmListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_mm&&window.ttsPlay)ttsPlay(tid_mm);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
   b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🇵🇰 ' + (mmIdx+1) + ' / ' + mmPool.length + '</span></div>'
     + '<div style="background:rgba(255,209,102,.08);border:1.5px solid rgba(255,209,102,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
     + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">🇵🇰 Is Urdu meaning ka letter kaunsa hai?</div>'
     + '<div style="font-size:28px;font-weight:700;color:#FFD166;">' + correct.meaning + '</div>'
     + (correct.example ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;">(' + correct.example + ')</div>' : '')
+    + mmListenHtml
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
@@ -14277,7 +14362,13 @@ function renderPCNextLetter(s, b){
   _pcTotal++;
   var curUpper = current.upper || current.char || '?';
   var curLower = current.lower || curUpper.toLowerCase();
+  // NextLetter counter + listen
+  var nlAllLetters = s.letters; var nlIdx = 0;
+  for(var nli=0;nli<nlAllLetters.length;nli++){ if(nlAllLetters[nli].char===current.char){ nlIdx=nli; break; } }
+  var tid_nl = _storeTTS ? _storeTTS(current.pronunciation||current.name||current.char, '') : 0;
+  var nlListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_nl&&window.ttsPlay)ttsPlay(tid_nl);else if(window.spk)spk(current.name||current.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
   b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🔡 ' + (nlIdx+1) + ' / ' + (nlAllLetters.length-1) + '</span></div>'
     + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
     + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">🔡 Is letter ke baad kaunsa aata hai?</div>'
     + '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">'
@@ -14291,6 +14382,7 @@ function renderPCNextLetter(s, b){
     + '<div style="font-family:serif;font-size:28px;color:rgba(255,255,255,.1);">?</div>'
     + '</div>'
     + '</div>'
+    + nlListenHtml
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
@@ -14346,11 +14438,18 @@ function renderPCBlank(s, b){
       : '<span style="font-size:36px;color:#fff;margin:0 1px;">' + c + '</span>';
   }).join('');
 
+  // Blank counter + listen
+  var blankPool2 = letters.filter(function(l){ return l.example && l.example.length >= 2; });
+  var blankIdx2 = 0; for(var bli=0;bli<blankPool2.length;bli++){ if(blankPool2[bli].char===correct.char){ blankIdx2=bli; break; } }
+  var tid_bl = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
+  var blListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_bl&&window.ttsPlay)ttsPlay(tid_bl);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
   b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
+    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">✏️ ' + (blankIdx2+1) + ' / ' + blankPool2.length + '</span></div>'
     + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
     + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">✏️ Kaunsa letter missing hai?</div>'
     + '<div style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;margin-bottom:8px;">' + blankedHtml + '</div>'
     + (correct.meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;">🇵🇰 ' + correct.meaning + '</div>' : '')
+    + blListenHtml
     + '</div>'
     + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
     + options.map(function(o){
@@ -14529,13 +14628,21 @@ function renderPCSpeed(s, b){
       + '<span style="font-size:11px;color:#58CC02;">✓ ' + correct_count + '</span>'
       + '</div>'
       + '<div style="height:5px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:12px;overflow:hidden;">'
-      + '<div id="pcSpeedBar" style="height:100%;background:linear-gradient(90deg,#C77DFF,#FF4B4B);border-radius:4px;width:100%;transition:width 5s linear;"></div>'
+      + '<div id="pcSpeedBar" style="height:100%;background:linear-gradient(90deg,#C77DFF,#FF4B4B);border-radius:4px;width:100%;transition:width 10s linear;"></div>'
       + '</div>'
       + '<div style="background:rgba(199,125,255,.06);border:1px solid rgba(199,125,255,.15);border-radius:16px;padding:18px 16px;margin-bottom:14px;">'
       + questionHtml + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
       + optionsFn()
       + '</div></div>';
+
+    // Auto-play TTS for non-sound questions too
+    if(qType !== 'letter_from_sound'){
+      setTimeout(function(){
+        var pronounce = correct.pronunciation || correct.name || correct.char || '';
+        if(window.spk && pronounce) spk(pronounce);
+      }, 300);
+    }
 
     // Start timer
     setTimeout(function(){
@@ -14579,7 +14686,7 @@ function renderPCSpeed(s, b){
         qIdx++;
         setTimeout(buildQ, 300);
       }
-    }, 5100);
+    }, 10000);
   }
 
   buildQ();
@@ -14888,6 +14995,7 @@ function renderPCDone(s, b){
 }
 
 function pcFinishAndComplete(lang){
+  var pauseBtn = document.getElementById('pcPauseBtn'); if(pauseBtn) pauseBtn.style.display = 'none';
   exitLesson();
   setTimeout(function(){
     if(typeof completePreClass === 'function') completePreClass(lang);
