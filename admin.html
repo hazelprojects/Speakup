@@ -6906,33 +6906,125 @@ function loadDefaultAlphabet(lang){
 }
 
 function getDefaultAlphabetTemplate(lang){
+  const enLetters = [
+    {"char":"A","name":"A","pronunciation":"ay","example":"Apple","meaning":"Seb"},
+    {"char":"B","name":"B","pronunciation":"bee","example":"Ball","meaning":"Gend"},
+    {"char":"C","name":"C","pronunciation":"see","example":"Cat","meaning":"Billi"},
+    {"char":"D","name":"D","pronunciation":"dee","example":"Dog","meaning":"Kutta"},
+    {"char":"E","name":"E","pronunciation":"ee","example":"Egg","meaning":"Anda"},
+    {"char":"F","name":"F","pronunciation":"ef","example":"Fish","meaning":"Machli"},
+    {"char":"G","name":"G","pronunciation":"jee","example":"Goat","meaning":"Bakri"},
+    {"char":"H","name":"H","pronunciation":"aych","example":"Hat","meaning":"Topi"},
+    {"char":"I","name":"I","pronunciation":"eye","example":"Ice","meaning":"Baraf"},
+    {"char":"J","name":"J","pronunciation":"jay","example":"Juice","meaning":"Ras"},
+    {"char":"K","name":"K","pronunciation":"kay","example":"Key","meaning":"Chaabi"},
+    {"char":"L","name":"L","pronunciation":"el","example":"Lion","meaning":"Sher"},
+    {"char":"M","name":"M","pronunciation":"em","example":"Moon","meaning":"Chaand"},
+    {"char":"N","name":"N","pronunciation":"en","example":"Night","meaning":"Raat"},
+    {"char":"O","name":"O","pronunciation":"oh","example":"Orange","meaning":"Narangi"},
+    {"char":"P","name":"P","pronunciation":"pee","example":"Pen","meaning":"Qalam"},
+    {"char":"Q","name":"Q","pronunciation":"kyoo","example":"Queen","meaning":"Malika"},
+    {"char":"R","name":"R","pronunciation":"ar","example":"Rain","meaning":"Baarish"},
+    {"char":"S","name":"S","pronunciation":"es","example":"Sun","meaning":"Suraj"},
+    {"char":"T","name":"T","pronunciation":"tee","example":"Tree","meaning":"Darakht"},
+    {"char":"U","name":"U","pronunciation":"yoo","example":"Umbrella","meaning":"Chhatri"},
+    {"char":"V","name":"V","pronunciation":"vee","example":"Van","meaning":"Gaadi"},
+    {"char":"W","name":"W","pronunciation":"double-yoo","example":"Water","meaning":"Paani"},
+    {"char":"X","name":"X","pronunciation":"eks","example":"X-ray","meaning":"X-ree"},
+    {"char":"Y","name":"Y","pronunciation":"why","example":"Yellow","meaning":"Peela"},
+    {"char":"Z","name":"Z","pronunciation":"zee","example":"Zoo","meaning":"Chirya ghar"}
+  ];
   const templates = {
+    en: JSON.stringify(enLetters, null, 2),
+    ru: JSON.stringify([
+      {"char":"А","name":"A","pronunciation":"a","example":"Арбуз","meaning":"Tarbooz"},
+      {"char":"Б","name":"Be","pronunciation":"b","example":"Банан","meaning":"Kela"},
+      {"char":"В","name":"Ve","pronunciation":"v","example":"Вода","meaning":"Paani"},
+      {"char":"Г","name":"Ge","pronunciation":"g","example":"Город","meaning":"Sheher"},
+      {"char":"Д","name":"De","pronunciation":"d","example":"Дом","meaning":"Ghar"},
+      {"char":"Е","name":"Ye","pronunciation":"ye","example":"Еда","meaning":"Khana"},
+      {"char":"Ж","name":"Zhe","pronunciation":"zh","example":"Жизнь","meaning":"Zindagi"},
+      {"char":"З","name":"Ze","pronunciation":"z","example":"Звезда","meaning":"Sitara"},
+      {"char":"И","name":"I","pronunciation":"ee","example":"Имя","meaning":"Naam"},
+      {"char":"К","name":"Ka","pronunciation":"k","example":"Книга","meaning":"Kitaab"},
+      {"char":"Л","name":"El","pronunciation":"l","example":"Лес","meaning":"Jungle"},
+      {"char":"М","name":"Em","pronunciation":"m","example":"Мама","meaning":"Amma"},
+      {"char":"Н","name":"En","pronunciation":"n","example":"Нет","meaning":"Nahi"},
+      {"char":"О","name":"O","pronunciation":"o","example":"Огонь","meaning":"Aag"},
+      {"char":"П","name":"Pe","pronunciation":"p","example":"Привет","meaning":"Salam"},
+      {"char":"Р","name":"Er","pronunciation":"r","example":"Россия","meaning":"Russia"},
+      {"char":"С","name":"Es","pronunciation":"s","example":"Солнце","meaning":"Suraj"},
+      {"char":"Т","name":"Te","pronunciation":"t","example":"Тигр","meaning":"Sher"},
+      {"char":"У","name":"U","pronunciation":"oo","example":"Улица","meaning":"Gali"},
+      {"char":"Ф","name":"Ef","pronunciation":"f","example":"Фото","meaning":"Tasveer"},
+      {"char":"Х","name":"Kha","pronunciation":"kh","example":"Хлеб","meaning":"Roti"},
+      {"char":"Ц","name":"Tse","pronunciation":"ts","example":"Цветок","meaning":"Phool"},
+      {"char":"Ч","name":"Che","pronunciation":"ch","example":"Час","meaning":"Ghanta"},
+      {"char":"Ш","name":"Sha","pronunciation":"sh","example":"Школа","meaning":"Madrasa"},
+      {"char":"Э","name":"E","pronunciation":"e","example":"Это","meaning":"Yeh"},
+      {"char":"Я","name":"Ya","pronunciation":"ya","example":"Яблоко","meaning":"Seb"}
+    ], null, 2),
     ar: JSON.stringify([
       {"char":"ا","name":"Alif","pronunciation":"aa","example":"أسد","meaning":"Sher"},
       {"char":"ب","name":"Ba","pronunciation":"b","example":"بيت","meaning":"Ghar"},
-      {"char":"ت","name":"Ta","pronunciation":"t","example":"تفاحة","meaning":"Seb"}
+      {"char":"ت","name":"Ta","pronunciation":"t","example":"تفاحة","meaning":"Seb"},
+      {"char":"ث","name":"Tha","pronunciation":"th","example":"ثلاثة","meaning":"Teen"},
+      {"char":"ج","name":"Jim","pronunciation":"j","example":"جمل","meaning":"Oont"},
+      {"char":"ح","name":"Ha","pronunciation":"h","example":"حصان","meaning":"Ghora"},
+      {"char":"خ","name":"Kha","pronunciation":"kh","example":"خبز","meaning":"Roti"},
+      {"char":"د","name":"Dal","pronunciation":"d","example":"دار","meaning":"Ghar"},
+      {"char":"ر","name":"Ra","pronunciation":"r","example":"رجل","meaning":"Aadmi"},
+      {"char":"س","name":"Sin","pronunciation":"s","example":"سمك","meaning":"Machli"},
+      {"char":"ش","name":"Shin","pronunciation":"sh","example":"شمس","meaning":"Suraj"},
+      {"char":"ع","name":"Ain","pronunciation":"a'","example":"عين","meaning":"Ankh"},
+      {"char":"ف","name":"Fa","pronunciation":"f","example":"فيل","meaning":"Haathi"},
+      {"char":"ق","name":"Qaf","pronunciation":"q","example":"قمر","meaning":"Chaand"},
+      {"char":"ك","name":"Kaf","pronunciation":"k","example":"كتاب","meaning":"Kitaab"},
+      {"char":"ل","name":"Lam","pronunciation":"l","example":"لبن","meaning":"Doodh"},
+      {"char":"م","name":"Mim","pronunciation":"m","example":"ماء","meaning":"Paani"},
+      {"char":"ن","name":"Nun","pronunciation":"n","example":"نور","meaning":"Roshni"},
+      {"char":"ه","name":"Ha","pronunciation":"h","example":"هواء","meaning":"Hawa"},
+      {"char":"و","name":"Waw","pronunciation":"w/oo","example":"ورد","meaning":"Phool"},
+      {"char":"ي","name":"Ya","pronunciation":"y/ee","example":"يد","meaning":"Haath"}
     ], null, 2),
     ko: JSON.stringify([
       {"char":"ㄱ","name":"Giyeok","pronunciation":"g/k","example":"가방","meaning":"Bag"},
       {"char":"ㄴ","name":"Nieun","pronunciation":"n","example":"나무","meaning":"Darakht"},
-      {"char":"ㄷ","name":"Digeut","pronunciation":"d/t","example":"도로","meaning":"Sadak"}
+      {"char":"ㄷ","name":"Digeut","pronunciation":"d/t","example":"도로","meaning":"Sadak"},
+      {"char":"ㄹ","name":"Rieul","pronunciation":"r/l","example":"라디오","meaning":"Radio"},
+      {"char":"ㅁ","name":"Mieum","pronunciation":"m","example":"마을","meaning":"Gaon"},
+      {"char":"ㅂ","name":"Bieup","pronunciation":"b/p","example":"바나나","meaning":"Kela"},
+      {"char":"ㅅ","name":"Siot","pronunciation":"s","example":"사람","meaning":"Insaan"},
+      {"char":"ㅇ","name":"Ieung","pronunciation":"ng","example":"아이","meaning":"Bachcha"},
+      {"char":"ㅈ","name":"Jieut","pronunciation":"j","example":"지도","meaning":"Naqsha"},
+      {"char":"ㅎ","name":"Hieut","pronunciation":"h","example":"하늘","meaning":"Aasman"}
     ], null, 2),
     ja: JSON.stringify([
       {"char":"あ","name":"A","pronunciation":"a","example":"あおい","meaning":"Neela"},
       {"char":"い","name":"I","pronunciation":"i","example":"いぬ","meaning":"Kutta"},
-      {"char":"う","name":"U","pronunciation":"u","example":"うみ","meaning":"Samundar"}
+      {"char":"う","name":"U","pronunciation":"u","example":"うみ","meaning":"Samundar"},
+      {"char":"え","name":"E","pronunciation":"e","example":"えき","meaning":"Station"},
+      {"char":"お","name":"O","pronunciation":"o","example":"おかあさん","meaning":"Amma"},
+      {"char":"か","name":"Ka","pronunciation":"ka","example":"かさ","meaning":"Chhatri"},
+      {"char":"き","name":"Ki","pronunciation":"ki","example":"きて","meaning":"Aao"},
+      {"char":"く","name":"Ku","pronunciation":"ku","example":"くに","meaning":"Mulk"},
+      {"char":"さ","name":"Sa","pronunciation":"sa","example":"さかな","meaning":"Machli"},
+      {"char":"た","name":"Ta","pronunciation":"ta","example":"たべる","meaning":"Khana"}
     ], null, 2),
     zh: JSON.stringify([
       {"char":"一","name":"Yī","pronunciation":"ee","example":"一个","meaning":"Ek"},
       {"char":"二","name":"Èr","pronunciation":"arr","example":"二月","meaning":"February"},
-      {"char":"三","name":"Sān","pronunciation":"san","example":"三天","meaning":"Teen din"}
+      {"char":"三","name":"Sān","pronunciation":"san","example":"三天","meaning":"Teen din"},
+      {"char":"人","name":"Rén","pronunciation":"ren","example":"人们","meaning":"Log"},
+      {"char":"大","name":"Dà","pronunciation":"da","example":"大学","meaning":"University"},
+      {"char":"中","name":"Zhōng","pronunciation":"zhong","example":"中国","meaning":"China"},
+      {"char":"好","name":"Hǎo","pronunciation":"hao","example":"你好","meaning":"Salam"},
+      {"char":"我","name":"Wǒ","pronunciation":"wo","example":"我是","meaning":"Main hun"},
+      {"char":"水","name":"Shuǐ","pronunciation":"shway","example":"水果","meaning":"Phal"},
+      {"char":"日","name":"Rì","pronunciation":"r","example":"日本","meaning":"Japan"}
     ], null, 2)
   };
-  return templates[lang] || JSON.stringify([
-    {"char":"A","name":"A","pronunciation":"ay","example":"Apple","meaning":"Seb"},
-    {"char":"B","name":"B","pronunciation":"bee","example":"Ball","meaning":"Gend"},
-    {"char":"C","name":"C","pronunciation":"see","example":"Cat","meaning":"Billi"}
-  ], null, 2);
+  return templates[lang] || JSON.stringify(enLetters, null, 2);
 }
 
 function saveAlphabetDay(lang){
@@ -6959,7 +7051,8 @@ function saveAlphabetDay(lang){
     description: desc || (LANG_INFO[lang]?.name + ' ke ' + letters.length + ' letters aur pronunciation seekho'),
     content: letters.map(l =>
       '<b>' + l.char + '</b> &nbsp;' + l.name + ' &nbsp;&middot;&nbsp; <i>' + l.pronunciation + '</i> &nbsp;&middot;&nbsp; ' + l.example + ' (' + l.meaning + ')'
-    ).join('<br>')
+    ).join('<br>'),
+    letters: letters
   };
 
   saveAdminData();
