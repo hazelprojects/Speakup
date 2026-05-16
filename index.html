@@ -13561,8 +13561,8 @@ function openPreClass(lang){
   if(!done){
     var cmpBtn = document.createElement('button');
     cmpBtn.style.cssText = 'background:linear-gradient(135deg,#C77DFF,#9B40E8);border:none;border-radius:16px;padding:14px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 4px 18px rgba(199,125,255,.4);width:100%;';
-    cmpBtn.innerHTML = '&#9989; Pre-Class Mukammal Kar Liya!';
-    cmpBtn.onclick = function(){ completePreClass(lang); };
+    cmpBtn.innerHTML = '&#9654;&#65039; Pre-Class Shuru Karo!';
+    cmpBtn.onclick = function(){ var e=document.getElementById('pcOverlay'); if(e) e.remove(); launchPreClassLesson(lang, false); };
     btnRow.appendChild(cmpBtn);
   } else {
     // ✅ FIX: Dobara practice karne ka button — done hone ke baad bhi
@@ -13587,50 +13587,819 @@ function openPreClass(lang){
   document.getElementById('pcCloseBtn').onclick = function(){ var e=document.getElementById('pcOverlay'); if(e) e.remove(); };
 }
 
-// ✅ FIX: Dobara practice ke liye — done state ignore karke full content dikhao
+// ══════════════════════════════════════════════════════════
+// PRE-CLASS FULL LESSON ENGINE
+// Alphabet letters se full interactive lesson chalata hai:
+// Letter cards → Pronunciation → Quiz → Match → Speaking
+// ══════════════════════════════════════════════════════════
+
+// Pre-class lesson state
+var _pcLS = []; // lesson steps array
+var _pcSI = 0;  // step index
+var _pcLang = ''; // current lang
+var _pcIsRevision = false;
+var _pcScore = 0;
+var _pcTotal = 0;
+var _pcWrongLetters = [];
+
+// ── Inbuilt Alphabets ──
+var PC_ALPHABETS = {
+  en: [
+    {"char":"A","upper":"A","lower":"a","name":"A","pronunciation":"ay","example":"Apple","meaning":"Seb","sound_hint":"Jaise 'ey' kehte hain"},
+    {"char":"B","upper":"B","lower":"b","name":"B","pronunciation":"bee","example":"Ball","meaning":"Gend","sound_hint":"Honthon se 'b' ki awaaz"},
+    {"char":"C","upper":"C","lower":"c","name":"C","pronunciation":"see","example":"Cat","meaning":"Billi","sound_hint":"Kabhi 'k' kabhi 's' bolta hai"},
+    {"char":"D","upper":"D","lower":"d","name":"D","pronunciation":"dee","example":"Dog","meaning":"Kutta","sound_hint":"Zuban upar lagao 'd' bolo"},
+    {"char":"E","upper":"E","lower":"e","name":"E","pronunciation":"ee","example":"Egg","meaning":"Anda","sound_hint":"Jaise 'ee' kehte hain"},
+    {"char":"F","upper":"F","lower":"f","name":"F","pronunciation":"ef","example":"Fish","meaning":"Machli","sound_hint":"Daant honth pe rakh ke 'f'"},
+    {"char":"G","upper":"G","lower":"g","name":"G","pronunciation":"jee","example":"Goat","meaning":"Bakri","sound_hint":"Kabhi 'g' kabhi 'j' bolta hai"},
+    {"char":"H","upper":"H","lower":"h","name":"H","pronunciation":"aych","example":"Hat","meaning":"Topi","sound_hint":"Halki sans ki awaaz 'h'"},
+    {"char":"I","upper":"I","lower":"i","name":"I","pronunciation":"eye","example":"Ice","meaning":"Baraf","sound_hint":"Jaise 'aai' kehte hain"},
+    {"char":"J","upper":"J","lower":"j","name":"J","pronunciation":"jay","example":"Juice","meaning":"Ras","sound_hint":"Jaise 'jey' kehte hain"},
+    {"char":"K","upper":"K","lower":"k","name":"K","pronunciation":"kay","example":"Key","meaning":"Chaabi","sound_hint":"Gale se 'k' ki awaaz"},
+    {"char":"L","upper":"L","lower":"l","name":"L","pronunciation":"el","example":"Lion","meaning":"Sher","sound_hint":"Zuban upar lagao 'l' bolo"},
+    {"char":"M","upper":"M","lower":"m","name":"M","pronunciation":"em","example":"Moon","meaning":"Chaand","sound_hint":"Honth band karke 'mm'"},
+    {"char":"N","upper":"N","lower":"n","name":"N","pronunciation":"en","example":"Night","meaning":"Raat","sound_hint":"Naak se 'n' ki awaaz"},
+    {"char":"O","upper":"O","lower":"o","name":"O","pronunciation":"oh","example":"Orange","meaning":"Narangi","sound_hint":"Jaise 'oh' kehte hain"},
+    {"char":"P","upper":"P","lower":"p","name":"P","pronunciation":"pee","example":"Pen","meaning":"Qalam","sound_hint":"Honthon se 'p' ki awaaz"},
+    {"char":"Q","upper":"Q","lower":"q","name":"Q","pronunciation":"kyoo","example":"Queen","meaning":"Malika","sound_hint":"Hamesha 'qu' sath aata hai"},
+    {"char":"R","upper":"R","lower":"r","name":"R","pronunciation":"ar","example":"Rain","meaning":"Baarish","sound_hint":"Halki gargling awaaz 'r'"},
+    {"char":"S","upper":"S","lower":"s","name":"S","pronunciation":"es","example":"Sun","meaning":"Suraj","sound_hint":"Saanp ki awaaz 'ssss'"},
+    {"char":"T","upper":"T","lower":"t","name":"T","pronunciation":"tee","example":"Tree","meaning":"Darakht","sound_hint":"Zuban upar lagao 't' bolo"},
+    {"char":"U","upper":"U","lower":"u","name":"U","pronunciation":"yoo","example":"Umbrella","meaning":"Chhatri","sound_hint":"Jaise 'yoo' kehte hain"},
+    {"char":"V","upper":"V","lower":"v","name":"V","pronunciation":"vee","example":"Van","meaning":"Gaadi","sound_hint":"Daant honth pe 'v' ki awaaz"},
+    {"char":"W","upper":"W","lower":"w","name":"W","pronunciation":"double-yoo","example":"Water","meaning":"Paani","sound_hint":"Honth gol karke 'w'"},
+    {"char":"X","upper":"X","lower":"x","name":"X","pronunciation":"eks","example":"X-ray","meaning":"X-ree","sound_hint":"'ks' do awaazein milti hain"},
+    {"char":"Y","upper":"Y","lower":"y","name":"Y","pronunciation":"why","example":"Yellow","meaning":"Peela","sound_hint":"Jaise 'wai' kehte hain"},
+    {"char":"Z","upper":"Z","lower":"z","name":"Z","pronunciation":"zee","example":"Zoo","meaning":"Chirya ghar","sound_hint":"Makhi ki awaaz 'zzzz'"}
+  ],
+  fr: [
+    {"char":"A","upper":"A","lower":"a","name":"A","pronunciation":"ah","example":"Ami","meaning":"Dost","sound_hint":"Urdu 'a' jaisi awaaz"},
+    {"char":"B","upper":"B","lower":"b","name":"B","pronunciation":"bay","example":"Bonjour","meaning":"Salam","sound_hint":"Jaise 'bay' kehte hain"},
+    {"char":"C","upper":"C","lower":"c","name":"C","pronunciation":"say","example":"Chat","meaning":"Billi","sound_hint":"'s' ya 'k' bolta hai"},
+    {"char":"D","upper":"D","lower":"d","name":"D","pronunciation":"day","example":"Deux","meaning":"Do","sound_hint":"Jaise 'day' kehte hain"},
+    {"char":"E","upper":"E","lower":"e","name":"E","pronunciation":"uh","example":"Et","meaning":"Aur","sound_hint":"Halki 'uh' awaaz"},
+    {"char":"F","upper":"F","lower":"f","name":"F","pronunciation":"ef","example":"Fille","meaning":"Larki","sound_hint":"Angrezi F jaisi awaaz"},
+    {"char":"G","upper":"G","lower":"g","name":"G","pronunciation":"zhay","example":"Garcon","meaning":"Larka","sound_hint":"Kabhi 'g' kabhi 'zh'"},
+    {"char":"H","upper":"H","lower":"h","name":"H","pronunciation":"ash","example":"Homme","meaning":"Aadmi","sound_hint":"French mein H khamosh hota hai"},
+    {"char":"I","upper":"I","lower":"i","name":"I","pronunciation":"ee","example":"Ici","meaning":"Yahan","sound_hint":"Urdu 'i' jaisi awaaz"},
+    {"char":"J","upper":"J","lower":"j","name":"J","pronunciation":"zhee","example":"Jour","meaning":"Din","sound_hint":"Jaise 'zhee' kehte hain"},
+    {"char":"K","upper":"K","lower":"k","name":"K","pronunciation":"kah","example":"Kilo","meaning":"Kilo","sound_hint":"Sirf borrowed words mein"},
+    {"char":"L","upper":"L","lower":"l","name":"L","pronunciation":"el","example":"Lune","meaning":"Chaand","sound_hint":"Angrezi L jaisi awaaz"},
+    {"char":"M","upper":"M","lower":"m","name":"M","pronunciation":"em","example":"Maison","meaning":"Ghar","sound_hint":"Angrezi M jaisi awaaz"},
+    {"char":"N","upper":"N","lower":"n","name":"N","pronunciation":"en","example":"Non","meaning":"Nahi","sound_hint":"Angrezi N jaisi awaaz"},
+    {"char":"O","upper":"O","lower":"o","name":"O","pronunciation":"oh","example":"Or","meaning":"Sona","sound_hint":"Honth gol karke 'oh'"},
+    {"char":"P","upper":"P","lower":"p","name":"P","pronunciation":"pay","example":"Pain","meaning":"Roti","sound_hint":"Jaise 'pay' kehte hain"},
+    {"char":"Q","upper":"Q","lower":"q","name":"Q","pronunciation":"koo","example":"Qui","meaning":"Kaun","sound_hint":"Hamesha 'qu' sath aata hai"},
+    {"char":"R","upper":"R","lower":"r","name":"R","pronunciation":"air","example":"Rouge","meaning":"Laal","sound_hint":"Gale se gargling awaaz"},
+    {"char":"S","upper":"S","lower":"s","name":"S","pronunciation":"es","example":"Soleil","meaning":"Suraj","sound_hint":"Kabhi 's' kabhi 'z'"},
+    {"char":"T","upper":"T","lower":"t","name":"T","pronunciation":"tay","example":"Tout","meaning":"Sab","sound_hint":"Jaise 'tay' kehte hain"},
+    {"char":"U","upper":"U","lower":"u","name":"U","pronunciation":"oo","example":"Un","meaning":"Ek","sound_hint":"Honth gol 'oo' bolo"},
+    {"char":"V","upper":"V","lower":"v","name":"V","pronunciation":"vay","example":"Ville","meaning":"Sheher","sound_hint":"Jaise 'vay' kehte hain"},
+    {"char":"W","upper":"W","lower":"w","name":"W","pronunciation":"double-vay","example":"Week-end","meaning":"Hafte ka akhir","sound_hint":"Sirf borrowed words mein"},
+    {"char":"X","upper":"X","lower":"x","name":"X","pronunciation":"eeks","example":"Exemple","meaning":"Misal","sound_hint":"Kabhi 'ks' kabhi 'gz'"},
+    {"char":"Y","upper":"Y","lower":"y","name":"Y","pronunciation":"ee-grek","example":"Yeux","meaning":"Aankhein","sound_hint":"'ee-grek' yaani Greek I"},
+    {"char":"Z","upper":"Z","lower":"z","name":"Z","pronunciation":"zed","example":"Zero","meaning":"Sifar","sound_hint":"Jaise 'zed' kehte hain"},
+    {"char":"\u00C9","upper":"\u00C9","lower":"\u00E9","name":"E accent aigu","pronunciation":"ay","example":"Ecole","meaning":"School","sound_hint":"Angrezi 'ay' jaisi"},
+    {"char":"\u00C8","upper":"\u00C8","lower":"\u00E8","name":"E accent grave","pronunciation":"eh","example":"Pere","meaning":"Abba","sound_hint":"Khuli 'eh' awaaz"},
+    {"char":"\u00CA","upper":"\u00CA","lower":"\u00EA","name":"E circumflex","pronunciation":"eh","example":"Fete","meaning":"Jashn","sound_hint":"Lambi 'eh' awaaz"},
+    {"char":"\u00C0","upper":"\u00C0","lower":"\u00E0","name":"A accent grave","pronunciation":"ah","example":"A","meaning":"Ko/Mein","sound_hint":"Sirf spelling ke liye"},
+    {"char":"\u00C7","upper":"\u00C7","lower":"\u00E7","name":"C cedille","pronunciation":"say","example":"Garcon","meaning":"Larka","sound_hint":"Hamesha 's' ki awaaz deta hai"},
+    {"char":"\u00CE","upper":"\u00CE","lower":"\u00EE","name":"I circumflex","pronunciation":"ee","example":"Ile","meaning":"Jazira","sound_hint":"Lambi 'ee' awaaz"},
+    {"char":"\u00D4","upper":"\u00D4","lower":"\u00F4","name":"O circumflex","pronunciation":"oh","example":"Cote","meaning":"Kinara","sound_hint":"Lambi 'oh' awaaz"},
+    {"char":"\u00DB","upper":"\u00DB","lower":"\u00FB","name":"U circumflex","pronunciation":"oo","example":"Sur","meaning":"Pakka","sound_hint":"Lambi 'oo' awaaz"},
+    {"char":"\u0152","upper":"\u0152","lower":"\u0153","name":"OE ligature","pronunciation":"uh","example":"Coeur","meaning":"Dil","sound_hint":"'o' aur 'e' milke bolta hai"}
+  ]
+};
+
 function openPreClassContent(lang){
+  var e = document.getElementById('pcOverlay'); if(e) e.remove();
+  _pcIsRevision = true;
+  launchPreClassLesson(lang, true);
+}
+
+// ── Main entry: Pre-class lesson launch karo ──
+function launchPreClassLesson(lang, isRevision){
   var nfo = PRE_CLASS_INFO[lang]; if(!nfo) return;
   var adPc = (typeof AD!=='undefined' && AD && AD.langs && AD.langs[lang]) ? AD.langs[lang].preClass : null;
-  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke basic characters aur quiz honge.');
-  var extra = (adPc && adPc.content) ? '<div style="background:rgba(255,255,255,.04);border-radius:14px;padding:12px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,.7);line-height:1.8;">' + adPc.content + '</div>' : '';
-  var bodyHtml = '<div style="background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.3);border-radius:14px;padding:10px 14px;margin-bottom:10px;font-size:11px;color:#5B8DEF;text-align:center;">&#128257; Revision Mode — Yeh practice tumhari progress affect nahi karegi</div>'
-    + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.25);border-radius:14px;padding:14px;margin-bottom:14px;">'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.6;">' + desc + '</div></div>'
-    + extra;
-  var ol = document.createElement('div');
-  ol.id = 'pcOverlay';
-  ol.className = 'pcbadge-overlay';
-  var box = document.createElement('div');
-  box.className = 'pcbadge-box';
-  box.style.cssText = 'max-height:85vh;overflow-y:auto;position:relative;animation:pcPop .35s cubic-bezier(.34,1.56,.64,1);';
-  box.innerHTML = '<button id="pcCloseBtn" style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.1);border:none;border-radius:10px;width:32px;height:32px;cursor:pointer;color:#fff;font-size:16px;">&#x2715;</button>'
-    + '<div style="text-align:center;margin-bottom:16px;">'
-    + '<div style="font-size:50px;margin-bottom:8px;">' + nfo.i + '</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#C77DFF;margin-bottom:3px;">' + nfo.t + '</div>'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.5);">' + nfo.d + '</div></div>'
-    + bodyHtml;
-  var btnRow = document.createElement('div');
-  btnRow.style.cssText = 'display:flex;flex-direction:column;gap:10px;';
-  // ✅ FIX: Revision mode mein bhi "Shuru Karo" button — user kabi bhi practice kar sakta hai
-  var startBtn = document.createElement('button');
-  startBtn.style.cssText = 'background:linear-gradient(135deg,#C77DFF,#9B40E8);border:none;border-radius:16px;padding:14px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;box-shadow:0 4px 18px rgba(199,125,255,.4);width:100%;';
-  startBtn.innerHTML = '&#9654;&#65039; Practice Shuru Karo';
-  startBtn.onclick = (function(l){ return function(){
-    var e=document.getElementById('pcOverlay'); if(e) e.remove();
-    var cs = (typeof CS==='function') ? CS() : null;
-    if(cs){ cs.preClassRevision = l; if(typeof save==='function') save(); }
-    if(typeof goLesson==='function') goLesson();
-  }; })(lang);
-  btnRow.appendChild(startBtn);
-  var backBtn = document.createElement('button');
-  backBtn.style.cssText = 'background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:12px;font-family:Fredoka One,sans-serif;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;width:100%;';
-  backBtn.textContent = 'Wapas Jaao';
-  backBtn.onclick = function(){ var e=document.getElementById('pcOverlay'); if(e) e.remove(); };
-  btnRow.appendChild(backBtn);
-  box.appendChild(btnRow);
-  ol.appendChild(box);
-  document.body.appendChild(ol);
-  document.getElementById('pcCloseBtn').onclick = function(){ var e=document.getElementById('pcOverlay'); if(e) e.remove(); };
+
+  // Score reset
+  _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
+
+  // Letters priority: 1) Firebase/Admin 2) Inbuilt 3) Empty
+  var letters = [];
+  if(adPc && adPc.letters && Array.isArray(adPc.letters) && adPc.letters.length > 0){
+    letters = adPc.letters;
+  } else if(PC_ALPHABETS[lang]){
+    letters = PC_ALPHABETS[lang];
+  }
+
+  // Steps build karo
+  _pcLS = buildPreClassSteps(lang, nfo, letters, adPc, isRevision);
+  _pcSI = 0;
+  _pcLang = lang;
+  _pcIsRevision = isRevision || false;
+
+  // Lesson screen kholo
+  showScreen('lesson');
+  // Progress bar reset
+  var pb = document.getElementById('lPf'); if(pb) pb.style.width = '0%';
+  // Hearts hide (pre-class mein hearts nahi)
+  var ht = document.getElementById('lHt'); if(ht) ht.textContent = '✨ Pre-Class';
+  setTimeout(function(){ renderPCStep(); }, 160);
+}
+
+// ── Build pre-class lesson steps from letters ──
+function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
+  var steps = [];
+  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke basic characters seekhenge.');
+
+  // STEP 1: Welcome header
+  steps.push({t:'pc_header', nfo:nfo, desc:desc, isRevision:isRevision, total:letters.length});
+
+  if(letters.length === 0){
+    steps.push({t:'pc_nodata', nfo:nfo, desc:desc});
+    steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
+    return steps;
+  }
+
+  // STEP 2: Letter cards — har letter alag card
+  letters.forEach(function(l, i){
+    steps.push({t:'pc_letter', letter:l, num:i+1, total:letters.length});
+  });
+
+  // STEP 3: Listening practice — sound suno, letter dhundo
+  if(letters.length >= 4){
+    var listenPool = letters.slice(0, Math.min(letters.length, 8));
+    listenPool.forEach(function(l){
+      steps.push({t:'pc_quiz', letters:listenPool, fixedLetter:l, label:'Listening', qType:'char'});
+    });
+  }
+
+  // STEP 4: Recognition quiz — letter dikhao, naam dhundo
+  if(letters.length >= 3){
+    var quizPool = letters.slice(0, Math.min(letters.length, 10));
+    quizPool.forEach(function(l){
+      steps.push({t:'pc_quiz', letters:quizPool, fixedLetter:l, label:'Recognition', qType:'meaning'});
+    });
+  }
+
+  // STEP 5: Speaking practice
+  var spkLetters = letters.slice(0, Math.min(letters.length, 8));
+  if(spkLetters.length > 0){
+    steps.push({t:'pc_speaking_intro'});
+    spkLetters.forEach(function(l){
+      steps.push({t:'pc_speaking', letter:l});
+    });
+  }
+
+  // STEP 6: Upper-Lower match (4 letters)
+  if(letters.length >= 4){
+    var shuffled = letters.slice().sort(function(){ return Math.random()-.5; });
+    steps.push({t:'pc_match', letters:shuffled.slice(0,4)});
+  }
+
+  // STEP 7: Example word match
+  if(letters.length >= 4){
+    var exPool = letters.slice(0, Math.min(letters.length, 8));
+    exPool.forEach(function(l){
+      if(l.example) steps.push({t:'pc_exmatch', letters:exPool, fixedLetter:l});
+    });
+  }
+
+  // STEP 8: Fill in the blank
+  if(letters.length >= 4){
+    var blankPool = letters.slice(0, Math.min(letters.length, 8));
+    blankPool.forEach(function(l){
+      if(l.example && l.example.length > 1) steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l});
+    });
+  }
+
+  // STEP 9: Speed round — 10 random questions
+  if(letters.length >= 4){
+    steps.push({t:'pc_speed', letters:letters, lang:lang});
+  }
+
+  // STEP 10: Final results
+  steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
+  return steps;
+}
+
+// ── Render current pre-class step ──
+function renderPCStep(){
+  var tot = _pcLS.length;
+  var pb = document.getElementById('lPf');
+  if(pb) pb.style.width = Math.round((_pcSI/tot)*100) + '%';
+  var step = _pcLS[_pcSI];
+  var bd = document.getElementById('lBd');
+  if(!bd || !step) return;
+  bd.scrollTop = 0;
+  bd.style.transition = 'opacity .15s ease,transform .15s ease';
+  bd.style.opacity = '0'; bd.style.transform = 'translateX(-12px)';
+  setTimeout(function(){
+    if(step.t==='pc_header')         renderPCHeader(step, bd);
+    else if(step.t==='pc_nodata')    renderPCNoData(step, bd);
+    else if(step.t==='pc_letter')    renderPCLetter(step, bd);
+    else if(step.t==='pc_quiz')      renderPCQuiz(step, bd);
+    else if(step.t==='pc_speaking_intro') renderPCSpeakingIntro(bd);
+    else if(step.t==='pc_speaking')  renderPCSpeaking(step, bd);
+    else if(step.t==='pc_match')     renderPCMatch(step, bd);
+    else if(step.t==='pc_exmatch')   renderPCExMatch(step, bd);
+    else if(step.t==='pc_blank')     renderPCBlank(step, bd);
+    else if(step.t==='pc_speed')     renderPCSpeed(step, bd);
+    else if(step.t==='pc_done')      renderPCDone(step, bd);
+    else pcNx();
+    bd.style.transform = 'translateX(14px)';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      bd.style.transition = 'opacity .3s ease,transform .35s cubic-bezier(.34,1.56,.64,1)';
+      bd.style.opacity = '1'; bd.style.transform = 'translateX(0)';
+      setTimeout(function(){bd.style.transition='';},380);
+    });});
+  }, 150);
+}
+
+function pcNx(){
+  _pcSI++;
+  if(_pcSI < _pcLS.length) renderPCStep();
+}
+
+// ── STEP: Welcome header ──
+function renderPCHeader(s, b){
+  var revBadge = s.isRevision ? '<div style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:20px;padding:5px 14px;display:inline-block;font-size:11px;color:#5B8DEF;margin-bottom:14px;">&#128257; Revision Mode</div>' : '';
+  var cnt = s.total || 0;
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
+    + '<div style="font-size:72px;margin-bottom:10px;">' + s.nfo.i + '</div>'
+    + revBadge
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#C77DFF;margin-bottom:8px;">' + s.nfo.t + '</div>'
+    + (cnt > 0 ? '<div style="background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.3);border-radius:20px;padding:6px 18px;display:inline-block;font-size:13px;color:#C77DFF;font-family:Fredoka One,sans-serif;margin-bottom:14px;">&#128214; ' + cnt + ' letters seekhenge</div>' : '')
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">' + s.desc + '</div>'
+    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:24px;text-align:left;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;font-weight:700;">&#127891; Is class mein:</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:2.2;">'
+    + '&#128195; Letter cards seekhenge<br>'
+    + '&#127908; Awaaz sun ke letter dhundo<br>'
+    + '&#10067; Recognition quiz<br>'
+    + '&#127381; Upper-Lower matching<br>'
+    + '&#127919; Example word match<br>'
+    + '&#9998; Fill in the blank<br>'
+    + '&#9889; Speed round (10 sawal!)<br>'
+    + '&#127881; Badge milega!'
+    + '</div>'
+    + '</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#9654;&#65039; Shuru Karo!</button>'
+    + '</div>';
+}
+
+// ── STEP: No data ──
+function renderPCNoData(s, b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:30px 0;">'
+    + '<div style="font-size:48px;margin-bottom:12px;">&#9888;&#65039;</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#FFD166;margin-bottom:8px;">Content Abhi Nahi Hai</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:24px;">' + s.desc + '</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px;">Admin panel mein letters add karo phir dobara try karo.</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;">Aagey &#8594;</button>'
+    + '</div>';
+}
+
+// ── STEP: Letter card ──
+function renderPCLetter(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var name = l.name || l.letterName || char;
+  var pron = l.pronunciation || l.sound || l.phonetic || '';
+  var example = l.example || l.word || '';
+  var meaning = l.meaning || l.urdu || l.translation || '';
+  var upper = l.upper || l.uppercase || char;
+  var lower = l.lower || l.lowercase || char.toLowerCase();
+  var sound_hint = l.sound_hint || '';
+
+  // TTS ke liye
+  var ttsText = pron || name || char;
+  var tid = _storeTTS ? _storeTTS(ttsText, example) : 0;
+
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;margin-bottom:8px;font-size:11px;color:rgba(255,255,255,.4);">'
+    + 'Letter ' + s.num + ' / ' + s.total + '</div>'
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(199,125,255,.05));border:1.5px solid rgba(199,125,255,.35);border-radius:20px;padding:28px 20px;text-align:center;margin-bottom:14px;">'
+    + '<div style="font-size:80px;font-weight:700;color:#C77DFF;line-height:1;font-family:serif;">' + upper + '</div>'
+    + '<div style="font-size:36px;color:rgba(199,125,255,.6);margin-bottom:10px;font-family:serif;">' + lower + '</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#fff;margin-bottom:4px;">' + name + '</div>'
+    + (pron ? '<div style="font-size:15px;color:rgba(255,255,255,.55);margin-bottom:8px;">/ ' + pron + ' /</div>' : '')
+    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:10px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.6);margin-top:4px;">&#128483; ' + sound_hint + '</div>' : '')
+    + '</div>'
+    + (example ? '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.25);border-radius:14px;padding:14px;margin-bottom:14px;">'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px;">&#128218; Misal (Example):</div>'
+      + '<div style="font-size:18px;color:#58CC02;font-weight:700;">' + example + '</div>'
+      + (meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;">' + meaning + '</div>' : '')
+      + '</div>' : '')
+    + '<div class="spk-bar" style="margin-bottom:16px;">'
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="padding:14px 20px;">&#128266; Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="padding:14px 20px;">&#128034; Dheere Suno</button>'
+           : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')" style="padding:14px 20px;">&#128266; Suno</button>')
+    + '</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#10003; Samajh Gaya! &#8594;</button>'
+    + '</div>';
+  // Auto-play pronunciation
+  setTimeout(function(){
+    if(tid && window.ttsPlay) ttsPlay(tid);
+    else if(window.spk) spk(ttsText);
+  }, 500);
+}
+
+// ── STEP: Recognition/Listening quiz ──
+function renderPCQuiz(s, b){
+  var letters = s.letters;
+  if(!letters || letters.length < 2){ pcNx(); return; }
+
+  // fixedLetter ya random
+  var correct = s.fixedLetter || letters[Math.floor(Math.random() * letters.length)];
+  var char = correct.char || correct.character || correct.letter || '?';
+  var upper = correct.upper || char;
+  var name = correct.name || correct.letterName || char;
+  var pron = correct.pronunciation || correct.sound || '';
+
+  // Options banao (correct + 3 random wrong)
+  var pool = letters.filter(function(l){ return l !== correct; });
+  pool.sort(function(){ return Math.random()-.5; });
+  var wrongs = pool.slice(0,3);
+  var options = [correct].concat(wrongs).sort(function(){ return Math.random()-.5; });
+
+  var quizId = 'pcquiz_' + _pcSI;
+  _pcTotal++;
+
+  if(s.qType === 'meaning'){
+    // Char dikhao, naam dhundo (Recognition)
+    var correctAnswer = name;
+    b.innerHTML = '<div class="a">'
+      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
+      + '<div style="font-size:80px;font-weight:700;color:#C77DFF;line-height:1;font-family:serif;">' + upper + '</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:10px;">Is letter ka naam kya hai?</div>'
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
+      + options.map(function(o){
+          var ans = o.name || o.letterName || o.char || '?';
+          var lChar = o.char || o.character || '?';
+          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAnswer.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 10px;font-family:Fredoka One,sans-serif;font-size:14px;color:#fff;cursor:pointer;">'
+            + ans + '</button>';
+        }).join('')
+      + '</div></div>';
+  } else {
+    // Awaaz suno, letter dhundo (Listening)
+    var tid2 = _storeTTS ? _storeTTS(pron || name, '') : 0;
+    var correctChar = upper;
+    b.innerHTML = '<div class="a">'
+      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
+      + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:12px;">&#128266; Kaunsa letter yeh awaaz hai?</div>'
+      + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:15px;padding:14px 28px;">&#128266; Awaaz Suno</button>'
+              : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+name+'\')" style="font-size:15px;padding:14px 28px;">&#128266; Awaaz Suno</button>')
+      + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
+      + options.map(function(o){
+          var ans = o.upper || o.char || o.character || '?';
+          var lChar = o.char || o.character || '?';
+          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctChar.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
+            + ans + '</button>';
+        }).join('')
+      + '</div></div>';
+    setTimeout(function(){
+      if(tid2 && window.ttsPlay) ttsPlay(tid2);
+      else if(window.spk) spk(name);
+    }, 600);
+  }
+}
+
+function pcQuizAnswer(btn, selected, correct, containerId, letterChar){
+  var container = document.getElementById(containerId);
+  if(!container) return;
+  var btns = container.querySelectorAll('button');
+  btns.forEach(function(b){ b.disabled = true; });
+  var isCorrect = (selected === correct);
+  if(isCorrect){ _pcScore++; } else { if(letterChar) _pcWrongLetters.push(letterChar); }
+  btn.style.background = isCorrect ? 'rgba(88,204,2,.3)' : 'rgba(255,75,75,.3)';
+  btn.style.borderColor = isCorrect ? '#58CC02' : '#FF4B4B';
+  btn.style.color = isCorrect ? '#58CC02' : '#FF4B4B';
+  if(!isCorrect){
+    btns.forEach(function(b2){
+      if(b2.textContent.trim() === correct){
+        b2.style.background = 'rgba(88,204,2,.3)';
+        b2.style.borderColor = '#58CC02';
+        b2.style.color = '#58CC02';
+      }
+    });
+  }
+  var fb = document.createElement('div');
+  fb.style.cssText = 'text-align:center;padding:12px;font-family:Fredoka One,sans-serif;font-size:16px;color:' + (isCorrect?'#58CC02':'#FF4B4B') + ';';
+  fb.innerHTML = isCorrect ? '&#10003; Sahi Jawab! Shabaash! &#127881;' : '&#10007; Galat — Sahi: <b>' + correct + '</b>';
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'bg';
+  nextBtn.style.cssText = 'width:100%;margin-top:10px;padding:14px;';
+  nextBtn.textContent = 'Agla \u2192';
+  nextBtn.onclick = pcNx;
+  container.parentNode.appendChild(fb);
+  container.parentNode.appendChild(nextBtn);
+}
+
+// ── STEP: Example word match ──
+function renderPCExMatch(s, b){
+  var letters = s.letters;
+  var correct = s.fixedLetter;
+  if(!correct || !correct.example){ pcNx(); return; }
+  var pool = letters.filter(function(l){ return l !== correct; });
+  pool.sort(function(){ return Math.random()-.5; });
+  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+  var qId = 'pcex_' + _pcSI;
+  var correctUpper = correct.upper || correct.char || '?';
+  _pcTotal++;
+  b.innerHTML = '<div class="a">'
+    + '<div style="background:rgba(88,204,2,.08);border:1px solid rgba(88,204,2,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;">Is word ka pehla letter kaunsa hai?</div>'
+    + '<div style="font-size:32px;font-weight:700;color:#58CC02;">' + correct.example + '</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
+    + options.map(function(o){
+        var ans = o.upper || o.char || '?';
+        var lChar = o.char || '?';
+        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
+          + ans + '</button>';
+      }).join('')
+    + '</div></div>';
+}
+
+// ── STEP: Fill in the blank ──
+function renderPCBlank(s, b){
+  var letters = s.letters;
+  var correct = s.fixedLetter;
+  if(!correct || !correct.example || correct.example.length < 2){ pcNx(); return; }
+  var pool = letters.filter(function(l){ return l !== correct; });
+  pool.sort(function(){ return Math.random()-.5; });
+  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+  var qId = 'pcblank_' + _pcSI;
+  var correctUpper = correct.upper || correct.char || '?';
+  var blanked = '_' + correct.example.slice(1);
+  _pcTotal++;
+  b.innerHTML = '<div class="a">'
+    + '<div style="background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.2);border-radius:18px;padding:24px 20px;margin-bottom:16px;text-align:center;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;">Kaunsa letter missing hai?</div>'
+    + '<div style="font-size:32px;font-weight:700;color:#5B8DEF;letter-spacing:4px;">' + blanked + '</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
+    + options.map(function(o){
+        var ans = o.upper || o.char || '?';
+        var lChar = o.char || '?';
+        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 10px;font-family:serif;font-size:36px;color:#fff;cursor:pointer;">'
+          + ans + '</button>';
+      }).join('')
+    + '</div></div>';
+}
+
+// ── STEP: Speed Round ──
+function renderPCSpeed(s, b){
+  var letters = s.letters;
+  if(!letters || letters.length < 4){ pcNx(); return; }
+  var total = 10;
+  var qIdx = 0;
+  var correct_count = 0;
+  var speedWrong = [];
+
+  function buildQ(){
+    if(qIdx >= total){
+      // Results
+      _pcScore += correct_count; _pcTotal += total;
+      b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0;">'
+        + '<div style="font-size:56px;margin-bottom:12px;">&#9889;</div>'
+        + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#FFD166;margin-bottom:8px;">Speed Round Mukammal!</div>'
+        + '<div style="font-size:32px;font-family:Fredoka One,sans-serif;color:#58CC02;margin-bottom:16px;">' + correct_count + ' / ' + total + ' sahi jawab!</div>'
+        + (speedWrong.length > 0 ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.7);">Practice karo: <b>' + speedWrong.join(', ') + '</b></div>' : '')
+        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey &#8594;</button>'
+        + '</div>';
+      return;
+    }
+    var types = ['meaning','char'];
+    var qType = types[Math.floor(Math.random()*2)];
+    var correct = letters[Math.floor(Math.random()*letters.length)];
+    var pool = letters.filter(function(l){ return l !== correct; }).sort(function(){ return Math.random()-.5; });
+    var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
+    var qId = 'pcspeed_q';
+    var answered = false;
+    var timerEl, countBar;
+
+    var questionHtml, correctAns, optBtn;
+    if(qType === 'meaning'){
+      var upper = correct.upper || correct.char || '?';
+      correctAns = correct.name || correct.char || '?';
+      questionHtml = '<div style="font-size:72px;font-family:serif;color:#C77DFF;text-align:center;line-height:1;">' + upper + '</div>'
+        + '<div style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin:8px 0;">Is letter ka naam kya hai?</div>';
+      optBtn = function(o){ return o.name || o.char || '?'; };
+      var optStyle = 'font-family:Fredoka One,sans-serif;font-size:14px;';
+    } else {
+      var pron = correct.pronunciation || correct.name || correct.char || '?';
+      var tid3 = _storeTTS ? _storeTTS(pron, '') : 0;
+      correctAns = correct.upper || correct.char || '?';
+      questionHtml = '<div style="text-align:center;margin-bottom:8px;">'
+        + (tid3 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid3+')" style="padding:10px 20px;">&#128266; Awaaz Suno</button>'
+                : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+pron+'\')" style="padding:10px 20px;">&#128266; Awaaz Suno</button>')
+        + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:8px;">Kaunsa letter hai?</div>'
+        + '</div>';
+      optBtn = function(o){ return o.upper || o.char || '?'; };
+      var optStyle = 'font-family:serif;font-size:30px;';
+      setTimeout(function(){
+        if(tid3 && window.ttsPlay) ttsPlay(tid3); else if(window.spk) spk(pron);
+      }, 200);
+    }
+
+    b.innerHTML = '<div class="a">'
+      + '<div style="text-align:center;font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;">Sawal ' + (qIdx+1) + ' / ' + total + '</div>'
+      + '<div style="height:6px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:12px;overflow:hidden;">'
+      + '<div id="pcSpeedBar" style="height:100%;background:linear-gradient(90deg,#C77DFF,#FF4B4B);border-radius:4px;width:100%;transition:width 5s linear;"></div>'
+      + '</div>'
+      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:20px;margin-bottom:14px;">'
+      + questionHtml + '</div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
+      + options.map(function(o){
+          var ans = optBtn(o);
+          var lChar = o.char || '?';
+          return '<button onclick="pcSpeedAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAns.replace(/'/g,"\\'") + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:18px 10px;' + optStyle + 'color:#fff;cursor:pointer;">'
+            + ans + '</button>';
+        }).join('')
+      + '</div></div>';
+
+    // Timer countdown
+    setTimeout(function(){
+      var bar = document.getElementById('pcSpeedBar');
+      if(bar) bar.style.width = '0%';
+    }, 100);
+
+    window._pcSpeedAnswer = function(btn, selected, corr, lChar){
+      if(answered) return;
+      answered = true;
+      clearTimeout(window._pcSpeedTimer);
+      var container = document.getElementById(qId);
+      if(container){ container.querySelectorAll('button').forEach(function(bt){ bt.disabled=true; }); }
+      var ok = (selected === corr);
+      if(ok){ correct_count++; btn.style.background='rgba(88,204,2,.3)'; btn.style.borderColor='#58CC02'; }
+      else { speedWrong.push(lChar); btn.style.background='rgba(255,75,75,.3)'; btn.style.borderColor='#FF4B4B';
+        if(container) container.querySelectorAll('button').forEach(function(bt){
+          if(bt.textContent.trim()===corr){ bt.style.background='rgba(88,204,2,.3)'; bt.style.borderColor='#58CC02'; }
+        });
+      }
+      qIdx++;
+      setTimeout(buildQ, 800);
+    };
+
+    window._pcSpeedTimer = setTimeout(function(){
+      if(!answered){ answered=true; speedWrong.push(correct.char||'?'); qIdx++; setTimeout(buildQ,300); }
+    }, 5100);
+  }
+
+  buildQ();
+}
+
+function pcSpeedAnswer(btn, selected, correct, lChar){
+  if(window._pcSpeedAnswer) window._pcSpeedAnswer(btn, selected, correct, lChar);
+}
+
+// ── STEP: Speaking intro ──
+function renderPCSpeakingIntro(b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
+    + '<div style="font-size:56px;margin-bottom:12px;">&#127908;</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:8px;">Ab tum bologe! &#127908;</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.7;">Har letter ki awaaz suno, phir mic mein bolo. Score milega!</div>'
+    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:20px;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:2.2;">&#128266; Pehle awaaz suno<br>&#127906; Phir mic mein bolo<br>&#128218; Score dekho (0-100%)<br>&#128994; 80%+ = Shabaash!</div>'
+    + '</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#127908; Shuru Karo</button>'
+    + '</div>';
+}
+
+// ── STEP: Speaking practice ──
+function renderPCSpeaking(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var upper = l.upper || char;
+  var lower = l.lower || char.toLowerCase();
+  var name = l.name || l.letterName || char;
+  var pron = l.pronunciation || l.sound || name;
+  var sound_hint = l.sound_hint || '';
+  var example = l.example || l.word || '';
+  var meaning = l.meaning || l.urdu || '';
+
+  var tid = _storeTTS ? _storeTTS(pron, example) : 0;
+  var micId = 'pcmic_' + _pcSI;
+  var resId = 'pcres_' + _pcSI;
+  var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
+
+  b.innerHTML = '<div class="a">'
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.12),rgba(199,125,255,.04));border:1.5px solid rgba(199,125,255,.3);border-radius:20px;padding:20px;text-align:center;margin-bottom:14px;">'
+    + '<div style="font-size:64px;font-weight:700;color:#C77DFF;font-family:serif;line-height:1;">' + upper + '</div>'
+    + '<div style="font-size:28px;color:rgba(199,125,255,.5);font-family:serif;">' + lower + '</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#fff;margin-top:6px;">' + name + '</div>'
+    + (pron !== name ? '<div style="font-size:13px;color:rgba(255,255,255,.5);">/ ' + pron + ' /</div>' : '')
+    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:6px 10px;font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;">&#128483; ' + sound_hint + '</div>' : '')
+    + (example ? '<div style="font-size:13px;color:#58CC02;margin-top:8px;">' + example + (meaning ? ' — ' + meaning : '') + '</div>' : '')
+    + '</div>'
+    + '<div class="spk-bar" style="margin-bottom:14px;">'
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="padding:14px 20px;">&#128266; Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="padding:14px 20px;">&#128034; Dheere Suno</button>'
+           : '')
+    + '</div>'
+    + '<div class="sn-mic-wrap" style="margin-bottom:14px;">'
+    + (micSupported
+        ? '<button class="sn-mic-btn" id="'+micId+'" onclick="pcMicSpeak(\''+micId+'\',\''+resId+'\',\''+pron+'\')">&#127908; Bol ke Dekho</button>'
+          + '<span style="font-size:12px;color:var(--mut);flex:1;">"' + pron + '" bolo</span>'
+        : '<span style="font-size:12px;color:var(--mut);">&#127908; Chrome mein mic available hai</span>')
+    + '</div>'
+    + '<div id="' + resId + '" style="margin-bottom:12px;"></div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#10003; Agla Letter &#8594;</button>'
+    + '</div>';
+
+  // Auto-play
+  setTimeout(function(){
+    if(tid && window.ttsPlay) ttsPlay(tid);
+    else if(window.spk) spk(pron);
+  }, 400);
+}
+
+function pcMicSpeak(micId, resId, expected){
+  var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SRClass){ document.getElementById(resId).innerHTML='<div style="color:var(--mut);font-size:12px;">&#127908; Mic is browser mein nahi chala.</div>'; return; }
+  var btn = document.getElementById(micId);
+  if(btn){ btn.textContent='&#9899; Sun raha hun...'; btn.style.background='rgba(255,75,75,.3)'; btn.disabled=true; }
+  var sr = new SRClass();
+  sr.lang = 'en-US'; sr.continuous = false; sr.interimResults = false;
+  sr.onresult = function(ev){
+    var spoken = ev.results[0][0].transcript.trim().toLowerCase();
+    var exp = expected.toLowerCase().replace(/[^a-z0-9 ]/g,'');
+    var score = (spoken.indexOf(exp) !== -1 || exp.indexOf(spoken) !== -1) ? 100
+      : (spoken.split('').filter(function(c){ return exp.indexOf(c)!==-1; }).length / Math.max(spoken.length, exp.length) * 100);
+    var pct = Math.round(score);
+    var col = pct>=80?'#58CC02':pct>=50?'#FFD166':'#FF4B4B';
+    var msg = pct>=80?'&#127881; Zabardast!':pct>=50?'&#128515; Acha hai! Dobara try karo':'&#128553; Dobara suno phir bolo';
+    var resEl = document.getElementById(resId);
+    if(resEl) resEl.innerHTML='<div style="background:rgba(255,255,255,.05);border-radius:12px;padding:10px;font-size:13px;">'
+      +'<div style="color:'+col+';font-weight:700;margin-bottom:4px;">'+msg+'</div>'
+      +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "'+spoken+'" | Expected: "'+exp+'" | Score: <b style="color:'+col+'">'+pct+'%</b></div></div>';
+    if(btn){ btn.textContent='&#127908; Dobara Bolo'; btn.style.background=''; btn.disabled=false; }
+  };
+  sr.onerror = function(){
+    if(btn){ btn.textContent='&#127908; Bol ke Dekho'; btn.style.background=''; btn.disabled=false; }
+  };
+  sr.onend = function(){
+    if(btn && btn.disabled){ btn.textContent='&#127908; Bol ke Dekho'; btn.style.background=''; btn.disabled=false; }
+  };
+  sr.start();
+}
+
+// ── STEP: Match exercise (Upper ↔ Lower) ──
+function renderPCMatch(s, b){
+  var letters = s.letters.slice(0, 4); // max 4 pairs
+  if(letters.length < 2){ pcNx(); return; }
+
+  // Left: uppercase, Right: lowercase — both shuffled
+  var leftItems  = letters.map(function(l,i){ return {id:i, text: l.upper||l.char||'?', type:'upper'}; })
+                          .sort(function(){ return Math.random()-.5; });
+  var rightItems = letters.map(function(l,i){ return {id:i, text: l.lower||(l.char||'?').toLowerCase(), type:'lower'}; })
+                          .sort(function(){ return Math.random()-.5; });
+
+  var matchId = 'pcmatch_' + _pcSI;
+
+  b.innerHTML = '<div class="a">'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:16px;color:#C77DFF;text-align:center;margin-bottom:6px;">&#127381; Upper-Lower Match Karo</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:16px;">Bada letter chuno, phir chota letter se match karo</div>'
+    + '<div id="' + matchId + '" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">'
+    + leftItems.map(function(it){
+        return '<button id="mcL_'+it.id+'" data-id="'+it.id+'" data-side="L" onclick="pcMatchClick(this,\''+matchId+'\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 8px;font-family:serif;font-size:34px;color:#fff;cursor:pointer;">'
+          + it.text + '</button>';
+      }).join('')
+    + rightItems.map(function(it){
+        return '<button id="mcR_'+it.id+'" data-id="'+it.id+'" data-side="R" onclick="pcMatchClick(this,\''+matchId+'\')" '
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 8px;font-family:serif;font-size:34px;color:rgba(199,125,255,.8);cursor:pointer;">'
+          + it.text + '</button>';
+      }).join('')
+    + '</div>'
+    + '<div id="pcMatchFb_'+_pcSI+'" style="text-align:center;min-height:40px;margin-bottom:10px;"></div>'
+    + '</div>';
+
+  window._pcMatchState = { selected:null, matched:{}, total:letters.length, done:0, stepI:_pcSI };
+}
+
+function pcMatchClick(btn, containerId){
+  var state = window._pcMatchState;
+  if(!state) return;
+  var id   = parseInt(btn.dataset.id);
+  var side = btn.dataset.side;
+  var key  = side + id;
+  if(state.matched[key]) return; // already matched
+
+  if(!state.selected){
+    state.selected = {btn:btn, id:id, side:side, key:key};
+    btn.style.borderColor = '#C77DFF';
+    btn.style.background  = 'rgba(199,125,255,.2)';
+  } else {
+    var prev = state.selected;
+    state.selected = null;
+    // Reset previous highlight
+    prev.btn.style.borderColor = 'rgba(255,255,255,.15)';
+    prev.btn.style.background  = 'rgba(255,255,255,.07)';
+
+    if(prev.side === side){ // same side click — just reselect new
+      btn.style.borderColor = '#C77DFF';
+      btn.style.background  = 'rgba(199,125,255,.2)';
+      state.selected = {btn:btn, id:id, side:side};
+      return;
+    }
+    if(prev.id === id){ // MATCH!
+      prev.btn.style.background  = 'rgba(88,204,2,.25)';
+      prev.btn.style.borderColor = '#58CC02';
+      prev.btn.style.color       = '#58CC02';
+      prev.btn.disabled = true;
+      btn.style.background  = 'rgba(88,204,2,.25)';
+      btn.style.borderColor = '#58CC02';
+      btn.style.color       = '#58CC02';
+      btn.disabled = true;
+      state.matched[prev.key] = true;
+      state.matched[side+id]  = true;
+      state.done++;
+      var fb = document.getElementById('pcMatchFb_'+state.stepI);
+      if(fb) fb.innerHTML = '<div style="color:#58CC02;font-family:Fredoka One,sans-serif;">&#10003; Sahi Match! (' + state.done + '/' + state.total + ')</div>';
+      if(state.done >= state.total){
+        setTimeout(function(){
+          var fb2 = document.getElementById('pcMatchFb_'+state.stepI);
+          if(fb2) fb2.innerHTML += '<button class="bg" onclick="pcNx()" style="width:100%;margin-top:10px;">&#127881; Aagey &#8594;</button>';
+        }, 600);
+      }
+    } else { // WRONG
+      prev.btn.style.background = 'rgba(255,75,75,.15)';
+      prev.btn.style.borderColor = '#FF4B4B';
+      btn.style.background = 'rgba(255,75,75,.15)';
+      btn.style.borderColor = '#FF4B4B';
+      var fb3 = document.getElementById('pcMatchFb_'+state.stepI);
+      if(fb3) fb3.innerHTML = '<div style="color:#FF4B4B;font-size:12px;">&#10007; Galat — Dobara try karo</div>';
+      setTimeout(function(){
+        prev.btn.style.background = 'rgba(255,255,255,.07)';
+        prev.btn.style.borderColor = 'rgba(255,255,255,.15)';
+        btn.style.background = 'rgba(255,255,255,.07)';
+        btn.style.borderColor = 'rgba(255,255,255,.15)';
+      }, 800);
+    }
+  }
+}
+
+// ── STEP: Done / Final Results ──
+function renderPCDone(s, b){
+  var nfo = PRE_CLASS_INFO[s.lang] || {};
+  var isRevision = s.isRevision;
+  var pct = _pcTotal > 0 ? Math.round((_pcScore/_pcTotal)*100) : 0;
+  // Unique wrong letters
+  var uniqueWrong = _pcWrongLetters.filter(function(v,i,a){ return a.indexOf(v)===i; });
+  var scoreColor = pct >= 80 ? '#58CC02' : pct >= 50 ? '#FFD166' : '#FF4B4B';
+  var scoreMsg = pct >= 80 ? '&#127881; Shabaash! Zabardast!' : pct >= 50 ? '&#128077; Acha Kiya!' : '&#128170; Practice Karo!';
+
+  // Circle progress (SVG)
+  var r = 40, circ = Math.round(2*Math.PI*r);
+  var dash = Math.round(circ * pct / 100);
+  var circleSvg = '<svg width="100" height="100" viewBox="0 0 100 100" style="margin:0 auto 12px;display:block;">'
+    + '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/>'
+    + '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="' + scoreColor + '" stroke-width="8" stroke-linecap="round" '
+    + 'stroke-dasharray="' + dash + ' ' + circ + '" stroke-dashoffset="' + Math.round(circ*0.25) + '" style="transition:stroke-dasharray 1s ease;"/>'
+    + '<text x="50" y="50" dominant-baseline="middle" text-anchor="middle" font-family="Fredoka One,sans-serif" font-size="20" fill="' + scoreColor + '">' + pct + '%</text>'
+    + '</svg>';
+
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
+    + '<div style="font-size:56px;margin-bottom:8px;animation:heartbeat 1.5s ease infinite;">&#127941;</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#C77DFF;margin-bottom:6px;">'
+    + (isRevision ? 'Revision Mukammal! &#127881;' : 'Pre-Class Mukammal! &#127881;') + '</div>'
+    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:16px;">' + scoreMsg + '</div>'
+    + circleSvg
+    + '<div style="background:rgba(255,255,255,.05);border-radius:16px;padding:16px;margin-bottom:14px;text-align:left;">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+    + '<span style="font-size:13px;color:rgba(255,255,255,.6);">&#9989; Sahi jawab</span>'
+    + '<span style="font-family:Fredoka One,sans-serif;font-size:16px;color:#58CC02;">' + _pcScore + ' / ' + _pcTotal + '</span>'
+    + '</div>'
+    + (uniqueWrong.length > 0
+      ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:10px;padding:10px;margin-top:8px;">'
+        + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">&#9888;&#65039; Practice karo:</div>'
+        + '<div style="font-family:serif;font-size:22px;color:#FF4B4B;letter-spacing:6px;">' + uniqueWrong.join(' ') + '</div>'
+        + '</div>'
+      : '<div style="font-size:12px;color:#58CC02;margin-top:4px;">&#127775; Sab letters perfect!</div>')
+    + '</div>'
+    + '<div style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);border-radius:14px;padding:12px;margin-bottom:18px;font-family:Fredoka One,sans-serif;font-size:15px;color:#FFD166;">&#11088; +' + (nfo.xp||50) + ' XP mila!</div>'
+    + (isRevision
+        ? '<button class="bg" onclick="exitLesson()" style="width:100%;padding:16px;">&#127968; Dashboard Pe Wapas</button>'
+        : '<button class="bg" onclick="pcFinishAndComplete(\'' + s.lang + '\')" style="width:100%;margin-bottom:10px;padding:16px;">&#127941; Badge Lo!</button>'
+          + '<button class="bo" onclick="exitLesson()" style="width:100%;padding:14px;">Baad Mein</button>')
+    + '</div>';
+}
+
+function pcFinishAndComplete(lang){
+  exitLesson();
+  setTimeout(function(){
+    if(typeof completePreClass === 'function') completePreClass(lang);
+  }, 400);
 }
 
 function completePreClass(lang){
