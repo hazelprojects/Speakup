@@ -14579,13 +14579,30 @@ function pcMicSpeak(micId, resId, expected){
     var score = (spoken.indexOf(exp) !== -1 || exp.indexOf(spoken) !== -1) ? 100
       : (spoken.split('').filter(function(c){ return exp.indexOf(c)!==-1; }).length / Math.max(spoken.length, exp.length) * 100);
     var pct = Math.round(score);
-    var col = pct>=80?'#58CC02':pct>=50?'#FFD166':'#FF4B4B';
-    var msg = pct>=80?'🎉 Zabardast!':pct>=50?'😃 Acha hai! Dobara try karo':'😩 Dobara suno phir bolo';
     var resEl = document.getElementById(resId);
-    if(resEl) resEl.innerHTML='<div style="background:rgba(255,255,255,.05);border-radius:12px;padding:10px;font-size:13px;">'
-      +'<div style="color:'+col+';font-weight:700;margin-bottom:4px;">'+msg+'</div>'
-      +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "'+spoken+'" | Expected: "'+exp+'" | Score: <b style="color:'+col+'">'+pct+'%</b></div></div>';
-    if(btn){ btn.textContent='🎤 Dobara Bolo'; btn.style.background=''; btn.disabled=false; }
+
+    if(pct >= 80){
+      // ✅ SAHI JAWAB — green celebration box + auto next
+      if(resEl) resEl.innerHTML=
+        '<div style="background:linear-gradient(135deg,rgba(88,204,2,.18),rgba(46,229,157,.08));border:2px solid rgba(88,204,2,.5);border-radius:14px;padding:12px 16px;text-align:center;animation:correctPulse .6s ease;">'
+        +'<div style="font-size:28px;margin-bottom:4px;">🎉</div>'
+        +'<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#58CC02;margin-bottom:2px;">Zabardast!</div>'
+        +'<div style="font-size:12px;color:rgba(255,255,255,.55);">Bilkul sahi talaffuz! Agla letter aa raha hai...</div>'
+        +'</div>';
+      if(btn){ btn.style.display='none'; }
+      // Auto next after 1.2s
+      setTimeout(function(){ if(typeof pcNx==='function') pcNx(); }, 1200);
+    } else {
+      // ❌ GALAT JAWAB — error feedback + retry button
+      var col = pct>=50?'#FFD166':'#FF4B4B';
+      var msg = pct>=50?'😃 Karib hai! Dobara try karo':'😩 Dobara suno phir bolo';
+      if(resEl) resEl.innerHTML=
+        '<div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(255,75,75,.3);border-radius:12px;padding:10px;font-size:13px;">'
+        +'<div style="color:'+col+';font-weight:700;margin-bottom:4px;">'+msg+'</div>'
+        +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "'+spoken+'" | Expected: "'+exp+'" | Score: <b style="color:'+col+'">'+pct+'%</b></div>'
+        +'</div>';
+      if(btn){ btn.textContent='🎤 Dobara Bolo'; btn.style.background=''; btn.disabled=false; }
+    }
   };
   sr.onerror = function(){
     if(btn){ btn.textContent='🎤 Bol ke Dekho'; btn.style.background=''; btn.disabled=false; }
