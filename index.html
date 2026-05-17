@@ -14570,14 +14570,21 @@ function pcMicSpeak(micId, resId, expected){
   var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SRClass){ document.getElementById(resId).innerHTML='<div style="color:var(--mut);font-size:12px;">🎤 Mic is browser mein nahi chala.</div>'; return; }
   var btn = document.getElementById(micId);
-  if(btn){ btn.textContent='&#9899; Sun raha hun...'; btn.style.background='rgba(255,75,75,.3)'; btn.disabled=true; }
+  if(btn){ btn.textContent='🔴 Sun raha hun...'; btn.style.background='rgba(255,75,75,.3)'; btn.disabled=true; }
   var sr = new SRClass();
   sr.lang = 'en-US'; sr.continuous = false; sr.interimResults = false;
   sr.onresult = function(ev){
     var spoken = ev.results[0][0].transcript.trim().toLowerCase();
     var exp = expected.toLowerCase().replace(/[^a-z0-9 ]/g,'');
-    var score = (spoken.indexOf(exp) !== -1 || exp.indexOf(spoken) !== -1) ? 100
-      : (spoken.split('').filter(function(c){ return exp.indexOf(c)!==-1; }).length / Math.max(spoken.length, exp.length) * 100);
+    // Direct match OR short sound match (e.g. "apple" accepted for "ay" = letter A)
+    var directMatch = (spoken === exp || spoken.indexOf(exp) !== -1 || exp.indexOf(spoken) !== -1);
+    var firstLetterMatch = exp.length <= 3 && spoken.length > 0 && spoken[0] === exp[0];
+    var score;
+    if(directMatch || firstLetterMatch){
+      score = 100;
+    } else {
+      score = (spoken.split('').filter(function(c){ return exp.indexOf(c)!==-1; }).length / Math.max(spoken.length, exp.length) * 100);
+    }
     var pct = Math.round(score);
     var resEl = document.getElementById(resId);
 
