@@ -104,6 +104,164 @@ body { padding-top: 48px; }
 .ach-new{position:absolute;top:6px;right:6px;background:#FF4B4B;color:#fff;font-size:8px;font-weight:900;padding:2px 5px;border-radius:8px;letter-spacing:.3px;animation:achNewPulse 1.5s ease infinite;}
 @keyframes achNewPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
 .ach-lock-ico{position:absolute;top:6px;right:6px;font-size:12px;opacity:.5;}
+
+
+/* ══════════════════════════════════════
+   PRE-CLASS ANIMATIONS
+══════════════════════════════════════ */
+
+/* Letter pop-in */
+@keyframes letterPop {
+  0%   { transform: scale(0.4) rotate(-8deg); opacity: 0; }
+  60%  { transform: scale(1.18) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Slide + fade in from bottom */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Blink for fill-blank placeholder */
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.3; }
+}
+
+/* Card shine sweep */
+@keyframes shineSweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+/* Correct answer pulse */
+@keyframes correctPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(88,204,2,.6); }
+  70%  { box-shadow: 0 0 0 14px rgba(88,204,2,0); }
+  100% { box-shadow: 0 0 0 0 rgba(88,204,2,0); }
+}
+
+/* Wrong shake */
+@keyframes wrongShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-8px); }
+  40%     { transform: translateX(8px); }
+  60%     { transform: translateX(-6px); }
+  80%     { transform: translateX(6px); }
+}
+
+/* Speed timer bar pulse when low */
+@keyframes timerUrgent {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.5; }
+}
+
+/* Score ring draw */
+@keyframes ringDraw {
+  from { stroke-dashoffset: 226; }
+}
+
+/* Step transition classes */
+.pc-step-in {
+  animation: pcStepIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pcStepIn {
+  from { opacity: 0; transform: translateX(30px) scale(.97); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* Quiz button hover glow */
+.pc-opt-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform .15s, border-color .18s, box-shadow .18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.pc-opt-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,.07);
+  opacity: 0;
+  transition: opacity .15s;
+}
+.pc-opt-btn:active::after { opacity: 1; }
+.pc-opt-btn:active { transform: scale(.94); }
+
+/* Speed round urgent timer */
+#pcspeed_timerbar.urgent {
+  animation: timerUrgent .4s ease infinite;
+}
+
+/* ═══════════════════════════════════════════════
+   HEART SYSTEM — Free Users
+═══════════════════════════════════════════════ */
+.heart-icon { font-size:18px; transition:transform .2s,filter .2s; line-height:1; display:inline-block; }
+.heart-icon.lost { filter:grayscale(1) opacity(.35); }
+.heart-icon.shake { animation:heartShake .4s ease; }
+.heart-icon.regen { animation:heartRegen .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes heartShake {
+  0%,100%{ transform:translateX(0) scale(1); }
+  25%{ transform:translateX(-5px) scale(.85); }
+  50%{ transform:translateX(5px) scale(.85); }
+  75%{ transform:translateX(-4px) scale(.9); }
+}
+@keyframes heartRegen {
+  0%{ transform:scale(0) rotate(-20deg); filter:grayscale(1) opacity(.3); }
+  60%{ transform:scale(1.3) rotate(5deg); filter:none; }
+  100%{ transform:scale(1) rotate(0); filter:none; }
+}
+#noHeartsOverlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:99998;
+  display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+}
+#noHeartsOverlay.show { display:flex; }
+.nho-box {
+  background:linear-gradient(135deg,#1a0505,#2d0a0a,#1a0505);
+  border:2px solid rgba(255,75,75,.55); border-radius:28px;
+  padding:32px 24px; text-align:center; max-width:300px; width:90%;
+  box-shadow:0 20px 60px rgba(255,75,75,.25);
+  animation:nhoPopIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes nhoPopIn { from{transform:scale(.6);opacity:0;} to{transform:scale(1);opacity:1;} }
+.nho-emoji { font-size:64px; margin-bottom:12px; animation:nhoBeat 1.5s ease infinite; }
+@keyframes nhoBeat { 0%,100%{transform:scale(1);} 14%{transform:scale(1.2);} 28%{transform:scale(1);} 42%{transform:scale(1.15);} }
+.nho-title { font-family:'Fredoka One',sans-serif; font-size:24px; color:#FF4B4B; margin-bottom:8px; }
+.nho-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:8px; line-height:1.5; }
+.nho-timer { font-family:'Fredoka One',sans-serif; font-size:28px; color:#FF9A3C; margin-bottom:20px; }
+.nho-btn-go { width:100%; padding:14px; border-radius:16px; border:none; background:linear-gradient(135deg,#FF4B4B,#cc2222); color:#fff; font-family:'Fredoka One',sans-serif; font-size:16px; cursor:pointer; box-shadow:0 5px 0 #991111; margin-bottom:10px; }
+.nho-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.07); color:rgba(255,255,255,.6); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; }
+
+/* ═══════════════════════════════════════════════
+   PAUSE SCREEN — Game Style
+═══════════════════════════════════════════════ */
+#pauseOverlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:99997;
+  display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+}
+#pauseOverlay.show { display:flex; }
+.pause-box {
+  background:linear-gradient(135deg,#0d0a1e,#1a0f3a,#0d0a1e);
+  border:2px solid rgba(91,141,239,.5); border-radius:28px;
+  padding:32px 24px; text-align:center; max-width:300px; width:90%;
+  box-shadow:0 20px 60px rgba(91,141,239,.25);
+  animation:pausePopIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pausePopIn { from{transform:scale(.65) translateY(30px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
+.pause-emoji { font-size:60px; margin-bottom:10px; animation:pauseFloat 2.5s ease infinite; }
+@keyframes pauseFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+.pause-title { font-family:'Fredoka One',sans-serif; font-size:26px; color:#5B8DEF; margin-bottom:6px; text-shadow:0 0 16px rgba(91,141,239,.5); }
+.pause-sub { font-size:13px; color:rgba(255,255,255,.45); margin-bottom:24px; line-height:1.5; }
+.pause-btn-continue { width:100%; padding:16px; border-radius:18px; border:none; background:linear-gradient(135deg,#2EE59D,#1BC47D); color:#0A0918; font-family:'Fredoka One',sans-serif; font-size:17px; cursor:pointer; box-shadow:0 5px 0 #14A363; margin-bottom:10px; transition:transform .15s; }
+.pause-btn-continue:active { transform:scale(.97); }
+.pause-btn-restart { width:100%; padding:14px; border-radius:16px; border:2px solid rgba(255,150,0,.4); background:rgba(255,150,0,.1); color:#FF9A3C; font-family:'Fredoka One',sans-serif; font-size:15px; cursor:pointer; margin-bottom:10px; transition:transform .15s; }
+.pause-btn-restart:active { transform:scale(.97); }
+.pause-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:rgba(255,255,255,.5); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; transition:transform .15s; }
+.pause-btn-dash:active { transform:scale(.97); }
+.pause-divider { height:1px; background:rgba(255,255,255,.08); margin:14px 0; }
 </style>
 
 <style>
@@ -4164,7 +4322,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
     <button class="lc" onclick="exitLesson()" style="position: relative; overflow: hidden;">✕</button>
     <div class="lpb"><div class="lpf" id="lPf" style="width: 2%;"></div></div>
     <div class="lhts" id="lHt">❤️❤️❤️❤️❤️❤️❤️</div>
-    <button id="pcPauseBtn" onclick="pcShowPauseMenu()" style="display:none;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;padding:6px 10px;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;margin-left:4px;">⏸</button>
+    <button id="pauseBtn" onclick="showPauseScreen()" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;">⏸️</button>
   </div>
   <div class="lb" id="lBd" style="opacity: 1; transform: translateX(0px);"><div class="vc a observed anim-entrance" id="vc3" style="animation-delay: 0s; position: relative; overflow: hidden;"><div class="vct"><div class="vcn">2</div><div><div class="vcw">Bread</div><div class="vcu">روٹی / ڈبل روٹی</div><div class="vcp">/BRED/</div></div></div><div class="vcb"><div class="vce">"Give me some bread."</div></div><div class="vcp2">💡 Naan, chapati, aur double roti sab ke liye</div><div class="vmcard" style="border-color:#FF6B35;background:linear-gradient(135deg,#FF6B3518,#FF6B3508);"><div class="vmcard-emoji">🍞</div><div class="vmcard-body"><div class="vmcard-scene">Roti / Slice</div><div class="vmcard-trick" style="color:#FF6B35">🧠 Bread = Roti</div></div></div><div class="vsits"><div class="vsits-title">📍 Kahaan Use Karein:</div><div class="vsit"><span class="vsit-em">🍳</span><div><div class="vsit-pl">Breakfast</div><div class="vsit-ex">"Bread and butter."</div></div></div><div class="vsit"><span class="vsit-em">🍽️</span><div><div class="vsit-pl">Dinner</div><div class="vsit-ex">"Eat with bread."</div></div></div><div class="vsit"><span class="vsit-em">🛒</span><div><div class="vsit-pl">Market</div><div class="vsit-ex">"Buy some bread."</div></div></div></div><div class="vmistake">⚠️ ⚠️ Galti: Bread qabil-e-ginti nahi, "a bread" ghalat hai, "a piece of bread" kahein.</div><div class="spk-bar"><button class="spk-btn spk-listen" onclick="ttsPlay(3)" style="position: relative; overflow: hidden;">🔊 Word + Example</button><button class="spk-btn spk-slow" onclick="ttsSlow(3)">🐢 Dheere Suno</button></div><div id="ram_container_2"><div class="ram-box"><div class="ram-title">🎤 Repeat After Me</div><div class="ram-word" id="ram_word_2">Bread</div><div class="ram-pron" id="ram_pron_2">/BRED/</div><div class="ram-steps" id="ram_steps_2"><div class="ram-step active" id="ram_s1_2">🔊 Step 1: Pehle suno</div><div class="ram-step" id="ram_s2_2">🎤 Step 2: Mic mein bolo</div><div class="ram-step" id="ram_s3_2">📊 Step 3: Score dekho</div></div><div style="display:flex;gap:8px;margin-top:12px;"><button class="spk-btn spk-listen" data-ramid="2" onclick="ramListenById(this)">🔊 Suno</button><button class="spk-btn spk-mic" id="ram_micbtn_2" data-ramid="2" onclick="ramRecordById(this)">🎤 Bolo</button><button class="spk-btn spk-slow" data-ramid="2" onclick="ramSlowById(this)">🐢 Dheere</button></div><div id="ram_result_2"></div></div></div></div><div class="a" style="padding:8px 0 20px;"><button class="bg" onclick="markL(3)">✅ Samajh Gaya! →</button><button class="bo" onclick="ttsPlay(3)">🔊 Dobara Suno</button></div></div>
 </div>
@@ -13510,6 +13668,357 @@ function _pcKey(lang){
   return 'su_preclass_' + pid + '_' + lang;
 }
 
+// ══════════════════════════════════════════════════════════
+// PC_ALPHABETS — Inbuilt alphabet data har language ke liye
+// Priority: Firebase/Admin > PC_ALPHABETS > "no data" screen
+// ══════════════════════════════════════════════════════════
+var PC_ALPHABETS = {
+  en: [
+    {char:'A',upper:'A',lower:'a',name:'A',pronunciation:'ay',example:'Apple',meaning:'Seb',sound_hint:"Jaise 'ey' bolta hai"},
+    {char:'B',upper:'B',lower:'b',name:'B',pronunciation:'bee',example:'Ball',meaning:'Gend',sound_hint:"Honton ko mila ke 'b' bolo"},
+    {char:'C',upper:'C',lower:'c',name:'C',pronunciation:'see',example:'Cat',meaning:'Billi',sound_hint:"'k' ya 's' ki awaaz"},
+    {char:'D',upper:'D',lower:'d',name:'D',pronunciation:'dee',example:'Dog',meaning:'Kutta',sound_hint:"Zeban daanton ke peeche rakho"},
+    {char:'E',upper:'E',lower:'e',name:'E',pronunciation:'ee',example:'Egg',meaning:'Anda',sound_hint:"Seedha 'ee' ki awaaz"},
+    {char:'F',upper:'F',lower:'f',name:'F',pronunciation:'ef',example:'Fish',meaning:'Machli',sound_hint:"Upar ke daant nichle honth pe rakho"},
+    {char:'G',upper:'G',lower:'g',name:'G',pronunciation:'jee',example:'Goat',meaning:'Bakri',sound_hint:"Andar se 'g' nikalo"},
+    {char:'H',upper:'H',lower:'h',name:'H',pronunciation:'aych',example:'Hat',meaning:'Topi',sound_hint:"Halki saans ki awaaz"},
+    {char:'I',upper:'I',lower:'i',name:'I',pronunciation:'eye',example:'Ice',meaning:'Baraf',sound_hint:"'aa-ee' milake bolo"},
+    {char:'J',upper:'J',lower:'j',name:'J',pronunciation:'jay',example:'Jam',meaning:'Murabba',sound_hint:"'j' phir 'ey'"},
+    {char:'K',upper:'K',lower:'k',name:'K',pronunciation:'kay',example:'King',meaning:'Badshah',sound_hint:"Andar se 'k' ki awaaz"},
+    {char:'L',upper:'L',lower:'l',name:'L',pronunciation:'el',example:'Lion',meaning:'Sher',sound_hint:"Zeban taalu se lagao"},
+    {char:'M',upper:'M',lower:'m',name:'M',pronunciation:'em',example:'Moon',meaning:'Chaand',sound_hint:"Honton ko band karke 'm' bolo"},
+    {char:'N',upper:'N',lower:'n',name:'N',pronunciation:'en',example:'Nose',meaning:'Naak',sound_hint:"Naak se awaaz nikalo"},
+    {char:'O',upper:'O',lower:'o',name:'O',pronunciation:'oh',example:'Orange',meaning:'Narangi',sound_hint:"Honton ko gol karo"},
+    {char:'P',upper:'P',lower:'p',name:'P',pronunciation:'pee',example:'Pen',meaning:'Qalam',sound_hint:"Honton se hawa phenko"},
+    {char:'Q',upper:'Q',lower:'q',name:'Q',pronunciation:'cue',example:'Queen',meaning:'Malika',sound_hint:"'k-yoo' milake bolo"},
+    {char:'R',upper:'R',lower:'r',name:'R',pronunciation:'ar',example:'Rain',meaning:'Baarish',sound_hint:"Thodi si zeban ghuma ke bolo"},
+    {char:'S',upper:'S',lower:'s',name:'S',pronunciation:'ess',example:'Sun',meaning:'Suraj',sound_hint:"Saanp jaisi seeti awaaz"},
+    {char:'T',upper:'T',lower:'t',name:'T',pronunciation:'tee',example:'Tree',meaning:'Darakht',sound_hint:"Zeban daanton pe rakho"},
+    {char:'U',upper:'U',lower:'u',name:'U',pronunciation:'you',example:'Umbrella',meaning:'Chhatri',sound_hint:"Honton aage karke 'yoo' bolo"},
+    {char:'V',upper:'V',lower:'v',name:'V',pronunciation:'vee',example:'Van',meaning:'Gaadi',sound_hint:"Daant nichle honth pe rakho, 'v'"},
+    {char:'W',upper:'W',lower:'w',name:'W',pronunciation:'double-u',example:'Water',meaning:'Paani',sound_hint:"Honton gol karke 'w' bolo"},
+    {char:'X',upper:'X',lower:'x',name:'X',pronunciation:'ex',example:'X-ray',meaning:'X-ray',sound_hint:"'eks' ki awaaz"},
+    {char:'Y',upper:'Y',lower:'y',name:'Y',pronunciation:'why',example:'Yellow',meaning:'Peela',sound_hint:"'w-aa-ee' milake bolo"},
+    {char:'Z',upper:'Z',lower:'z',name:'Z',pronunciation:'zee',example:'Zebra',meaning:'Zebra',sound_hint:"Machhar jaisi awaaz 'zzz'"}
+  ],
+  ru: [
+    {char:'А',upper:'А',lower:'а',name:'А',pronunciation:'a',example:'Арбуз',meaning:'Tarbuz',sound_hint:"Seedha 'a' jaise urdu mein"},
+    {char:'Б',upper:'Б',lower:'б',name:'Б',pronunciation:'b',example:'Банан',meaning:'Kela',sound_hint:"'b' ki awaaz"},
+    {char:'В',upper:'В',lower:'в',name:'В',pronunciation:'v',example:'Вода',meaning:'Paani',sound_hint:"'v' ki awaaz, daant honth pe"},
+    {char:'Г',upper:'Г',lower:'г',name:'Г',pronunciation:'g',example:'Город',meaning:'Shehar',sound_hint:"Andar se 'g' nikalo"},
+    {char:'Д',upper:'Д',lower:'д',name:'Д',pronunciation:'d',example:'Дом',meaning:'Ghar',sound_hint:"'d' ki awaaz"},
+    {char:'Е',upper:'Е',lower:'е',name:'Е',pronunciation:'ye',example:'Ель',meaning:'Devdar darakht',sound_hint:"'ye' jaise 'yet' mein"},
+    {char:'Ё',upper:'Ё',lower:'ё',name:'Ё',pronunciation:'yo',example:'Ёж',meaning:'Kanta maar jaanwar',sound_hint:"'yo' jaise 'yogurt' mein"},
+    {char:'Ж',upper:'Ж',lower:'ж',name:'Zh',pronunciation:'zh',example:'Журнал',meaning:'Risaala',sound_hint:"'zh' jaise 'beige' mein"},
+    {char:'З',upper:'З',lower:'з',name:'З',pronunciation:'z',example:'Зима',meaning:'Sardi',sound_hint:"'z' ki awaaz, machhar jaisi"},
+    {char:'И',upper:'И',lower:'и',name:'И',pronunciation:'ee',example:'Имя',meaning:'Naam',sound_hint:"Lambi 'ee' ki awaaz"},
+    {char:'Й',upper:'Й',lower:'й',name:'Й',pronunciation:'y',example:'Йод',meaning:'Iodine',sound_hint:"Chhoti 'y' ki awaaz"},
+    {char:'К',upper:'К',lower:'к',name:'К',pronunciation:'k',example:'Кот',meaning:'Billi',sound_hint:"'k' ki awaaz"},
+    {char:'Л',upper:'Л',lower:'л',name:'Л',pronunciation:'l',example:'Лес',meaning:'Jungle',sound_hint:"'l' ki awaaz, zeban taalu pe"},
+    {char:'М',upper:'М',lower:'м',name:'М',pronunciation:'m',example:'Мама',meaning:'Ammi',sound_hint:"Honton band karke 'm'"},
+    {char:'Н',upper:'Н',lower:'н',name:'Н',pronunciation:'n',example:'Нос',meaning:'Naak',sound_hint:"'n' ki awaaz"},
+    {char:'О',upper:'О',lower:'о',name:'О',pronunciation:'o',example:'Окно',meaning:'Khirki',sound_hint:"Gol honton se 'o'"},
+    {char:'П',upper:'П',lower:'п',name:'П',pronunciation:'p',example:'Папа',meaning:'Abbu',sound_hint:"'p' ki awaaz"},
+    {char:'Р',upper:'Р',lower:'р',name:'Р',pronunciation:'r',example:'Рыба',meaning:'Machli',sound_hint:"Zeban ghuma ke 'r' bolo"},
+    {char:'С',upper:'С',lower:'с',name:'С',pronunciation:'s',example:'Собака',meaning:'Kutta',sound_hint:"'s' saanp jaisi awaaz"},
+    {char:'Т',upper:'Т',lower:'т',name:'Т',pronunciation:'t',example:'Телефон',meaning:'Phone',sound_hint:"'t' ki awaaz"},
+    {char:'У',upper:'У',lower:'у',name:'У',pronunciation:'oo',example:'Утро',meaning:'Subah',sound_hint:"Honton aage kar ke 'oo'"},
+    {char:'Ф',upper:'Ф',lower:'ф',name:'F',pronunciation:'f',example:'Фото',meaning:'Tasveer',sound_hint:"Daant honth pe 'f'"},
+    {char:'Х',upper:'Х',lower:'х',name:'Kh',pronunciation:'kh',example:'Хлеб',meaning:'Roti',sound_hint:"Urdu 'kh' jaise 'khaana'"},
+    {char:'Ц',upper:'Ц',lower:'ц',name:'Ts',pronunciation:'ts',example:'Цирк',meaning:'Circus',sound_hint:"'ts' milake bolo"},
+    {char:'Ч',upper:'Ч',lower:'ч',name:'Ch',pronunciation:'ch',example:'Час',meaning:'Ghanta',sound_hint:"'ch' jaise 'chair' mein"},
+    {char:'Ш',upper:'Ш',lower:'ш',name:'Sh',pronunciation:'sh',example:'Школа',meaning:'School',sound_hint:"'sh' jaise 'show' mein"},
+    {char:'Щ',upper:'Щ',lower:'щ',name:'Shch',pronunciation:'shch',example:'Щи',meaning:'Soup',sound_hint:"Lamba 'sh' ki awaaz"},
+    {char:'Ъ',upper:'Ъ',lower:'ъ',name:'Hard sign',pronunciation:'(khamosh)',example:'Объект',meaning:'Cheez',sound_hint:"Koi awaaz nahi, sirf separator"},
+    {char:'Ы',upper:'Ы',lower:'ы',name:'Y',pronunciation:'y',example:'Мышь',meaning:'Chuha',sound_hint:"'i' aur 'u' ke beech ki awaaz"},
+    {char:'Ь',upper:'Ь',lower:'ь',name:'Soft sign',pronunciation:'(naram)',example:'Мать',meaning:'Maadhar',sound_hint:"Pehle waale harf ko naram karta hai"},
+    {char:'Э',upper:'Э',lower:'э',name:'E',pronunciation:'e',example:'Эхо',meaning:'Gaaj',sound_hint:"'e' jaise 'egg' mein"},
+    {char:'Ю',upper:'Ю',lower:'ю',name:'Yu',pronunciation:'yu',example:'Юг',meaning:'Janub',sound_hint:"'yu' jaise 'you'"},
+    {char:'Я',upper:'Я',lower:'я',name:'Ya',pronunciation:'ya',example:'Яблоко',meaning:'Seb',sound_hint:"'ya' jaise 'yacht' mein"}
+  ],
+  ar: [
+    {char:'ا',upper:'ا',lower:'ا',name:'Alif',pronunciation:'a / aa',example:'أسد',meaning:'Sher',sound_hint:"Seedha 'a' ya 'aa' ki awaaz"},
+    {char:'ب',upper:'ب',lower:'ب',name:'Ba',pronunciation:'b',example:'بيت',meaning:'Ghar',sound_hint:"'b' ki awaaz, honton se"},
+    {char:'ت',upper:'ت',lower:'ت',name:'Ta',pronunciation:'t',example:'تفاح',meaning:'Seb',sound_hint:"'t' ki awaaz"},
+    {char:'ث',upper:'ث',lower:'ث',name:'Tha',pronunciation:'th',example:'ثلاثة',meaning:'Teen',sound_hint:"'th' jaise 'think' mein"},
+    {char:'ج',upper:'ج',lower:'ج',name:'Jeem',pronunciation:'j',example:'جمل',meaning:'Ount',sound_hint:"'j' ki awaaz"},
+    {char:'ح',upper:'ح',lower:'ح',name:'Ha',pronunciation:'H (gehri)',example:'حر',meaning:'Garmi',sound_hint:"Gehri seenay se 'h' ki awaaz"},
+    {char:'خ',upper:'خ',lower:'خ',name:'Kha',pronunciation:'kh',example:'خبز',meaning:'Roti',sound_hint:"Urdu 'kh' jaise 'khaana'"},
+    {char:'د',upper:'د',lower:'د',name:'Dal',pronunciation:'d',example:'دار',meaning:'Ghar',sound_hint:"'d' ki awaaz"},
+    {char:'ذ',upper:'ذ',lower:'ذ',name:'Dhal',pronunciation:'dh',example:'ذهب',meaning:'Sona',sound_hint:"'dh' jaise 'the' mein"},
+    {char:'ر',upper:'ر',lower:'ر',name:'Ra',pronunciation:'r',example:'رجل',meaning:'Aadmi',sound_hint:"'r' zeban ghuma ke"},
+    {char:'ز',upper:'ز',lower:'ز',name:'Zay',pronunciation:'z',example:'زيت',meaning:'Tel',sound_hint:"'z' ki awaaz"},
+    {char:'س',upper:'س',lower:'س',name:'Seen',pronunciation:'s',example:'سمك',meaning:'Machli',sound_hint:"'s' ki awaaz"},
+    {char:'ش',upper:'ش',lower:'ش',name:'Sheen',pronunciation:'sh',example:'شمس',meaning:'Suraj',sound_hint:"'sh' ki awaaz"},
+    {char:'ص',upper:'ص',lower:'ص',name:'Saad',pronunciation:'S (mota)',example:'صابون',meaning:'Sabun',sound_hint:"Mota 'S' andar se"},
+    {char:'ض',upper:'ض',lower:'ض',name:'Daad',pronunciation:'D (mota)',example:'ضفدع',meaning:'Mendhak',sound_hint:"Andar se mota 'D'"},
+    {char:'ط',upper:'ط',lower:'ط',name:'Ta',pronunciation:'T (mota)',example:'طفل',meaning:'Bacha',sound_hint:"Andar se mota 'T'"},
+    {char:'ظ',upper:'ظ',lower:'ظ',name:'Dha',pronunciation:'DH (mota)',example:'ظلام',meaning:'Andhera',sound_hint:"Mota 'dh' ki awaaz"},
+    {char:'ع',upper:'ع',lower:'ع',name:'Ain',pronunciation:'ayn (gehri)',example:'عين',meaning:'Aankh',sound_hint:'Gehri andar se nikli awaaz'},
+    {char:'غ',upper:'غ',lower:'غ',name:'Ghain',pronunciation:'gh',example:'غرفة',meaning:'Kamra',sound_hint:"Urdu 'gh' jaise 'ghulam'"},
+    {char:'ف',upper:'ف',lower:'ف',name:'Fa',pronunciation:'f',example:'فيل',meaning:'Hathi',sound_hint:"Daant honth pe 'f'"},
+    {char:'ق',upper:'ق',lower:'ق',name:'Qaf',pronunciation:'q (gehri)',example:'قمر',meaning:'Chaand',sound_hint:"Bahut andar se 'q' nikalo"},
+    {char:'ك',upper:'ك',lower:'ك',name:'Kaf',pronunciation:'k',example:'كتاب',meaning:'Kitaab',sound_hint:"'k' ki awaaz"},
+    {char:'ل',upper:'ل',lower:'ل',name:'Lam',pronunciation:'l',example:'لبن',meaning:'Doodh',sound_hint:"Zeban taalu pe 'l'"},
+    {char:'م',upper:'م',lower:'م',name:'Meem',pronunciation:'m',example:'مدرسة',meaning:'School',sound_hint:"Honton band karke 'm'"},
+    {char:'ن',upper:'ن',lower:'ن',name:'Noon',pronunciation:'n',example:'نهر',meaning:'Darya',sound_hint:"'n' naak se nikalo"},
+    {char:'ه',upper:'ه',lower:'ه',name:'Ha',pronunciation:'h',example:'هواء',meaning:'Hawa',sound_hint:"Halki saans 'h'"},
+    {char:'و',upper:'و',lower:'و',name:'Waw',pronunciation:'w / oo',example:'وردة',meaning:'Phool',sound_hint:"'w' ya 'oo' ki awaaz"},
+    {char:'ي',upper:'ي',lower:'ي',name:'Ya',pronunciation:'y / ee',example:'يد',meaning:'Haath',sound_hint:"'y' ya 'ee' ki awaaz"}
+  ],
+  ko: [
+    {char:'ㄱ',upper:'ㄱ',lower:'ㄱ',name:'Giyeok',pronunciation:'g/k',example:'가방',meaning:'Bag',sound_hint:"'g' ya 'k' ki awaaz"},
+    {char:'ㄴ',upper:'ㄴ',lower:'ㄴ',name:'Nieun',pronunciation:'n',example:'나무',meaning:'Darakht',sound_hint:"'n' ki awaaz"},
+    {char:'ㄷ',upper:'ㄷ',lower:'ㄷ',name:'Digeut',pronunciation:'d/t',example:'도시',meaning:'Shehar',sound_hint:"'d' ya 't' ki awaaz"},
+    {char:'ㄹ',upper:'ㄹ',lower:'ㄹ',name:'Rieul',pronunciation:'r/l',example:'라디오',meaning:'Radio',sound_hint:"'r' ya 'l' ke beech ki awaaz"},
+    {char:'ㅁ',upper:'ㅁ',lower:'ㅁ',name:'Mieum',pronunciation:'m',example:'마음',meaning:'Dil',sound_hint:"'m' honton band karke"},
+    {char:'ㅂ',upper:'ㅂ',lower:'ㅂ',name:'Bieup',pronunciation:'b/p',example:'바다',meaning:'Samundar',sound_hint:"'b' ya 'p' ki awaaz"},
+    {char:'ㅅ',upper:'ㅅ',lower:'ㅅ',name:'Siot',pronunciation:'s',example:'사람',meaning:'Insaan',sound_hint:"'s' ki awaaz"},
+    {char:'ㅇ',upper:'ㅇ',lower:'ㅇ',name:'Ieung',pronunciation:'ng / (khamosh)',example:'아이',meaning:'Bacha',sound_hint:"Shuru mein khamosh, aakhir mein 'ng'"},
+    {char:'ㅈ',upper:'ㅈ',lower:'ㅈ',name:'Jieut',pronunciation:'j',example:'자동차',meaning:'Gaadi',sound_hint:"'j' ki awaaz"},
+    {char:'ㅊ',upper:'ㅊ',lower:'ㅊ',name:'Chieut',pronunciation:'ch',example:'차',meaning:'Chai',sound_hint:"'ch' ki awaaz"},
+    {char:'ㅋ',upper:'ㅋ',lower:'ㅋ',name:'Kieuk',pronunciation:'k',example:'코',meaning:'Naak',sound_hint:"Andar se zor se 'k'"},
+    {char:'ㅌ',upper:'ㅌ',lower:'ㅌ',name:'Tieut',pronunciation:'t',example:'토끼',meaning:'Khargosh',sound_hint:"Zor se 't' ki awaaz"},
+    {char:'ㅍ',upper:'ㅍ',lower:'ㅍ',name:'Pieup',pronunciation:'p',example:'파란',meaning:'Neela',sound_hint:"Zor se 'p' ki awaaz"},
+    {char:'ㅎ',upper:'ㅎ',lower:'ㅎ',name:'Hieut',pronunciation:'h',example:'하늘',meaning:'Aasman',sound_hint:"Halki saans 'h'"},
+    {char:'ㅏ',upper:'ㅏ',lower:'ㅏ',name:'A',pronunciation:'a',example:'아',meaning:'(Aah ki awaaz)',sound_hint:"Seedha 'a' jaise urdu mein"},
+    {char:'ㅓ',upper:'ㅓ',lower:'ㅓ',name:'Eo',pronunciation:'eo',example:'어',meaning:'(Oh ki awaaz)',sound_hint:"'uh' ki awaaz"},
+    {char:'ㅗ',upper:'ㅗ',lower:'ㅗ',name:'O',pronunciation:'o',example:'오',meaning:'Paanch',sound_hint:"Gol honton se 'o'"},
+    {char:'ㅜ',upper:'ㅜ',lower:'ㅜ',name:'U',pronunciation:'u',example:'우',meaning:'(Oo ki awaaz)',sound_hint:"Honton aage karke 'oo'"},
+    {char:'ㅡ',upper:'ㅡ',lower:'ㅡ',name:'Eu',pronunciation:'eu',example:'으',meaning:'(Sochna)',sound_hint:"Honton flat karke 'uh'"},
+    {char:'ㅣ',upper:'ㅣ',lower:'ㅣ',name:'I',pronunciation:'i',example:'이',meaning:'Yeh / Do',sound_hint:"Lambi 'ee' ki awaaz"},
+    {char:'ㅐ',upper:'ㅐ',lower:'ㅐ',name:'Ae',pronunciation:'ae',example:'애',meaning:'(Ae ki awaaz)',sound_hint:"'ae' jaise 'air' mein"},
+    {char:'ㅔ',upper:'ㅔ',lower:'ㅔ',name:'E',pronunciation:'e',example:'에',meaning:'(E ki awaaz)',sound_hint:"'e' jaise 'egg' mein"},
+    {char:'ㅑ',upper:'ㅑ',lower:'ㅑ',name:'Ya',pronunciation:'ya',example:'야',meaning:'Oi!',sound_hint:"'ya' ki awaaz"},
+    {char:'ㅕ',upper:'ㅕ',lower:'ㅕ',name:'Yeo',pronunciation:'yeo',example:'여',meaning:'Aurat',sound_hint:"'yuh' ki awaaz"}
+  ],
+  ja: [
+    {char:'あ',upper:'あ',lower:'あ',name:'a',pronunciation:'a',example:'あめ',meaning:'Baarish',sound_hint:"Seedha 'a'"},
+    {char:'い',upper:'い',lower:'い',name:'i',pronunciation:'i',example:'いぬ',meaning:'Kutta',sound_hint:"Lambi 'ee'"},
+    {char:'う',upper:'う',lower:'う',name:'u',pronunciation:'u',example:'うみ',meaning:'Samundar',sound_hint:"Chhoti 'oo'"},
+    {char:'え',upper:'え',lower:'え',name:'e',pronunciation:'e',example:'えき',meaning:'Station',sound_hint:"'e' jaise 'egg'"},
+    {char:'お',upper:'お',lower:'お',name:'o',pronunciation:'o',example:'おかね',meaning:'Paisa',sound_hint:"Gol 'o'"},
+    {char:'か',upper:'か',lower:'か',name:'ka',pronunciation:'ka',example:'かさ',meaning:'Chhatri',sound_hint:"'ka' milake bolo"},
+    {char:'き',upper:'き',lower:'き',name:'ki',pronunciation:'ki',example:'きつね',meaning:'Lomri',sound_hint:"'ki' milake bolo"},
+    {char:'く',upper:'く',lower:'く',name:'ku',pronunciation:'ku',example:'くも',meaning:'Baadal',sound_hint:"'ku' milake bolo"},
+    {char:'け',upper:'け',lower:'け',name:'ke',pronunciation:'ke',example:'けむり',meaning:'Dhuwaan',sound_hint:"'ke' milake bolo"},
+    {char:'こ',upper:'こ',lower:'こ',name:'ko',pronunciation:'ko',example:'こども',meaning:'Bacha',sound_hint:"'ko' milake bolo"},
+    {char:'さ',upper:'さ',lower:'さ',name:'sa',pronunciation:'sa',example:'さかな',meaning:'Machli',sound_hint:"'sa' milake bolo"},
+    {char:'し',upper:'し',lower:'し',name:'shi',pronunciation:'shi',example:'しんぶん',meaning:'Akhbaar',sound_hint:"'shi' milake bolo"},
+    {char:'す',upper:'す',lower:'す',name:'su',pronunciation:'su',example:'すし',meaning:'Sushi',sound_hint:"'su' milake bolo"},
+    {char:'せ',upper:'せ',lower:'せ',name:'se',pronunciation:'se',example:'せんせい',meaning:'Ustaad',sound_hint:"'se' milake bolo"},
+    {char:'そ',upper:'そ',lower:'そ',name:'so',pronunciation:'so',example:'そら',meaning:'Aasman',sound_hint:"'so' milake bolo"},
+    {char:'た',upper:'た',lower:'た',name:'ta',pronunciation:'ta',example:'たまご',meaning:'Anda',sound_hint:"'ta' milake bolo"},
+    {char:'ち',upper:'ち',lower:'ち',name:'chi',pronunciation:'chi',example:'ちず',meaning:'Naksha',sound_hint:"'chi' milake bolo"},
+    {char:'つ',upper:'つ',lower:'つ',name:'tsu',pronunciation:'tsu',example:'つき',meaning:'Chaand',sound_hint:"'tsu' milake bolo"},
+    {char:'て',upper:'て',lower:'て',name:'te',pronunciation:'te',example:'てがみ',meaning:'Khat',sound_hint:"'te' milake bolo"},
+    {char:'と',upper:'と',lower:'と',name:'to',pronunciation:'to',example:'とり',meaning:'Parinda',sound_hint:"'to' milake bolo"},
+    {char:'な',upper:'な',lower:'な',name:'na',pronunciation:'na',example:'なまえ',meaning:'Naam',sound_hint:"'na' milake bolo"},
+    {char:'に',upper:'に',lower:'に',name:'ni',pronunciation:'ni',example:'にわ',meaning:'Bagicha',sound_hint:"'ni' milake bolo"},
+    {char:'ぬ',upper:'ぬ',lower:'ぬ',name:'nu',pronunciation:'nu',example:'ぬいぐるみ',meaning:'Gudiya',sound_hint:"'nu' milake bolo"},
+    {char:'ね',upper:'ね',lower:'ね',name:'ne',pronunciation:'ne',example:'ねこ',meaning:'Billi',sound_hint:"'ne' milake bolo"},
+    {char:'の',upper:'の',lower:'の',name:'no',pronunciation:'no',example:'のみもの',meaning:'Peene ki cheez',sound_hint:"'no' milake bolo"},
+    {char:'は',upper:'は',lower:'は',name:'ha',pronunciation:'ha',example:'はな',meaning:'Phool',sound_hint:"'ha' milake bolo"},
+    {char:'ひ',upper:'ひ',lower:'ひ',name:'hi',pronunciation:'hi',example:'ひと',meaning:'Insaan',sound_hint:"'hi' milake bolo"},
+    {char:'ふ',upper:'ふ',lower:'ふ',name:'fu',pronunciation:'fu',example:'ふね',meaning:'Jahaaz',sound_hint:"Halki 'fu' ki awaaz"},
+    {char:'へ',upper:'へ',lower:'へ',name:'he',pronunciation:'he',example:'へや',meaning:'Kamra',sound_hint:"'he' milake bolo"},
+    {char:'ほ',upper:'ほ',lower:'ほ',name:'ho',pronunciation:'ho',example:'ほん',meaning:'Kitaab',sound_hint:"'ho' milake bolo"},
+    {char:'ま',upper:'ま',lower:'ま',name:'ma',pronunciation:'ma',example:'まち',meaning:'Shehar',sound_hint:"'ma' milake bolo"},
+    {char:'み',upper:'み',lower:'み',name:'mi',pronunciation:'mi',example:'みず',meaning:'Paani',sound_hint:"'mi' milake bolo"},
+    {char:'む',upper:'む',lower:'む',name:'mu',pronunciation:'mu',example:'むし',meaning:'Keeda',sound_hint:"'mu' milake bolo"},
+    {char:'め',upper:'め',lower:'め',name:'me',pronunciation:'me',example:'めだか',meaning:'Machli',sound_hint:"'me' milake bolo"},
+    {char:'も',upper:'も',lower:'も',name:'mo',pronunciation:'mo',example:'もり',meaning:'Jungle',sound_hint:"'mo' milake bolo"},
+    {char:'や',upper:'や',lower:'や',name:'ya',pronunciation:'ya',example:'やさい',meaning:'Sabzi',sound_hint:"'ya' milake bolo"},
+    {char:'ゆ',upper:'ゆ',lower:'ゆ',name:'yu',pronunciation:'yu',example:'ゆき',meaning:'Baraf',sound_hint:"'yu' milake bolo"},
+    {char:'よ',upper:'よ',lower:'よ',name:'yo',pronunciation:'yo',example:'よる',meaning:'Raat',sound_hint:"'yo' milake bolo"},
+    {char:'ら',upper:'ら',lower:'ら',name:'ra',pronunciation:'ra',example:'らいおん',meaning:'Sher',sound_hint:"'ra' milake bolo"},
+    {char:'り',upper:'り',lower:'り',name:'ri',pronunciation:'ri',example:'りんご',meaning:'Seb',sound_hint:"'ri' milake bolo"},
+    {char:'る',upper:'る',lower:'る',name:'ru',pronunciation:'ru',example:'るーむ',meaning:'Kamra',sound_hint:"'ru' milake bolo"},
+    {char:'れ',upper:'れ',lower:'れ',name:'re',pronunciation:'re',example:'れい',meaning:'Zero',sound_hint:"'re' milake bolo"},
+    {char:'ろ',upper:'ろ',lower:'ろ',name:'ro',pronunciation:'ro',example:'ろく',meaning:'Chhe',sound_hint:"'ro' milake bolo"},
+    {char:'わ',upper:'わ',lower:'わ',name:'wa',pronunciation:'wa',example:'わたし',meaning:'Main',sound_hint:"'wa' milake bolo"},
+    {char:'を',upper:'を',lower:'を',name:'wo',pronunciation:'o/wo',example:'(grammar particle)',meaning:'(Grammar ka hissa)',sound_hint:"'o' ya 'wo' ki awaaz"},
+    {char:'ん',upper:'ん',lower:'ん',name:'n',pronunciation:'n',example:'でんしゃ',meaning:'Train',sound_hint:"Naak se 'n' ki awaaz"}
+  ],
+  zh: [
+    {char:'人',upper:'人',lower:'人',name:'Rén',pronunciation:'rén',example:'人 (rén)',meaning:'Insaan',sound_hint:"'ren' jaise 'run' ke qareeb"},
+    {char:'大',upper:'大',lower:'大',name:'Dà',pronunciation:'dà',example:'大 (dà)',meaning:'Bara',sound_hint:"'da' ke saath neeche ki awaaz"},
+    {char:'中',upper:'中',lower:'中',name:'Zhōng',pronunciation:'zhōng',example:'中国 (zhōngguó)',meaning:'China',sound_hint:"'jong' ki awaaz"},
+    {char:'国',upper:'国',lower:'国',name:'Guó',pronunciation:'guó',example:'国家 (guójiā)',meaning:'Mulk',sound_hint:"'gwoh' ki awaaz"},
+    {char:'好',upper:'好',lower:'好',name:'Hǎo',pronunciation:'hǎo',example:'你好 (nǐhǎo)',meaning:'Theek / Acha',sound_hint:"'how' ke qareeb, oopar se neeche awaaz"},
+    {char:'你',upper:'你',lower:'你',name:'Nǐ',pronunciation:'nǐ',example:'你好 (nǐhǎo)',meaning:'Tum',sound_hint:"'nee' neeche se oopar"},
+    {char:'我',upper:'我',lower:'我',name:'Wǒ',pronunciation:'wǒ',example:'我是 (wǒ shì)',meaning:'Main',sound_hint:"'woh' neeche se oopar"},
+    {char:'是',upper:'是',lower:'是',name:'Shì',pronunciation:'shì',example:'我是 (wǒ shì)',meaning:'Hoon / Hai',sound_hint:"'sher' mein 'sh' jaise, neeche ki awaaz"},
+    {char:'不',upper:'不',lower:'不',name:'Bù',pronunciation:'bù',example:'不好 (bùhǎo)',meaning:'Nahi',sound_hint:"'boo' neeche ki awaaz"},
+    {char:'有',upper:'有',lower:'有',name:'Yǒu',pronunciation:'yǒu',example:'有没有 (yǒu méiyǒu)',meaning:'Hai (mojood)',sound_hint:"'yo' neeche se oopar"},
+    {char:'一',upper:'一',lower:'一',name:'Yī',pronunciation:'yī',example:'一个 (yīgè)',meaning:'Ek',sound_hint:"Seedhi oopar ki awaaz 'ee'"},
+    {char:'二',upper:'二',lower:'二',name:'Èr',pronunciation:'èr',example:'二月 (èryuè)',meaning:'Do',sound_hint:"'er' neeche ki awaaz"},
+    {char:'三',upper:'三',lower:'三',name:'Sān',pronunciation:'sān',example:'三月 (sānyuè)',meaning:'Teen',sound_hint:"Seedha 'san'"},
+    {char:'四',upper:'四',lower:'四',name:'Sì',pronunciation:'sì',example:'四月 (sìyuè)',meaning:'Chaar',sound_hint:"'si' neeche ki awaaz"},
+    {char:'五',upper:'五',lower:'五',name:'Wǔ',pronunciation:'wǔ',example:'五月 (wǔyuè)',meaning:'Paanch',sound_hint:"'woo' neeche se oopar"},
+    {char:'来',upper:'来',lower:'来',name:'Lái',pronunciation:'lái',example:'来 (lái)',meaning:'Aao',sound_hint:"'lai' oopar ki awaaz"},
+    {char:'去',upper:'去',lower:'去',name:'Qù',pronunciation:'qù',example:'去 (qù)',meaning:'Jao',sound_hint:"'choo' neeche ki awaaz"},
+    {char:'吃',upper:'吃',lower:'吃',name:'Chī',pronunciation:'chī',example:'吃饭 (chīfàn)',meaning:'Khaana Khao',sound_hint:"Seedha 'chee'"},
+    {char:'喝',upper:'喝',lower:'喝',name:'Hē',pronunciation:'hē',example:'喝水 (hēshuǐ)',meaning:'Paani Piyo',sound_hint:"Seedha 'huh'"},
+    {char:'说',upper:'说',lower:'说',name:'Shuō',pronunciation:'shuō',example:'说话 (shuōhuà)',meaning:'Bolo',sound_hint:"'shwoh' seedha ki awaaz"},
+    {char:'水',upper:'水',lower:'水',name:'Shuǐ',pronunciation:'shuǐ',example:'水 (shuǐ)',meaning:'Paani',sound_hint:"'shway' neeche se oopar"},
+    {char:'火',upper:'火',lower:'火',name:'Huǒ',pronunciation:'huǒ',example:'火 (huǒ)',meaning:'Aag',sound_hint:"'hwoh' neeche se oopar"},
+    {char:'日',upper:'日',lower:'日',name:'Rì',pronunciation:'rì',example:'日本 (rìběn)',meaning:'Japan / Din',sound_hint:"'ri' neeche ki awaaz"},
+    {char:'月',upper:'月',lower:'月',name:'Yuè',pronunciation:'yuè',example:'月亮 (yuèliàng)',meaning:'Chaand',sound_hint:"'yweh' neeche ki awaaz"},
+    {char:'山',upper:'山',lower:'山',name:'Shān',pronunciation:'shān',example:'山 (shān)',meaning:'Pahaar',sound_hint:"Seedha 'shan'"},
+    {char:'木',upper:'木',lower:'木',name:'Mù',pronunciation:'mù',example:'木头 (mùtou)',meaning:'Lakdi',sound_hint:"'moo' neeche ki awaaz"},
+    {char:'土',upper:'土',lower:'土',name:'Tǔ',pronunciation:'tǔ',example:'土地 (tǔdì)',meaning:'Zameen',sound_hint:"'too' neeche se oopar"},
+    {char:'金',upper:'金',lower:'金',name:'Jīn',pronunciation:'jīn',example:'金子 (jīnzi)',meaning:'Sona',sound_hint:"Seedha 'jin'"},
+    {char:'女',upper:'女',lower:'女',name:'Nǚ',pronunciation:'nǚ',example:'女人 (nǚrén)',meaning:'Aurat',sound_hint:"'nyoo' neeche se oopar"},
+    {char:'男',upper:'男',lower:'男',name:'Nán',pronunciation:'nán',example:'男人 (nánrén)',meaning:'Mard',sound_hint:"Seedha 'nan'"},
+    {char:'子',upper:'子',lower:'子',name:'Zǐ',pronunciation:'zǐ',example:'孩子 (háizi)',meaning:'Bacha',sound_hint:"'zi' neeche se oopar"},
+    {char:'上',upper:'上',lower:'上',name:'Shàng',pronunciation:'shàng',example:'上面 (shàngmiàn)',meaning:'Oopar',sound_hint:"'shang' neeche ki awaaz"},
+    {char:'下',upper:'下',lower:'下',name:'Xià',pronunciation:'xià',example:'下面 (xiàmiàn)',meaning:'Neeche',sound_hint:"'shya' neeche ki awaaz"},
+    {char:'左',upper:'左',lower:'左',name:'Zuǒ',pronunciation:'zuǒ',example:'左边 (zuǒbiān)',meaning:'Baayein',sound_hint:"'zwoh' neeche se oopar"},
+    {char:'右',upper:'右',lower:'右',name:'Yòu',pronunciation:'yòu',example:'右边 (yòubiān)',meaning:'Daayein',sound_hint:"'yo' neeche ki awaaz"},
+    {char:'前',upper:'前',lower:'前',name:'Qián',pronunciation:'qián',example:'前面 (qiánmiàn)',meaning:'Aage',sound_hint:"'chyen' oopar ki awaaz"},
+    {char:'后',upper:'后',lower:'后',name:'Hòu',pronunciation:'hòu',example:'后面 (hòumiàn)',meaning:'Peechhe',sound_hint:"'ho' neeche ki awaaz"},
+    {char:'家',upper:'家',lower:'家',name:'Jiā',pronunciation:'jiā',example:'家人 (jiārén)',meaning:'Ghar / Khandan',sound_hint:"Seedha 'jya'"},
+    {char:'学',upper:'学',lower:'学',name:'Xué',pronunciation:'xué',example:'学校 (xuéxiào)',meaning:'Seekhna',sound_hint:"'shweh' oopar ki awaaz"},
+    {char:'语',upper:'语',lower:'语',name:'Yǔ',pronunciation:'yǔ',example:'中文 (zhōngwén)',meaning:'Zabaar',sound_hint:"'yoo' neeche se oopar"},
+    {char:'书',upper:'书',lower:'书',name:'Shū',pronunciation:'shū',example:'书本 (shūběn)',meaning:'Kitaab',sound_hint:"Seedha 'shoo'"},
+    {char:'车',upper:'车',lower:'车',name:'Chē',pronunciation:'chē',example:'汽车 (qìchē)',meaning:'Gaadi',sound_hint:"Seedha 'che'"},
+    {char:'马',upper:'马',lower:'马',name:'Mǎ',pronunciation:'mǎ',example:'马 (mǎ)',meaning:'Ghoda',sound_hint:"'ma' neeche se oopar"},
+    {char:'鸟',upper:'鸟',lower:'鸟',name:'Niǎo',pronunciation:'niǎo',example:'鸟 (niǎo)',meaning:'Parinda',sound_hint:"'nyow' neeche se oopar"},
+    {char:'鱼',upper:'鱼',lower:'鱼',name:'Yú',pronunciation:'yú',example:'鱼 (yú)',meaning:'Machli',sound_hint:"'yoo' oopar ki awaaz"},
+    {char:'花',upper:'花',lower:'花',name:'Huā',pronunciation:'huā',example:'花 (huā)',meaning:'Phool',sound_hint:"Seedha 'hwa'"},
+    {char:'草',upper:'草',lower:'草',name:'Cǎo',pronunciation:'cǎo',example:'草地 (cǎodì)',meaning:'Ghaas',sound_hint:"'tsow' neeche se oopar"},
+    {char:'门',upper:'门',lower:'门',name:'Mén',pronunciation:'mén',example:'大门 (dàmén)',meaning:'Darwaaza',sound_hint:"Seedha 'men'"},
+    {char:'口',upper:'口',lower:'口',name:'Kǒu',pronunciation:'kǒu',example:'口语 (kǒuyǔ)',meaning:'Munh',sound_hint:"'ko' neeche se oopar"},
+    {char:'目',upper:'目',lower:'目',name:'Mù',pronunciation:'mù',example:'目标 (mùbiāo)',meaning:'Aankh / Maqsad',sound_hint:"'moo' neeche ki awaaz"}
+  ],
+  fr: [
+    {char:'A',upper:'A',lower:'a',name:'A',pronunciation:'ah',example:'Ami',meaning:'Dost',sound_hint:"Seedha 'ah' ki awaaz"},
+    {char:'B',upper:'B',lower:'b',name:'Bé',pronunciation:'bay',example:'Bonjour',meaning:'Namaste',sound_hint:"'bay' ki awaaz"},
+    {char:'C',upper:'C',lower:'c',name:'Cé',pronunciation:'say',example:'Chat',meaning:'Billi',sound_hint:"'say' ki awaaz"},
+    {char:'D',upper:'D',lower:'d',name:'Dé',pronunciation:'day',example:'Demain',meaning:'Kal',sound_hint:"'day' ki awaaz"},
+    {char:'E',upper:'E',lower:'e',name:'E',pronunciation:'uh',example:'Eau',meaning:'Paani',sound_hint:"Halki 'uh' ki awaaz"},
+    {char:'F',upper:'F',lower:'f',name:'Effe',pronunciation:'ef',example:'Fromage',meaning:'Paneer',sound_hint:"'ef' ki awaaz"},
+    {char:'G',upper:'G',lower:'g',name:'Gé',pronunciation:'zhay',example:'Garçon',meaning:'Ladka',sound_hint:"'zhay' ki awaaz"},
+    {char:'H',upper:'H',lower:'h',name:'Ache',pronunciation:'ash',example:'Heure',meaning:'Ghanta',sound_hint:"French mein H mostly khamosh"},
+    {char:'I',upper:'I',lower:'i',name:'I',pronunciation:'ee',example:'Ile',meaning:'Jazeera',sound_hint:"Lambi 'ee'"},
+    {char:'J',upper:'J',lower:'j',name:'Ji',pronunciation:'zhee',example:'Jour',meaning:'Din',sound_hint:"'zh' jaise 'measure' mein"},
+    {char:'K',upper:'K',lower:'k',name:'Ka',pronunciation:'ka',example:'Kilo',meaning:'Kilo',sound_hint:"'ka' ki awaaz"},
+    {char:'L',upper:'L',lower:'l',name:'Elle',pronunciation:'el',example:'Lune',meaning:'Chaand',sound_hint:"'el' ki awaaz"},
+    {char:'M',upper:'M',lower:'m',name:'Emme',pronunciation:'em',example:'Maison',meaning:'Ghar',sound_hint:"'em' ki awaaz"},
+    {char:'N',upper:'N',lower:'n',name:'Enne',pronunciation:'en',example:'Nuit',meaning:'Raat',sound_hint:"'en' ki awaaz"},
+    {char:'O',upper:'O',lower:'o',name:'O',pronunciation:'oh',example:'Orange',meaning:'Narangi',sound_hint:"Gol 'oh'"},
+    {char:'P',upper:'P',lower:'p',name:'Pé',pronunciation:'pay',example:'Père',meaning:'Baap',sound_hint:"'pay' ki awaaz"},
+    {char:'Q',upper:'Q',lower:'q',name:'Cu',pronunciation:'coo',example:'Que',meaning:'Kya',sound_hint:"'coo' ki awaaz"},
+    {char:'R',upper:'R',lower:'r',name:'Erre',pronunciation:'er (gargling)',example:'Rouge',meaning:'Surakh',sound_hint:"Andar se gargle jaisi 'r' ki awaaz"},
+    {char:'S',upper:'S',lower:'s',name:'Esse',pronunciation:'es',example:'Soleil',meaning:'Suraj',sound_hint:"'es' ki awaaz"},
+    {char:'T',upper:'T',lower:'t',name:'Té',pronunciation:'tay',example:'Table',meaning:'Mez',sound_hint:"'tay' ki awaaz"},
+    {char:'U',upper:'U',lower:'u',name:'U',pronunciation:'oo (round)',example:'Lune',meaning:'Chaand',sound_hint:"Honton gol karke 'oo' bolo"},
+    {char:'V',upper:'V',lower:'v',name:'Vé',pronunciation:'vay',example:'Ville',meaning:'Shehar',sound_hint:"'vay' ki awaaz"},
+    {char:'W',upper:'W',lower:'w',name:'Double-vé',pronunciation:'doobl-vay',example:'Weekend',meaning:'Hafta aakhir',sound_hint:"'doobl-vay' ki awaaz"},
+    {char:'X',upper:'X',lower:'x',name:'Ixe',pronunciation:'eeks',example:'Xylophone',meaning:'Xylophone',sound_hint:"'eeks' ki awaaz"},
+    {char:'Y',upper:'Y',lower:'y',name:'I grec',pronunciation:'ee-grek',example:'Yaourt',meaning:'Dahi',sound_hint:"'ee-grek' ki awaaz"},
+    {char:'Z',upper:'Z',lower:'z',name:'Zède',pronunciation:'zed',example:'Zéro',meaning:'Zero',sound_hint:"'zed' ki awaaz"},
+    {char:'É',upper:'É',lower:'é',name:'E accent aigu',pronunciation:'ay',example:'Été',meaning:'Garmi',sound_hint:"'ay' jaise 'say' mein"},
+    {char:'È',upper:'È',lower:'è',name:'E accent grave',pronunciation:'eh',example:'Père',meaning:'Baap',sound_hint:"'eh' jaise 'get' mein"},
+    {char:'Ê',upper:'Ê',lower:'ê',name:'E accent circonflex',pronunciation:'eh',example:'Fête',meaning:'Tyohaar',sound_hint:"Thodi lambi 'eh' ki awaaz"},
+    {char:'À',upper:'À',lower:'à',name:'A accent grave',pronunciation:'ah',example:'Là',meaning:'Wahaan',sound_hint:"Seedha 'ah'"},
+    {char:'Ç',upper:'Ç',lower:'ç',name:'C cédille',pronunciation:'s',example:'Garçon',meaning:'Ladka',sound_hint:"'s' ki awaaz, 'c' nahi"}
+  ],
+  de: [
+    {char:'A',upper:'A',lower:'a',name:'A',pronunciation:'ah',example:'Apfel',meaning:'Seb',sound_hint:"Seedha 'ah'"},
+    {char:'B',upper:'B',lower:'b',name:'Be',pronunciation:'bay',example:'Buch',meaning:'Kitaab',sound_hint:"'bay' ki awaaz"},
+    {char:'C',upper:'C',lower:'c',name:'Ce',pronunciation:'tsay',example:'Computer',meaning:'Computer',sound_hint:"'tsay' ki awaaz"},
+    {char:'D',upper:'D',lower:'d',name:'De',pronunciation:'day',example:'Danke',meaning:'Shukriya',sound_hint:"'day' ki awaaz"},
+    {char:'E',upper:'E',lower:'e',name:'E',pronunciation:'ay',example:'Essen',meaning:'Khaana',sound_hint:"'ay' ki awaaz"},
+    {char:'F',upper:'F',lower:'f',name:'Ef',pronunciation:'ef',example:'Freund',meaning:'Dost',sound_hint:"'ef' ki awaaz"},
+    {char:'G',upper:'G',lower:'g',name:'Ge',pronunciation:'gay',example:'Guten',meaning:'Acha',sound_hint:"'gay' ki awaaz"},
+    {char:'H',upper:'H',lower:'h',name:'Ha',pronunciation:'ha',example:'Haus',meaning:'Ghar',sound_hint:"Seedha 'ha'"},
+    {char:'I',upper:'I',lower:'i',name:'I',pronunciation:'ee',example:'Ich',meaning:'Main',sound_hint:"Chhoti 'ee'"},
+    {char:'J',upper:'J',lower:'j',name:'Jot',pronunciation:'yot',example:'Ja',meaning:'Haan',sound_hint:"'y' ki awaaz, 'j' nahi"},
+    {char:'K',upper:'K',lower:'k',name:'Ka',pronunciation:'ka',example:'Kinder',meaning:'Bachay',sound_hint:"'ka' ki awaaz"},
+    {char:'L',upper:'L',lower:'l',name:'El',pronunciation:'el',example:'Liebe',meaning:'Mohabbat',sound_hint:"'el' ki awaaz"},
+    {char:'M',upper:'M',lower:'m',name:'Em',pronunciation:'em',example:'Mutter',meaning:'Ammi',sound_hint:"'em' ki awaaz"},
+    {char:'N',upper:'N',lower:'n',name:'En',pronunciation:'en',example:'Nacht',meaning:'Raat',sound_hint:"'en' ki awaaz"},
+    {char:'O',upper:'O',lower:'o',name:'O',pronunciation:'oh',example:'Ohr',meaning:'Kaan',sound_hint:"Gol 'oh'"},
+    {char:'P',upper:'P',lower:'p',name:'Pe',pronunciation:'pay',example:'Papa',meaning:'Abbu',sound_hint:"'pay' ki awaaz"},
+    {char:'Q',upper:'Q',lower:'q',name:'Qu',pronunciation:'koo',example:'Quelle',meaning:'Zariya',sound_hint:"'koo' ki awaaz"},
+    {char:'R',upper:'R',lower:'r',name:'Er',pronunciation:'er',example:'Rot',meaning:'Surakh',sound_hint:"Andar se ghurghura ke 'r'"},
+    {char:'S',upper:'S',lower:'s',name:'Es',pronunciation:'es',example:'Sonne',meaning:'Suraj',sound_hint:"'es' ki awaaz"},
+    {char:'T',upper:'T',lower:'t',name:'Te',pronunciation:'tay',example:'Tag',meaning:'Din',sound_hint:"'tay' ki awaaz"},
+    {char:'U',upper:'U',lower:'u',name:'U',pronunciation:'oo',example:'Uhr',meaning:'Ghadi',sound_hint:"Lambi 'oo'"},
+    {char:'V',upper:'V',lower:'v',name:'Vau',pronunciation:'fow',example:'Vater',meaning:'Baap',sound_hint:"'f' ki awaaz, 'v' nahi"},
+    {char:'W',upper:'W',lower:'w',name:'We',pronunciation:'vay',example:'Wasser',meaning:'Paani',sound_hint:"'v' ki awaaz, 'w' nahi"},
+    {char:'X',upper:'X',lower:'x',name:'Ix',pronunciation:'iks',example:'Xylophon',meaning:'Xylophone',sound_hint:"'iks' ki awaaz"},
+    {char:'Y',upper:'Y',lower:'y',name:'Ypsilon',pronunciation:'upsilon',example:'Yoga',meaning:'Yoga',sound_hint:"'upsilon' ki awaaz"},
+    {char:'Z',upper:'Z',lower:'z',name:'Zett',pronunciation:'tset',example:'Zug',meaning:'Train',sound_hint:"'ts' ki awaaz, 'z' nahi"},
+    {char:'Ä',upper:'Ä',lower:'ä',name:'A-Umlaut',pronunciation:'eh',example:'Ärger',meaning:'Gussa',sound_hint:"'eh' jaise 'air' mein"},
+    {char:'Ö',upper:'Ö',lower:'ö',name:'O-Umlaut',pronunciation:'uh',example:'Öl',meaning:'Tel',sound_hint:"Honton gol karke 'uh' bolo"},
+    {char:'Ü',upper:'Ü',lower:'ü',name:'U-Umlaut',pronunciation:'ü',example:'Über',meaning:'Oopar',sound_hint:"Honton aage karke 'ee' bolo"},
+    {char:'ß',upper:'ß',lower:'ß',name:'Eszett',pronunciation:'ss',example:'Straße',meaning:'Sadak',sound_hint:"Double 's' ki awaaz"}
+  ],
+  es: [
+    {char:'A',upper:'A',lower:'a',name:'A',pronunciation:'a',example:'Amigo',meaning:'Dost',sound_hint:"Seedha 'a'"},
+    {char:'B',upper:'B',lower:'b',name:'Be',pronunciation:'bay',example:'Bueno',meaning:'Acha',sound_hint:"'bay' ki awaaz"},
+    {char:'C',upper:'C',lower:'c',name:'Ce',pronunciation:'say/they',example:'Casa',meaning:'Ghar',sound_hint:"'k' ya 'th' ki awaaz"},
+    {char:'D',upper:'D',lower:'d',name:'De',pronunciation:'day',example:'Día',meaning:'Din',sound_hint:"'day' ki awaaz"},
+    {char:'E',upper:'E',lower:'e',name:'E',pronunciation:'ay',example:'Español',meaning:'Spanish',sound_hint:"'ay' ki awaaz"},
+    {char:'F',upper:'F',lower:'f',name:'Efe',pronunciation:'efay',example:'Familia',meaning:'Khandan',sound_hint:"'efay' ki awaaz"},
+    {char:'G',upper:'G',lower:'g',name:'Ge',pronunciation:'hay',example:'Gato',meaning:'Billi',sound_hint:"'h' ya 'g' ki awaaz"},
+    {char:'H',upper:'H',lower:'h',name:'Hache',pronunciation:'achay',example:'Hola',meaning:'Salam',sound_hint:"Spanish mein H khamosh hota hai!"},
+    {char:'I',upper:'I',lower:'i',name:'I',pronunciation:'ee',example:'Isla',meaning:'Jazeera',sound_hint:"Lambi 'ee'"},
+    {char:'J',upper:'J',lower:'j',name:'Jota',pronunciation:'hota',example:'Jardín',meaning:'Bagicha',sound_hint:"Andar se 'h' ki awaaz"},
+    {char:'K',upper:'K',lower:'k',name:'Ka',pronunciation:'ka',example:'Kilo',meaning:'Kilo',sound_hint:"'ka' ki awaaz"},
+    {char:'L',upper:'L',lower:'l',name:'Ele',pronunciation:'elay',example:'Luna',meaning:'Chaand',sound_hint:"'elay' ki awaaz"},
+    {char:'M',upper:'M',lower:'m',name:'Eme',pronunciation:'emay',example:'Madre',meaning:'Ammi',sound_hint:"'emay' ki awaaz"},
+    {char:'N',upper:'N',lower:'n',name:'Ene',pronunciation:'enay',example:'Noche',meaning:'Raat',sound_hint:"'enay' ki awaaz"},
+    {char:'Ñ',upper:'Ñ',lower:'ñ',name:'Eñe',pronunciation:'enyay',example:'Niño',meaning:'Ladka',sound_hint:"'ny' jaise 'canyon' mein"},
+    {char:'O',upper:'O',lower:'o',name:'O',pronunciation:'o',example:'Ojo',meaning:'Aankh',sound_hint:"Gol 'o'"},
+    {char:'P',upper:'P',lower:'p',name:'Pe',pronunciation:'pay',example:'Padre',meaning:'Baap',sound_hint:"'pay' ki awaaz"},
+    {char:'Q',upper:'Q',lower:'q',name:'Cu',pronunciation:'koo',example:'Quiero',meaning:'Chahta hoon',sound_hint:"'k' ki awaaz, 'qu' = 'k'"},
+    {char:'R',upper:'R',lower:'r',name:'Erre',pronunciation:'erray',example:'Rojo',meaning:'Surakh',sound_hint:"Zeban ghuma ke 'r'"},
+    {char:'S',upper:'S',lower:'s',name:'Ese',pronunciation:'esay',example:'Sol',meaning:'Suraj',sound_hint:"'esay' ki awaaz"},
+    {char:'T',upper:'T',lower:'t',name:'Te',pronunciation:'tay',example:'Tarde',meaning:'Dophar/Shaam',sound_hint:"'tay' ki awaaz"},
+    {char:'U',upper:'U',lower:'u',name:'U',pronunciation:'oo',example:'Uno',meaning:'Ek',sound_hint:"Lambi 'oo'"},
+    {char:'V',upper:'V',lower:'v',name:'Uve',pronunciation:'oobay',example:'Vino',meaning:'Sharaab',sound_hint:"'b' ya 'v' ki awaaz"},
+    {char:'W',upper:'W',lower:'w',name:'Doble uve',pronunciation:'dooblay oobay',example:'Web',meaning:'Website',sound_hint:"Sirf borrowed words mein"},
+    {char:'X',upper:'X',lower:'x',name:'Equis',pronunciation:'ekees',example:'Exacto',meaning:'Bilkul',sound_hint:"'ks' ya 'h' ki awaaz"},
+    {char:'Y',upper:'Y',lower:'y',name:'Ye',pronunciation:'yay',example:'Yo',meaning:'Main',sound_hint:"'y' ki awaaz"},
+    {char:'Z',upper:'Z',lower:'z',name:'Zeta',pronunciation:'thayta',example:'Zapato',meaning:'Joota',sound_hint:"Spain mein 'th', Latin America mein 's'"}
+  ],
+  tr: [
+    {char:'A',upper:'A',lower:'a',name:'A',pronunciation:'a',example:'Araba',meaning:'Gaadi',sound_hint:"Seedha 'a'"},
+    {char:'B',upper:'B',lower:'b',name:'Be',pronunciation:'be',example:'Baba',meaning:'Abbu',sound_hint:"'b' ki awaaz"},
+    {char:'C',upper:'C',lower:'c',name:'Ce',pronunciation:'je',example:'Cam',meaning:'Sheeshe',sound_hint:"'j' ki awaaz, 'c' nahi!"},
+    {char:'Ç',upper:'Ç',lower:'ç',name:'Çe',pronunciation:'che',example:'Çay',meaning:'Chai',sound_hint:"'ch' ki awaaz"},
+    {char:'D',upper:'D',lower:'d',name:'De',pronunciation:'de',example:'Dost',meaning:'Dost',sound_hint:"'d' ki awaaz"},
+    {char:'E',upper:'E',lower:'e',name:'E',pronunciation:'e',example:'Ev',meaning:'Ghar',sound_hint:"'e' jaise 'egg'"},
+    {char:'F',upper:'F',lower:'f',name:'Fe',pronunciation:'fe',example:'Futbol',meaning:'Football',sound_hint:"'f' ki awaaz"},
+    {char:'G',upper:'G',lower:'g',name:'Ge',pronunciation:'ge',example:'Göz',meaning:'Aankh',sound_hint:"'g' ki awaaz"},
+    {char:'Ğ',upper:'Ğ',lower:'ğ',name:'Yumuşak ge',pronunciation:'(khamosh/uzaana)',example:'Dağ',meaning:'Pahaar',sound_hint:"Pehle waale harf ko lamba karta hai"},
+    {char:'H',upper:'H',lower:'h',name:'He',pronunciation:'he',example:'Hayır',meaning:'Nahi',sound_hint:"Seedha 'h' ki awaaz"},
+    {char:'I',upper:'I',lower:'ı',name:'I (noktasız)',pronunciation:'uh',example:'Iş',meaning:'Kaam',sound_hint:"Andar se 'uh' ki awaaz"},
+    {char:'İ',upper:'İ',lower:'i',name:'İ (noktalı)',pronunciation:'ee',example:'İyi',meaning:'Acha',sound_hint:"Lambi 'ee'"},
+    {char:'J',upper:'J',lower:'j',name:'Je',pronunciation:'zh',example:'Jambon',meaning:'Jamon',sound_hint:"'zh' ki awaaz"},
+    {char:'K',upper:'K',lower:'k',name:'Ke',pronunciation:'ke',example:'Kitap',meaning:'Kitaab',sound_hint:"'k' ki awaaz"},
+    {char:'L',upper:'L',lower:'l',name:'Le',pronunciation:'le',example:'Lamba',meaning:'Lamba',sound_hint:"'l' ki awaaz"},
+    {char:'M',upper:'M',lower:'m',name:'Me',pronunciation:'me',example:'Meyve',meaning:'Phal',sound_hint:"'m' ki awaaz"},
+    {char:'N',upper:'N',lower:'n',name:'Ne',pronunciation:'ne',example:'Ne',meaning:'Kya',sound_hint:"'n' ki awaaz"},
+    {char:'O',upper:'O',lower:'o',name:'O',pronunciation:'o',example:'Okul',meaning:'School',sound_hint:"Gol 'o'"},
+    {char:'Ö',upper:'Ö',lower:'ö',name:'Ö',pronunciation:'uh (round)',example:'Görmek',meaning:'Dekhna',sound_hint:"Honton gol karke 'uh' bolo"},
+    {char:'P',upper:'P',lower:'p',name:'Pe',pronunciation:'pe',example:'Para',meaning:'Paisa',sound_hint:"'p' ki awaaz"},
+    {char:'R',upper:'R',lower:'r',name:'Re',pronunciation:'re',example:'Renkli',meaning:'Rangeen',sound_hint:"Zeban ghuma ke 'r'"},
+    {char:'S',upper:'S',lower:'s',name:'Se',pronunciation:'se',example:'Su',meaning:'Paani',sound_hint:"'s' ki awaaz"},
+    {char:'Ş',upper:'Ş',lower:'ş',name:'Şe',pronunciation:'she',example:'Şeker',meaning:'Cheeni/Mithai',sound_hint:"'sh' ki awaaz"},
+    {char:'T',upper:'T',lower:'t',name:'Te',pronunciation:'te',example:'Taş',meaning:'Patthar',sound_hint:"'t' ki awaaz"},
+    {char:'U',upper:'U',lower:'u',name:'U',pronunciation:'oo',example:'Uçak',meaning:'Jahaaz',sound_hint:"Lambi 'oo'"},
+    {char:'Ü',upper:'Ü',lower:'ü',name:'Ü',pronunciation:'ü',example:'Ülke',meaning:'Mulk',sound_hint:"Honton aage karke 'ee' bolo"},
+    {char:'V',upper:'V',lower:'v',name:'Ve',pronunciation:'ve',example:'Var',meaning:'Hai (mojood)',sound_hint:"'v' ki awaaz"},
+    {char:'Y',upper:'Y',lower:'y',name:'Ye',pronunciation:'ye',example:'Yemek',meaning:'Khaana',sound_hint:"'y' ki awaaz"},
+    {char:'Z',upper:'Z',lower:'z',name:'Ze',pronunciation:'ze',example:'Zor',meaning:'Mushkil',sound_hint:"'z' ki awaaz"}
+  ]
+};
+
 function isPreClassDone(lang){
   if(!lang||PRE_CLASS_LANGS.indexOf(lang)<0) return true;
   try{ return localStorage.getItem(_pcKey(lang))==='done'; }catch(e){ return false; }
@@ -13599,228 +14108,6 @@ var _pcLS = []; // lesson steps array
 var _pcSI = 0;  // step index
 var _pcLang = ''; // current lang
 var _pcIsRevision = false;
-var _pcScore = 0;
-var _pcTotal = 0;
-var _pcWrongLetters = [];
-
-// ── Inbuilt Alphabets ──
-// ══════════════════════════════════════════════════════════
-//  PRE-CLASS HEART SYSTEM — Free users: 5 hearts, 3 min regen
-// ══════════════════════════════════════════════════════════
-var _pcHearts = 5;
-var _pcMaxHearts = 5;
-var _pcHeartRegenTimer = null;
-var _pcHeartBrokenTimes = []; // timestamps when hearts broke
-var _pcInProgress = false;
-
-function _pcIsFreeUser(){
-  return !isPro();
-}
-
-function _pcInitHearts(){
-  if(!_pcIsFreeUser()){ _pcHearts = 999; return; }
-  // Check localStorage for saved heart state
-  try{
-    var saved = JSON.parse(localStorage.getItem('su_pc_hearts')||'null');
-    if(saved && saved.ts){
-      var elapsed = Date.now() - saved.ts;
-      var regenMs = 3*60*1000;
-      var regened = Math.floor(elapsed / regenMs);
-      _pcHearts = Math.min(_pcMaxHearts, (saved.hearts||0) + regened);
-      _pcHeartBrokenTimes = (saved.broken||[]).filter(function(t){ return Date.now()-t < regenMs; });
-    } else {
-      _pcHearts = _pcMaxHearts;
-      _pcHeartBrokenTimes = [];
-    }
-  } catch(e){ _pcHearts = _pcMaxHearts; _pcHeartBrokenTimes = []; }
-}
-
-function _pcSaveHearts(){
-  try{ localStorage.setItem('su_pc_hearts', JSON.stringify({hearts:_pcHearts, ts:Date.now(), broken:_pcHeartBrokenTimes})); } catch(e){}
-}
-
-function _pcLoseHeart(){
-  if(!_pcIsFreeUser()) return true; // pro = unlimited
-  if(_pcHearts <= 0) return false; // no hearts left
-  _pcHearts--;
-  _pcHeartBrokenTimes.push(Date.now());
-  _pcSaveHearts();
-  _pcUpdateHeartsUI();
-  if(_pcHearts <= 0){
-    _pcShowNoHeartsScreen();
-    return false;
-  }
-  // Heart break animation
-  var hEl = document.getElementById('pcHeartsBar');
-  if(hEl){ hEl.style.animation='none'; hEl.offsetHeight; hEl.style.animation='pcHeartShake .4s ease'; }
-  return true;
-}
-
-function _pcUpdateHeartsUI(){
-  var el = document.getElementById('pcHeartsBar');
-  if(!el) return;
-  if(!_pcIsFreeUser()){ el.innerHTML='<span style="font-size:13px;color:#C77DFF;font-family:Fredoka One,sans-serif;">✨ Pro</span>'; return; }
-  var html = '';
-  for(var i=0;i<_pcMaxHearts;i++){
-    html += i < _pcHearts
-      ? '<span style="font-size:18px;filter:drop-shadow(0 0 4px #FF4B4B);">❤️</span>'
-      : '<span style="font-size:18px;opacity:.3;">🖤</span>';
-  }
-  el.innerHTML = html;
-}
-
-// Save current progress step index for resume
-var _pcResumeStepIndex = 0;
-
-function _pcShowNoHeartsScreen(){
-  var bd = document.getElementById('lBd'); if(!bd) return;
-  // Save where we left off for resume
-  _pcResumeStepIndex = _pcSI;
-
-  var regenMs = 3*60*1000;
-  var oldest = _pcHeartBrokenTimes.length > 0 ? Math.min.apply(null,_pcHeartBrokenTimes) : Date.now();
-  var nextRegen = oldest + regenMs;
-
-  bd.innerHTML = '<div class="a" style="text-align:center;padding:28px 16px;animation:pcCardPop .4s ease both;">'
-    + '<div style="font-size:64px;margin-bottom:12px;animation:heartbeat 1s ease infinite;">💔</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#FF4B4B;margin-bottom:8px;">Hearts Khatam!</div>'
-    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">Koi baat nahi! Wahan se dobara shuru karo jahan ruke the, ya bilkul shuru se. 💪</div>'
-
-    // ── Resume button ──
-    + '<button onclick="pcResumeFromSave()" style="width:100%;padding:16px;margin-bottom:10px;background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:16px;font-family:Fredoka One,sans-serif;font-size:16px;color:#fff;cursor:pointer;box-shadow:0 4px 16px rgba(46,229,157,.3);">▶️ Wahan se Shuru Karo — Jahan Ruke The</button>'
-
-    // ── Restart button ──
-    + '<button onclick="pcRestartFromBeginning()" style="width:100%;padding:14px;margin-bottom:16px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:16px;font-family:Fredoka One,sans-serif;font-size:15px;color:rgba(255,255,255,.8);cursor:pointer;">🔄 Bilkul Shuru Se Shuru Karo</button>'
-
-    // ── Timer for next heart ──
-    + '<div style="background:rgba(255,75,75,.08);border:1.5px solid rgba(255,75,75,.2);border-radius:14px;padding:14px;margin-bottom:16px;">'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">Agla heart milega:</div>'
-    + '<div id="pcHeartTimer" style="font-family:Fredoka One,sans-serif;font-size:26px;color:#FF4B4B;">--:--</div>'
-    + '</div>'
-
-    // ── Pro promo ──
-    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.12),rgba(91,141,239,.08));border:1.5px solid rgba(199,125,255,.3);border-radius:16px;padding:14px;margin-bottom:16px;">'
-    + '<div style="font-size:18px;margin-bottom:4px;">👑</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:15px;color:#C77DFF;margin-bottom:3px;">Pro lo — Unlimited Hearts!</div>'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.45);">Pro users ke liye koi limit nahi</div>'
-    + '</div>'
-
-    + '<button onclick="exitLesson()" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;">← Dashboard Pe Wapas</button>'
-    + '</div>';
-
-  // Countdown timer
-  var _pcHtInterval = setInterval(function(){
-    var s2 = Math.max(0, Math.ceil((nextRegen - Date.now())/1000));
-    var el2 = document.getElementById('pcHeartTimer');
-    if(el2) el2.textContent = Math.floor(s2/60) + ':' + ('0'+s2%60).slice(-2);
-    if(s2 <= 0){
-      clearInterval(_pcHtInterval);
-      _pcHearts = 1; _pcSaveHearts();
-      var bd2 = document.getElementById('lBd'); if(!bd2) return;
-      bd2.innerHTML = '<div class="a" style="text-align:center;padding:40px 16px;">'
-        + '<div style="font-size:56px;margin-bottom:12px;">❤️</div>'
-        + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#58CC02;margin-bottom:12px;">Heart wapas aa gaya!</div>'
-        + '<button class="bg" onclick="pcResumeFromSave()" style="width:100%;margin-bottom:10px;padding:16px;">▶️ Wahan se Shuru Karo</button>'
-        + '<button onclick="pcRestartFromBeginning()" style="width:100%;padding:14px;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;color:rgba(255,255,255,.7);font-family:Fredoka One,sans-serif;font-size:14px;cursor:pointer;">🔄 Shuru Se</button>'
-        + '</div>';
-    }
-  }, 1000);
-}
-
-// ── Resume from saved step ──
-window.pcResumeFromSave = function(){
-  _pcInitHearts();
-  _pcUpdateHeartsUI();
-  _pcSI = Math.max(0, _pcResumeStepIndex);
-  renderPCStep();
-};
-
-// ── Restart from beginning ──
-window.pcRestartFromBeginning = function(){
-  _pcSI = 0;
-  _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
-  _pcSkippedSpeaking = [];
-  _pcInitHearts();
-  _pcUpdateHeartsUI();
-  renderPCStep();
-};
-
-// CSS for heart shake animation - inject once
-(function(){
-  if(document.getElementById('pcHeartCSS')) return;
-  var s = document.createElement('style');
-  s.id = 'pcHeartCSS';
-  s.textContent = '@keyframes pcHeartShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}} @keyframes pcCardPop{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}} @keyframes pcShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}} @keyframes pcBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}} @keyframes pcPulseGlow{0%,100%{box-shadow:0 0 12px rgba(199,125,255,.3)}50%{box-shadow:0 0 28px rgba(199,125,255,.7)}} #pcHeartsBar{display:flex;align-items:center;gap:3px;}';
-  document.head.appendChild(s);
-})();
-
-var PC_ALPHABETS = {
-  en: [
-    {"char":"A","upper":"A","lower":"a","name":"A","pronunciation":"ay","example":"Apple","meaning":"Seb","sound_hint":"Jaise 'ey' kehte hain"},
-    {"char":"B","upper":"B","lower":"b","name":"B","pronunciation":"bee","example":"Ball","meaning":"Gend","sound_hint":"Honthon se 'b' ki awaaz"},
-    {"char":"C","upper":"C","lower":"c","name":"C","pronunciation":"see","example":"Cat","meaning":"Billi","sound_hint":"Kabhi 'k' kabhi 's' bolta hai"},
-    {"char":"D","upper":"D","lower":"d","name":"D","pronunciation":"dee","example":"Dog","meaning":"Kutta","sound_hint":"Zuban upar lagao 'd' bolo"},
-    {"char":"E","upper":"E","lower":"e","name":"E","pronunciation":"ee","example":"Egg","meaning":"Anda","sound_hint":"Jaise 'ee' kehte hain"},
-    {"char":"F","upper":"F","lower":"f","name":"F","pronunciation":"ef","example":"Fish","meaning":"Machli","sound_hint":"Daant honth pe rakh ke 'f'"},
-    {"char":"G","upper":"G","lower":"g","name":"G","pronunciation":"jee","example":"Goat","meaning":"Bakri","sound_hint":"Kabhi 'g' kabhi 'j' bolta hai"},
-    {"char":"H","upper":"H","lower":"h","name":"H","pronunciation":"aych","example":"Hat","meaning":"Topi","sound_hint":"Halki sans ki awaaz 'h'"},
-    {"char":"I","upper":"I","lower":"i","name":"I","pronunciation":"eye","example":"Ice","meaning":"Baraf","sound_hint":"Jaise 'aai' kehte hain"},
-    {"char":"J","upper":"J","lower":"j","name":"J","pronunciation":"jay","example":"Juice","meaning":"Ras","sound_hint":"Jaise 'jey' kehte hain"},
-    {"char":"K","upper":"K","lower":"k","name":"K","pronunciation":"kay","example":"Key","meaning":"Chaabi","sound_hint":"Gale se 'k' ki awaaz"},
-    {"char":"L","upper":"L","lower":"l","name":"L","pronunciation":"el","example":"Lion","meaning":"Sher","sound_hint":"Zuban upar lagao 'l' bolo"},
-    {"char":"M","upper":"M","lower":"m","name":"M","pronunciation":"em","example":"Moon","meaning":"Chaand","sound_hint":"Honth band karke 'mm'"},
-    {"char":"N","upper":"N","lower":"n","name":"N","pronunciation":"en","example":"Night","meaning":"Raat","sound_hint":"Naak se 'n' ki awaaz"},
-    {"char":"O","upper":"O","lower":"o","name":"O","pronunciation":"oh","example":"Orange","meaning":"Narangi","sound_hint":"Jaise 'oh' kehte hain"},
-    {"char":"P","upper":"P","lower":"p","name":"P","pronunciation":"pee","example":"Pen","meaning":"Qalam","sound_hint":"Honthon se 'p' ki awaaz"},
-    {"char":"Q","upper":"Q","lower":"q","name":"Q","pronunciation":"kyoo","example":"Queen","meaning":"Malika","sound_hint":"Hamesha 'qu' sath aata hai"},
-    {"char":"R","upper":"R","lower":"r","name":"R","pronunciation":"ar","example":"Rain","meaning":"Baarish","sound_hint":"Halki gargling awaaz 'r'"},
-    {"char":"S","upper":"S","lower":"s","name":"S","pronunciation":"es","example":"Sun","meaning":"Suraj","sound_hint":"Saanp ki awaaz 'ssss'"},
-    {"char":"T","upper":"T","lower":"t","name":"T","pronunciation":"tee","example":"Tree","meaning":"Darakht","sound_hint":"Zuban upar lagao 't' bolo"},
-    {"char":"U","upper":"U","lower":"u","name":"U","pronunciation":"yoo","example":"Umbrella","meaning":"Chhatri","sound_hint":"Jaise 'yoo' kehte hain"},
-    {"char":"V","upper":"V","lower":"v","name":"V","pronunciation":"vee","example":"Van","meaning":"Gaadi","sound_hint":"Daant honth pe 'v' ki awaaz"},
-    {"char":"W","upper":"W","lower":"w","name":"W","pronunciation":"double-yoo","example":"Water","meaning":"Paani","sound_hint":"Honth gol karke 'w'"},
-    {"char":"X","upper":"X","lower":"x","name":"X","pronunciation":"eks","example":"X-ray","meaning":"X-ree","sound_hint":"'ks' do awaazein milti hain"},
-    {"char":"Y","upper":"Y","lower":"y","name":"Y","pronunciation":"why","example":"Yellow","meaning":"Peela","sound_hint":"Jaise 'wai' kehte hain"},
-    {"char":"Z","upper":"Z","lower":"z","name":"Z","pronunciation":"zee","example":"Zoo","meaning":"Chirya ghar","sound_hint":"Makhi ki awaaz 'zzzz'"}
-  ],
-  fr: [
-    {"char":"A","upper":"A","lower":"a","name":"A","pronunciation":"ah","example":"Ami","meaning":"Dost","sound_hint":"Urdu 'a' jaisi awaaz"},
-    {"char":"B","upper":"B","lower":"b","name":"B","pronunciation":"bay","example":"Bonjour","meaning":"Salam","sound_hint":"Jaise 'bay' kehte hain"},
-    {"char":"C","upper":"C","lower":"c","name":"C","pronunciation":"say","example":"Chat","meaning":"Billi","sound_hint":"'s' ya 'k' bolta hai"},
-    {"char":"D","upper":"D","lower":"d","name":"D","pronunciation":"day","example":"Deux","meaning":"Do","sound_hint":"Jaise 'day' kehte hain"},
-    {"char":"E","upper":"E","lower":"e","name":"E","pronunciation":"uh","example":"Et","meaning":"Aur","sound_hint":"Halki 'uh' awaaz"},
-    {"char":"F","upper":"F","lower":"f","name":"F","pronunciation":"ef","example":"Fille","meaning":"Larki","sound_hint":"Angrezi F jaisi awaaz"},
-    {"char":"G","upper":"G","lower":"g","name":"G","pronunciation":"zhay","example":"Garcon","meaning":"Larka","sound_hint":"Kabhi 'g' kabhi 'zh'"},
-    {"char":"H","upper":"H","lower":"h","name":"H","pronunciation":"ash","example":"Homme","meaning":"Aadmi","sound_hint":"French mein H khamosh hota hai"},
-    {"char":"I","upper":"I","lower":"i","name":"I","pronunciation":"ee","example":"Ici","meaning":"Yahan","sound_hint":"Urdu 'i' jaisi awaaz"},
-    {"char":"J","upper":"J","lower":"j","name":"J","pronunciation":"zhee","example":"Jour","meaning":"Din","sound_hint":"Jaise 'zhee' kehte hain"},
-    {"char":"K","upper":"K","lower":"k","name":"K","pronunciation":"kah","example":"Kilo","meaning":"Kilo","sound_hint":"Sirf borrowed words mein"},
-    {"char":"L","upper":"L","lower":"l","name":"L","pronunciation":"el","example":"Lune","meaning":"Chaand","sound_hint":"Angrezi L jaisi awaaz"},
-    {"char":"M","upper":"M","lower":"m","name":"M","pronunciation":"em","example":"Maison","meaning":"Ghar","sound_hint":"Angrezi M jaisi awaaz"},
-    {"char":"N","upper":"N","lower":"n","name":"N","pronunciation":"en","example":"Non","meaning":"Nahi","sound_hint":"Angrezi N jaisi awaaz"},
-    {"char":"O","upper":"O","lower":"o","name":"O","pronunciation":"oh","example":"Or","meaning":"Sona","sound_hint":"Honth gol karke 'oh'"},
-    {"char":"P","upper":"P","lower":"p","name":"P","pronunciation":"pay","example":"Pain","meaning":"Roti","sound_hint":"Jaise 'pay' kehte hain"},
-    {"char":"Q","upper":"Q","lower":"q","name":"Q","pronunciation":"koo","example":"Qui","meaning":"Kaun","sound_hint":"Hamesha 'qu' sath aata hai"},
-    {"char":"R","upper":"R","lower":"r","name":"R","pronunciation":"air","example":"Rouge","meaning":"Laal","sound_hint":"Gale se gargling awaaz"},
-    {"char":"S","upper":"S","lower":"s","name":"S","pronunciation":"es","example":"Soleil","meaning":"Suraj","sound_hint":"Kabhi 's' kabhi 'z'"},
-    {"char":"T","upper":"T","lower":"t","name":"T","pronunciation":"tay","example":"Tout","meaning":"Sab","sound_hint":"Jaise 'tay' kehte hain"},
-    {"char":"U","upper":"U","lower":"u","name":"U","pronunciation":"oo","example":"Un","meaning":"Ek","sound_hint":"Honth gol 'oo' bolo"},
-    {"char":"V","upper":"V","lower":"v","name":"V","pronunciation":"vay","example":"Ville","meaning":"Sheher","sound_hint":"Jaise 'vay' kehte hain"},
-    {"char":"W","upper":"W","lower":"w","name":"W","pronunciation":"double-vay","example":"Week-end","meaning":"Hafte ka akhir","sound_hint":"Sirf borrowed words mein"},
-    {"char":"X","upper":"X","lower":"x","name":"X","pronunciation":"eeks","example":"Exemple","meaning":"Misal","sound_hint":"Kabhi 'ks' kabhi 'gz'"},
-    {"char":"Y","upper":"Y","lower":"y","name":"Y","pronunciation":"ee-grek","example":"Yeux","meaning":"Aankhein","sound_hint":"'ee-grek' yaani Greek I"},
-    {"char":"Z","upper":"Z","lower":"z","name":"Z","pronunciation":"zed","example":"Zero","meaning":"Sifar","sound_hint":"Jaise 'zed' kehte hain"},
-    {"char":"\u00C9","upper":"\u00C9","lower":"\u00E9","name":"E accent aigu","pronunciation":"ay","example":"Ecole","meaning":"School","sound_hint":"Angrezi 'ay' jaisi"},
-    {"char":"\u00C8","upper":"\u00C8","lower":"\u00E8","name":"E accent grave","pronunciation":"eh","example":"Pere","meaning":"Abba","sound_hint":"Khuli 'eh' awaaz"},
-    {"char":"\u00CA","upper":"\u00CA","lower":"\u00EA","name":"E circumflex","pronunciation":"eh","example":"Fete","meaning":"Jashn","sound_hint":"Lambi 'eh' awaaz"},
-    {"char":"\u00C0","upper":"\u00C0","lower":"\u00E0","name":"A accent grave","pronunciation":"ah","example":"A","meaning":"Ko/Mein","sound_hint":"Sirf spelling ke liye"},
-    {"char":"\u00C7","upper":"\u00C7","lower":"\u00E7","name":"C cedille","pronunciation":"say","example":"Garcon","meaning":"Larka","sound_hint":"Hamesha 's' ki awaaz deta hai"},
-    {"char":"\u00CE","upper":"\u00CE","lower":"\u00EE","name":"I circumflex","pronunciation":"ee","example":"Ile","meaning":"Jazira","sound_hint":"Lambi 'ee' awaaz"},
-    {"char":"\u00D4","upper":"\u00D4","lower":"\u00F4","name":"O circumflex","pronunciation":"oh","example":"Cote","meaning":"Kinara","sound_hint":"Lambi 'oh' awaaz"},
-    {"char":"\u00DB","upper":"\u00DB","lower":"\u00FB","name":"U circumflex","pronunciation":"oo","example":"Sur","meaning":"Pakka","sound_hint":"Lambi 'oo' awaaz"},
-    {"char":"\u0152","upper":"\u0152","lower":"\u0153","name":"OE ligature","pronunciation":"uh","example":"Coeur","meaning":"Dil","sound_hint":"'o' aur 'e' milke bolta hai"}
-  ]
-};
 
 function openPreClassContent(lang){
   var e = document.getElementById('pcOverlay'); if(e) e.remove();
@@ -13828,171 +14115,148 @@ function openPreClassContent(lang){
   launchPreClassLesson(lang, true);
 }
 
-// ── Pause menu (resume/restart) ──
-function pcShowPauseMenu(){
-  var bd = document.getElementById('lBd'); if(!bd) return;
-  _pcResumeStepIndex = _pcSI;
-  var pauseDiv = document.createElement('div');
-  pauseDiv.id = 'pcPauseOverlay';
-  pauseDiv.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99998;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);';
-  pauseDiv.innerHTML = '<div style="background:linear-gradient(135deg,#1a0f3a,#0f0e17);border:2px solid rgba(199,125,255,.4);border-radius:28px;padding:32px 24px;text-align:center;max-width:320px;width:90%;animation:pcCardPop .35s ease both;">'
-    + '<div style="font-size:48px;margin-bottom:12px;">⏸️</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:6px;">Ruk Gaye!</div>'
-    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:24px;">Kya karna chahte ho?</div>'
-    + '<button onclick="pcClosePause()" style="width:100%;padding:15px;margin-bottom:10px;background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:14px;font-family:Fredoka One,sans-serif;font-size:16px;color:#fff;cursor:pointer;">▶️ Jaari Rakho</button>'
-    + '<button onclick="pcRestartFromBeginning();pcClosePause();" style="width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:14px;font-family:Fredoka One,sans-serif;font-size:15px;color:rgba(255,255,255,.8);cursor:pointer;">🔄 Shuru Se Shuru Karo</button>'
-    + '<button onclick="exitLesson();pcClosePause();" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.4);font-size:13px;cursor:pointer;">← Dashboard Pe Wapas</button>'
-    + '</div>';
-  document.body.appendChild(pauseDiv);
-}
-
-window.pcClosePause = function(){
-  var ol = document.getElementById('pcPauseOverlay'); if(ol) ol.remove();
-};
+// ── Score tracking for pre-class ──
+var _pcScore = 0;
+var _pcTotal = 0;
+var _pcWrongLetters = [];
 
 // ── Main entry: Pre-class lesson launch karo ──
 function launchPreClassLesson(lang, isRevision){
   var nfo = PRE_CLASS_INFO[lang]; if(!nfo) return;
   var adPc = (typeof AD!=='undefined' && AD && AD.langs && AD.langs[lang]) ? AD.langs[lang].preClass : null;
 
-  // Score reset
-  _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
-  _pcSkippedSpeaking = []; // speaking skip track
-
-  // Hearts init
-  _pcInitHearts();
-
-  // Letters priority: 1) Firebase/Admin 2) Inbuilt 3) Empty
+  // Letters fetch priority: 1) Firebase/Admin  2) PC_ALPHABETS  3) empty → no-data screen
   var letters = [];
   if(adPc && adPc.letters && Array.isArray(adPc.letters) && adPc.letters.length > 0){
     letters = adPc.letters;
-  } else if(PC_ALPHABETS[lang]){
+  } else if(typeof PC_ALPHABETS !== 'undefined' && PC_ALPHABETS[lang] && PC_ALPHABETS[lang].length > 0){
     letters = PC_ALPHABETS[lang];
   }
 
-  // ✅ FIX: Poore 26 letters — A se Z order mein (shuffle nahi)
-  var shuffled = letters.slice(); // A→B→C...Z order maintain karo
+  // Score reset
+  _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
 
   // Steps build karo
-  _pcLS = buildPreClassSteps(lang, nfo, shuffled, adPc, isRevision);
+  _pcLS = buildPreClassSteps(lang, nfo, letters, adPc, isRevision);
   _pcSI = 0;
   _pcLang = lang;
   _pcIsRevision = isRevision || false;
 
   // Lesson screen kholo
   showScreen('lesson');
-  // Show pause button during pre-class
-  var pauseBtn = document.getElementById('pcPauseBtn'); if(pauseBtn) pauseBtn.style.display = 'block';
-  // Progress bar reset
   var pb = document.getElementById('lPf'); if(pb) pb.style.width = '0%';
-  // Hearts bar replace karo
-  var ht = document.getElementById('lHt');
-  if(ht){
-    ht.innerHTML = '<span id="pcHeartsBar" style="display:flex;align-items:center;gap:3px;"></span>';
-    _pcUpdateHeartsUI();
-  }
+  var ht = document.getElementById('lHt'); if(ht) ht.textContent = '\u2728 Pre-Class';
   setTimeout(function(){ renderPCStep(); }, 160);
 }
 
-var _pcSkippedSpeaking = []; // letters jinka speaking skip hua
-
-// ── Build pre-class lesson steps from letters ──
-// ✅ FIX: Poore 26 letters, random order, advanced quizzes
+// ── Build full pre-class lesson steps ──
 function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
   var steps = [];
-  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke tamam ' + letters.length + ' characters seekhenge.');
+  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke basic characters seekhenge.');
+  var totalLetters = letters.length;
 
-  // STEP 1: Welcome header
-  steps.push({t:'pc_header', nfo:nfo, desc:desc, isRevision:isRevision, total:letters.length});
+  // STEP 1: Welcome Screen
+  steps.push({t:'pc_header', nfo:nfo, desc:desc, isRevision:isRevision, totalLetters:totalLetters});
 
-  if(letters.length === 0){
+  if(totalLetters === 0){
     steps.push({t:'pc_nodata', nfo:nfo, desc:desc});
     steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
     return steps;
   }
 
-  // ✅ FIX: Poore 26 (ya jitne bhi) letters — random order mein
-  // Letters 6-6 ke batches mein dikhao to avoid overwhelm
-  var batchSize = 6;
-  for(var bi=0; bi < letters.length; bi += batchSize){
-    var batch = letters.slice(bi, bi+batchSize);
-    // STEP 2: Letter cards
-    batch.forEach(function(l, i){
-      steps.push({t:'pc_letter', letter:l, num:bi+i+1, total:letters.length});
+  // STEP 2: Letter Cards (har letter ek card)
+  letters.forEach(function(l, i){
+    steps.push({t:'pc_letter', letter:l, num:i+1, total:totalLetters});
+  });
+
+  // STEP 3: Listening Practice (sound sunke letter dhundo)
+  if(totalLetters >= 3){
+    var listenBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
+    listenBatch.forEach(function(l){
+      var distractors = _pcPickDistractors(l, letters, 3);
+      steps.push({t:'pc_listen', letter:l, options: _pcShuffle([l].concat(distractors))});
     });
-    // Mini quiz after each batch (4+ letters) — sirf is batch ke letters se random
-    if(batch.length >= 4){
-      var lPool = batch;
-      // Shuffle batch for random order in quizzes
-      var shuffledBatch = batch.slice().sort(function(){ return Math.random()-.5; });
-      // Listening quiz (random from batch)
-      shuffledBatch.forEach(function(l){
-        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Listening', qType:'char', sessionLetters:lPool});
-      });
-      // Recognition quiz (random from batch)
-      shuffledBatch.slice().sort(function(){ return Math.random()-.5; }).forEach(function(l){
-        steps.push({t:'pc_quiz', letters:lPool, fixedLetter:l, label:'Recognition', qType:'meaning', sessionLetters:lPool});
-      });
-      // Upper-Lower match
-      var shuf = batch.slice().sort(function(){ return Math.random()-.5; });
-      steps.push({t:'pc_match', letters:shuf.slice(0,4)});
-    }
   }
 
-  // STEP 3: Speaking practice (all letters, skip if mic fails)
-  if(letters.length > 0){
+  // STEP 4: Recognition Quiz (character dekh ke naam/pronunciation guess karo)
+  if(totalLetters >= 3){
+    var recogBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
+    recogBatch.forEach(function(l){
+      var distractors = _pcPickDistractors(l, letters, 3);
+      steps.push({t:'pc_recog', letter:l, options: _pcShuffle([l].concat(distractors))});
+    });
+  }
+
+  // STEP 5: Speaking Practice
+  if(totalLetters > 0){
     steps.push({t:'pc_speaking_intro'});
-    letters.forEach(function(l){
+    var spkBatch = letters.slice(0, Math.min(totalLetters, 8));
+    spkBatch.forEach(function(l){
       steps.push({t:'pc_speaking', letter:l});
     });
-    // Speaking retry ke liye — skipped letters baad mein (handled in renderPCDone)
-    steps.push({t:'pc_speaking_review'});
   }
 
-  // STEP 4: Advanced quizzes on full letter set
-  var fullPool = letters;
+  // STEP 6: Uppercase ↔ Lowercase Match
+  if(totalLetters >= 4){
+    var matchLetters = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 6));
+    steps.push({t:'pc_match', letters:matchLetters});
+  }
 
-  // ExMatch: Is word ka pehla letter kaunsa hai?
-  var exLetters = fullPool.filter(function(l){ return l.example; });
-  exLetters.forEach(function(l){
-    steps.push({t:'pc_exmatch', letters:fullPool, fixedLetter:l});
-  });
+  // STEP 7: Example Word Match
+  if(totalLetters >= 4){
+    var exBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
+    exBatch.forEach(function(l){
+      if(l.example){
+        var distractors = _pcPickDistractors(l, letters, 3);
+        steps.push({t:'pc_example_match', letter:l, options: _pcShuffle([l].concat(distractors))});
+      }
+    });
+  }
 
-  // ✅ NEW: Meaning match — Urdu meaning dikhao, letter dhundo
-  fullPool.forEach(function(l){
-    if(l.meaning) steps.push({t:'pc_meaning_match', letters:fullPool, fixedLetter:l});
-  });
+  // STEP 8: Fill in the Blank
+  if(totalLetters >= 4){
+    var fillBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 6));
+    fillBatch.forEach(function(l){
+      if(l.example && l.example.length > 1){
+        var distractors = _pcPickDistractors(l, letters, 3);
+        steps.push({t:'pc_fillblank', letter:l, options: _pcShuffle([l].concat(distractors))});
+      }
+    });
+  }
 
-  // ✅ NEW: Next letter — "A ke baad kaunsa letter hai?"
-  if(fullPool.length >= 4){
-    var orderedLetters = PC_ALPHABETS[lang] || letters; // original order
-    for(var ni=0; ni<orderedLetters.length-1; ni++){
-      var cur = orderedLetters[ni];
-      var nxt = orderedLetters[ni+1];
-      steps.push({t:'pc_nextletter', letters:orderedLetters, current:cur, answer:nxt});
+  // STEP 9: Speed Round (10 random mixed questions, 5s timer)
+  if(totalLetters >= 4){
+    var speedPool = _pcShuffle(letters.slice());
+    var speedQs = [];
+    for(var si=0; si<10 && si<totalLetters; si++){
+      var sl = speedPool[si % speedPool.length];
+      var types = ['listen','recog'];
+      var sType = types[si % 2];
+      var sdist = _pcPickDistractors(sl, letters, 3);
+      speedQs.push({letter:sl, qtype:sType, options: _pcShuffle([sl].concat(sdist))});
     }
+    steps.push({t:'pc_speed', questions:speedQs});
   }
 
-  // Fill in the blank (advanced — middle letter bhi)
-  var blankPool = fullPool;
-  blankPool.forEach(function(l){
-    if(l.example && l.example.length >= 3){
-      steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'first'});
-      if(l.example.length >= 4)
-        steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'middle'});
-    } else if(l.example && l.example.length > 1){
-      steps.push({t:'pc_blank', letters:blankPool, fixedLetter:l, blankPos:'first'});
-    }
-  });
-
-  // STEP 5: Final speed round — 15 sawal, poore 26 se
-  if(letters.length >= 4){
-    steps.push({t:'pc_speed', letters:letters, lang:lang});
-  }
-
-  // STEP 6: Final results
+  // STEP 10: Final Results
   steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
   return steps;
+}
+
+// ── Helper: Shuffle array ──
+function _pcShuffle(arr){
+  for(var i=arr.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=arr[i]; arr[i]=arr[j]; arr[j]=tmp;
+  }
+  return arr;
+}
+
+// ── Helper: Pick N distractor letters (different from correct) ──
+function _pcPickDistractors(correct, allLetters, n){
+  var pool = allLetters.filter(function(l){ return l.char !== correct.char; });
+  _pcShuffle(pool);
+  return pool.slice(0, n);
 }
 
 // ── Render current pre-class step ──
@@ -14007,20 +14271,19 @@ function renderPCStep(){
   bd.style.transition = 'opacity .15s ease,transform .15s ease';
   bd.style.opacity = '0'; bd.style.transform = 'translateX(-12px)';
   setTimeout(function(){
-    if(step.t==='pc_header')              renderPCHeader(step, bd);
-    else if(step.t==='pc_nodata')         renderPCNoData(step, bd);
-    else if(step.t==='pc_letter')         renderPCLetter(step, bd);
-    else if(step.t==='pc_quiz')           renderPCQuiz(step, bd);
+    if(step.t==='pc_header')         renderPCHeader(step, bd);
+    else if(step.t==='pc_nodata')     renderPCNoData(step, bd);
+    else if(step.t==='pc_letter')     renderPCLetter(step, bd);
+    else if(step.t==='pc_listen')     renderPCListen(step, bd);
+    else if(step.t==='pc_recog')      renderPCRecog(step, bd);
+    else if(step.t==='pc_quiz')       renderPCQuiz(step, bd);
     else if(step.t==='pc_speaking_intro') renderPCSpeakingIntro(bd);
-    else if(step.t==='pc_speaking')       renderPCSpeaking(step, bd);
-    else if(step.t==='pc_speaking_review') renderPCSpeakingReview(bd);
-    else if(step.t==='pc_match')          renderPCMatch(step, bd);
-    else if(step.t==='pc_exmatch')        renderPCExMatch(step, bd);
-    else if(step.t==='pc_meaning_match')  renderPCMeaningMatch(step, bd);
-    else if(step.t==='pc_nextletter')     renderPCNextLetter(step, bd);
-    else if(step.t==='pc_blank')          renderPCBlank(step, bd);
-    else if(step.t==='pc_speed')          renderPCSpeed(step, bd);
-    else if(step.t==='pc_done')           renderPCDone(step, bd);
+    else if(step.t==='pc_speaking')   renderPCSpeaking(step, bd);
+    else if(step.t==='pc_match')      renderPCMatch(step, bd);
+    else if(step.t==='pc_example_match') renderPCExampleMatch(step, bd);
+    else if(step.t==='pc_fillblank')  renderPCFillBlank(step, bd);
+    else if(step.t==='pc_speed')      renderPCSpeed(step, bd);
+    else if(step.t==='pc_done')       renderPCDone(step, bd);
     else pcNx();
     bd.style.transform = 'translateX(14px)';
     requestAnimationFrame(function(){requestAnimationFrame(function(){
@@ -14039,27 +14302,19 @@ function pcNx(){
 // ── STEP: Welcome header ──
 function renderPCHeader(s, b){
   var revBadge = s.isRevision ? '<div style="background:rgba(91,141,239,.15);border:1px solid rgba(91,141,239,.3);border-radius:20px;padding:5px 14px;display:inline-block;font-size:11px;color:#5B8DEF;margin-bottom:14px;">&#128257; Revision Mode</div>' : '';
-  var cnt = s.total || 0;
+  var totalL = s.totalLetters || 0;
   b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
     + '<div style="font-size:72px;margin-bottom:10px;">' + s.nfo.i + '</div>'
     + revBadge
     + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#C77DFF;margin-bottom:8px;">' + s.nfo.t + '</div>'
-    + (cnt > 0 ? '<div style="background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.3);border-radius:20px;padding:6px 18px;display:inline-block;font-size:13px;color:#C77DFF;font-family:Fredoka One,sans-serif;margin-bottom:14px;">&#128214; ' + cnt + ' letters seekhenge</div>' : '')
-    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.6;">' + s.desc + '</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:12px;line-height:1.6;">' + s.desc + '</div>'
+    + (totalL > 0 ? '<div style="display:inline-block;background:rgba(199,125,255,.15);border:1px solid rgba(199,125,255,.35);border-radius:20px;padding:5px 16px;font-size:12px;color:#C77DFF;margin-bottom:16px;">&#128218; ' + totalL + ' characters seekhenge</div>' : '')
     + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:24px;text-align:left;">'
     + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;font-weight:700;">&#127891; Is class mein:</div>'
     + '<div style="font-size:12px;color:rgba(255,255,255,.7);line-height:2.2;">'
-    + '&#128195; Letter cards seekhenge<br>'
-    + '&#127908; Awaaz sun ke letter dhundo<br>'
-    + '&#10067; Recognition quiz<br>'
-    + '&#127381; Upper-Lower matching<br>'
-    + '&#127919; Example word match<br>'
-    + '&#9998; Fill in the blank<br>'
-    + '&#9889; Speed round (10 sawal!)<br>'
-    + '&#127881; Badge milega!'
+    + '&#128195; Letter cards<br>&#128266; Sunne ki practice<br>&#10067; Pehchano quiz<br>&#127908; Speaking practice<br>&#127381; Matching exercise<br>&#9889; Speed round<br>&#127881; Badge + XP!</div>'
     + '</div>'
-    + '</div>'
-    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">&#9654;&#65039; Shuru Karo!</button>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;min-height:52px;font-size:17px;">&#9654;&#65039; Shuru Karo!</button>'
     + '</div>';
 }
 
@@ -14074,7 +14329,7 @@ function renderPCNoData(s, b){
     + '</div>';
 }
 
-// ── STEP: Letter card (Advanced UI) ──
+// ── STEP: Letter card ──
 function renderPCLetter(s, b){
   var l = s.letter;
   var char = l.char || l.character || l.letter || '?';
@@ -14082,145 +14337,102 @@ function renderPCLetter(s, b){
   var pron = l.pronunciation || l.sound || l.phonetic || '';
   var example = l.example || l.word || '';
   var meaning = l.meaning || l.urdu || l.translation || '';
-  var upper = l.upper || l.uppercase || char;
-  var lower = l.lower || l.lowercase || char.toLowerCase();
-  var sound_hint = l.sound_hint || '';
+  var upper = l.upper || l.uppercase || '';
+  var lower = l.lower || l.lowercase || '';
 
+  // TTS ke liye
   var ttsText = pron || name || char;
   var tid = _storeTTS ? _storeTTS(ttsText, example) : 0;
 
-  // Gradient color per letter (cycle through colors)
-  var colors = ['#C77DFF','#5B8DEF','#58CC02','#FFD166','#FF6B9D','#2EE59D','#FF9A3C','#4FC3F7'];
-  var ci = (char.charCodeAt(0) - 65) % colors.length;
-  var col = colors[Math.max(0,ci)] || '#C77DFF';
-  var colLight = col + '22';
-  var colBorder = col + '55';
-
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .4s cubic-bezier(.34,1.56,.64,1) both;">'
-    // Progress indicator
-    + '<div style="text-align:center;margin-bottom:10px;">'
-    + '<span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + s.num + ' / ' + s.total + '</span>'
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;margin-bottom:4px;font-size:11px;color:rgba(255,255,255,.4);">'
+    + 'Letter ' + s.num + ' / ' + s.total + '</div>'
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(199,125,255,.05));border:1.5px solid rgba(199,125,255,.35);border-radius:20px;padding:24px 20px;text-align:center;margin-bottom:16px;">'
+    + '<div style="font-size:72px;font-weight:700;color:#C77DFF;margin-bottom:8px;font-family:serif;">' + char + '</div>'
+    + (upper||lower ? '<div style="font-size:14px;color:rgba(255,255,255,.5);margin-bottom:6px;">'+(upper?'A: '+upper+' &nbsp;':'')+(lower?'a: '+lower:'')+'</div>' : '')
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#fff;margin-bottom:4px;">' + name + '</div>'
+    + (pron ? '<div style="font-size:14px;color:rgba(255,255,255,.5);margin-bottom:8px;">/ ' + pron + ' /</div>' : '')
     + '</div>'
-    // Big letter card
-    + '<div style="background:linear-gradient(135deg,' + colLight + ',rgba(255,255,255,.02));border:2px solid ' + colBorder + ';border-radius:24px;padding:28px 20px 20px;text-align:center;margin-bottom:14px;box-shadow:0 8px 32px ' + col + '22;animation:pcPulseGlow 3s ease infinite;">'
-    // Upper + Lower side by side (✅ FIX)
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;">'
-    + '<div style="text-align:center;">'
-    + '<div style="font-size:88px;font-weight:700;color:' + col + ';line-height:1;font-family:serif;text-shadow:0 0 30px ' + col + '44;">' + upper + '</div>'
-    + '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">Capital</div>'
-    + '</div>'
-    + '<div style="width:1px;height:60px;background:rgba(255,255,255,.1);"></div>'
-    + '<div style="text-align:center;">'
-    + '<div style="font-size:72px;color:' + col + '99;line-height:1;font-family:serif;margin-top:8px;">' + lower + '</div>'
-    + '<div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">Small</div>'
-    + '</div>'
-    + '</div>'
-    // Name + pronunciation
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#fff;margin-bottom:4px;">' + name + '</div>'
-    + (pron ? '<div style="font-size:15px;color:rgba(255,255,255,.5);margin-bottom:8px;">/ ' + pron + ' /</div>' : '')
-    // Sound hint in Urdu style
-    + (sound_hint ? '<div style="background:rgba(255,255,255,.06);border-radius:10px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,.65);margin-top:6px;">💡 ' + sound_hint + '</div>' : '')
-    + '</div>'
-    // Example word card with Urdu
-    + (example ? '<div style="background:rgba(88,204,2,.1);border:1.5px solid rgba(88,204,2,.3);border-radius:16px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">'
-      + '<div style="font-size:30px;min-width:36px;text-align:center;animation:pcBounce 2s ease infinite;">📗</div>'
-      + '<div>'
-      + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:2px;">Misal (Example)</div>'
-      + '<div style="font-size:20px;color:#58CC02;font-weight:700;">' + example + '</div>'
-      + (meaning ? '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-top:2px;">🇵🇰 ' + meaning + '</div>' : '')
-      + '</div>'
+    + (example ? '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.25);border-radius:14px;padding:14px;margin-bottom:14px;">'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:4px;">&#128218; Misal:</div>'
+      + '<div style="font-size:16px;color:#58CC02;font-weight:700;">' + example + '</div>'
+      + (meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-top:4px;">' + meaning + '</div>' : '')
       + '</div>' : '')
-    // Listen buttons
     + '<div class="spk-bar" style="margin-bottom:16px;">'
-    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="flex:1;padding:14px 16px;">🔊 Suno</button>'
-           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="flex:1;padding:14px 16px;">🐢 Dheere</button>'
-           : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')" style="width:100%;padding:14px;">🔊 Suno</button>')
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')">&#128266; Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')">&#128034; Dheere</button>'
+           : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')">&#128266; Suno</button>')
     + '</div>'
-    + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;font-size:16px;animation:none;">✓ Samajh Gaya! →</button>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;">&#10003; Samajh Gaya! &#8594;</button>'
     + '</div>';
-
+  // Auto-play pronunciation
   setTimeout(function(){
     if(tid && window.ttsPlay) ttsPlay(tid);
     else if(window.spk) spk(ttsText);
   }, 500);
 }
 
-// ── STEP: Recognition/Listening quiz ──
+// ── STEP: Recognition quiz ──
 function renderPCQuiz(s, b){
   var letters = s.letters;
   if(!letters || letters.length < 2){ pcNx(); return; }
-
-  var correct = s.fixedLetter || letters[Math.floor(Math.random() * letters.length)];
+  // Random letter choose karo
+  var idx = Math.floor(Math.random() * letters.length);
+  var correct = letters[idx];
   var char = correct.char || correct.character || correct.letter || '?';
-  var upper = correct.upper || char;
-  var lower = correct.lower || char.toLowerCase();
   var name = correct.name || correct.letterName || char;
   var pron = correct.pronunciation || correct.sound || '';
-  var meaning = correct.meaning || '';
-  var example = correct.example || '';
+  var example = correct.example || correct.word || '';
+  var meaning = correct.meaning || correct.urdu || '';
 
-  var pool = letters.filter(function(l){ return l !== correct; });
+  // Options banao (correct + 3 random wrong)
+  var pool = letters.filter(function(l, i){ return i !== idx; });
   pool.sort(function(){ return Math.random()-.5; });
   var wrongs = pool.slice(0,3);
   var options = [correct].concat(wrongs).sort(function(){ return Math.random()-.5; });
 
   var quizId = 'pcquiz_' + _pcSI;
-
-  // Session counter and listen button
-  var sessionLetters = s.sessionLetters || letters;
-  var sessionTotal = sessionLetters.length;
-  var sessionIdx = 0;
-  for(var si=0;si<sessionLetters.length;si++){ if(sessionLetters[si].char===char){ sessionIdx=si; break; } }
-  var tid_listen = _storeTTS ? _storeTTS(pron || name, example) : 0;
-  var listenBtnHtml = '<button class="spk-btn spk-listen" onclick="if(tid_listen&&window.ttsPlay)ttsPlay(tid_listen);else if(window.spk)spk(name);" style="padding:8px 20px;font-size:13px;margin-top:8px;">🔊 Suno</button>';
+  var question, optionFn;
 
   if(s.qType === 'meaning'){
-    // Char dikhao (upper+lower), naam dhundo
+    // Char dikhao, name/meaning guess karo
+    question = '<div style="font-size:80px;font-weight:700;color:#C77DFF;margin-bottom:8px;font-family:serif;text-align:center;">' + char + '</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:4px;">Is letter ka naam kya hai?</div>';
+    optionFn = function(o){ return (o.name || o.letterName || o.char || '?'); };
     var correctAnswer = name;
-    b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-      + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + (sessionIdx+1) + ' / ' + sessionTotal + '</span></div>'
-      + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-      + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;">'
-      + '<span style="font-family:serif;font-size:72px;color:#C77DFF;line-height:1;">' + upper + '</span>'
-      + '<span style="font-family:serif;font-size:48px;color:rgba(199,125,255,.5);line-height:1;">' + lower + '</span>'
-      + '</div>'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.5);">Is letter ka naam kya hai?</div>'
-      + (meaning ? '<div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:3px;">🇵🇰 ' + meaning + '</div>' : '')
-      + listenBtnHtml
-      + '</div>'
+    b.innerHTML = '<div class="a">'
+      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:20px;margin-bottom:16px;">'
+      + question + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
       + options.map(function(o){
-          var ans = o.name || o.letterName || o.char || '?';
-          var lChar = o.char || o.character || '?';
-          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAnswer.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 10px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;">'
+          var ans = optionFn(o);
+          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctAnswer.replace(/'/g,"\\'") + '\',\'' + quizId + '\')" '
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 10px;font-family:Fredoka One,sans-serif;font-size:14px;color:#fff;cursor:pointer;">'
             + ans + '</button>';
         }).join('')
       + '</div></div>';
   } else {
-    // Awaaz suno, letter dhundo (upper+lower options)
+    // Pronunciation suno, char dhundo
     var tid2 = _storeTTS ? _storeTTS(pron || name, '') : 0;
-    var correctChar = upper;
-    b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-      + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🔊 ' + (sessionIdx+1) + ' / ' + sessionTotal + '</span></div>'
-      + '<div style="background:rgba(199,125,255,.08);border:1.5px solid rgba(199,125,255,.25);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-      + '<div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;">🔊 Kaunsa letter yeh awaaz hai?</div>'
-      + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:15px;padding:12px 28px;">🔊 Awaaz Suno</button>'
-              : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+name+'\')" style="font-size:15px;padding:12px 28px;">🔊 Awaaz Suno</button>')
-      + (example ? '<div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:6px;">Jaise: ' + example + (meaning ? ' — ' + meaning : '') + '</div>' : '')
-      + '</div>'
+    question = '<div style="text-align:center;margin-bottom:12px;">'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:10px;">Is awaaz ka letter kaunsa hai?</div>'
+      + (tid2 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid2+')" style="font-size:14px;padding:10px 20px;">&#128266; Awaaz Suno</button>'
+              : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+name+'\')" style="font-size:14px;padding:10px 20px;">&#128266; Awaaz Suno</button>')
+      + '</div>';
+    optionFn = function(o){ return (o.char || o.character || o.letter || '?'); };
+    var correctChar = char;
+    b.innerHTML = '<div class="a">'
+      + '<div style="background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:20px;margin-bottom:16px;">'
+      + question + '</div>'
       + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;" id="' + quizId + '">'
       + options.map(function(o){
-          var ans = o.upper || o.char || o.character || '?';
-          var lChar = o.char || o.character || '?';
-          var low = o.lower || (o.char||'?').toLowerCase();
-          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctChar.replace(/'/g,"\\'") + '\',\'' + quizId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:16px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
-            + '<span style="font-family:serif;font-size:36px;color:#fff;">' + ans + '</span>'
-            + '<span style="font-family:serif;font-size:22px;color:rgba(255,255,255,.4);">' + low + '</span>'
-            + '</button>';
+          var ans = optionFn(o);
+          return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctChar.replace(/'/g,"\\'") + '\',\'' + quizId + '\')" '
+            + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:32px;color:#fff;cursor:pointer;">'
+            + ans + '</button>';
         }).join('')
       + '</div></div>';
+    // Auto-play
     setTimeout(function(){
       if(tid2 && window.ttsPlay) ttsPlay(tid2);
       else if(window.spk) spk(name);
@@ -14228,500 +14440,59 @@ function renderPCQuiz(s, b){
   }
 }
 
-function pcQuizAnswer(btn, selected, correct, containerId, letterChar){
+function pcQuizAnswer(btn, selected, correct, containerId){
   var container = document.getElementById(containerId);
   if(!container) return;
+  // Sab buttons disable karo
   var btns = container.querySelectorAll('button');
   btns.forEach(function(b){ b.disabled = true; });
   var isCorrect = (selected === correct);
-
-  if(isCorrect){
-    _pcScore++;
-  } else {
-    if(letterChar) _pcWrongLetters.push(letterChar);
-    // ✅ Heart system
-    var canContinue = _pcLoseHeart();
-    if(!canContinue) return; // hearts khatam
-  }
-
   btn.style.background = isCorrect ? 'rgba(88,204,2,.3)' : 'rgba(255,75,75,.3)';
   btn.style.borderColor = isCorrect ? '#58CC02' : '#FF4B4B';
   btn.style.color = isCorrect ? '#58CC02' : '#FF4B4B';
   if(!isCorrect){
+    // Sahi jawab highlight karo
     btns.forEach(function(b2){
-      if(b2.textContent.trim() === correct || b2.textContent.trim().indexOf(correct) !== -1){
+      if(b2.textContent.trim() === correct){
         b2.style.background = 'rgba(88,204,2,.3)';
         b2.style.borderColor = '#58CC02';
         b2.style.color = '#58CC02';
       }
     });
   }
+  // Feedback text add karo
   var fb = document.createElement('div');
   fb.style.cssText = 'text-align:center;padding:12px;font-family:Fredoka One,sans-serif;font-size:16px;color:' + (isCorrect?'#58CC02':'#FF4B4B') + ';';
-  fb.innerHTML = isCorrect ? '✓ Sahi Jawab! Shabaash! 🎉' : '✗ Galat — Sahi: <b>' + correct + '</b>';
+  fb.textContent = isCorrect ? '&#10003; Sahi Jawab! Shabaash!' : '&#10007; Galat — ' + correct + ' sahi hai';
+  fb.innerHTML = isCorrect ? '&#10003; Sahi Jawab! Shabaash! &#127881;' : '&#10007; Galat — Sahi: <b>' + correct + '</b>';
   var nextBtn = document.createElement('button');
   nextBtn.className = 'bg';
-  nextBtn.style.cssText = 'width:100%;margin-top:10px;padding:14px;';
-  nextBtn.textContent = 'Agla →';
+  nextBtn.style.cssText = 'width:100%;margin-top:10px;';
+  nextBtn.textContent = 'Agla \u2192';
   nextBtn.onclick = pcNx;
   container.parentNode.appendChild(fb);
   container.parentNode.appendChild(nextBtn);
-  _pcTotal++;
-}
-
-// ── STEP: Example word match (improved) ──
-function renderPCExMatch(s, b){
-  var letters = s.letters;
-  var correct = s.fixedLetter;
-  if(!correct || !correct.example){ pcNx(); return; }
-  var pool = letters.filter(function(l){ return l !== correct && l.example; });
-  // If not enough pool, use all letters
-  if(pool.length < 3) pool = letters.filter(function(l){ return l !== correct; });
-  pool.sort(function(){ return Math.random()-.5; });
-  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-  var qId = 'pcex_' + _pcSI;
-  var correctUpper = correct.upper || correct.char || '?';
-  _pcTotal++;
-  // ExMatch counter
-  var exPool = letters.filter(function(l){ return l.example; });
-  var exIdx = 0; for(var ei=0;ei<exPool.length;ei++){ if(exPool[ei].char===correct.char){ exIdx=ei; break; } }
-  var tid_ex = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
-  var exListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_ex&&window.ttsPlay)ttsPlay(tid_ex);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">📝 ' + (exIdx+1) + ' / ' + exPool.length + '</span></div>'
-    + '<div style="background:rgba(88,204,2,.08);border:1.5px solid rgba(88,204,2,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">📝 Is word ka pehla letter kaunsa hai?</div>'
-    + '<div style="font-size:36px;font-weight:700;color:#58CC02;letter-spacing:2px;">' + correct.example + '</div>'
-    + (correct.meaning ? '<div style="font-size:14px;color:rgba(255,255,255,.5);margin-top:4px;">🇵🇰 ' + correct.meaning + '</div>' : '')
-    + exListenHtml
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-    + options.map(function(o){
-        var ans = o.upper || o.char || '?';
-        var lChar = o.char || '?';
-        var low = o.lower || ans.toLowerCase();
-        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
-          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
-          + '</button>';
-      }).join('')
-    + '</div></div>';
-}
-
-// ── STEP: Meaning match — Urdu meaning dikhao, letter dhundo ──
-function renderPCMeaningMatch(s, b){
-  var letters = s.letters;
-  var correct = s.fixedLetter;
-  if(!correct || !correct.meaning){ pcNx(); return; }
-  var pool = letters.filter(function(l){ return l !== correct; });
-  pool.sort(function(){ return Math.random()-.5; });
-  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-  var qId = 'pcmm_' + _pcSI;
-  var correctUpper = correct.upper || correct.char || '?';
-  _pcTotal++;
-  // MeaningMatch counter + listen
-  var mmPool = letters.filter(function(l){ return l.meaning; });
-  var mmIdx = 0; for(var mi=0;mi<mmPool.length;mi++){ if(mmPool[mi].char===correct.char){ mmIdx=mi; break; } }
-  var tid_mm = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
-  var mmListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_mm&&window.ttsPlay)ttsPlay(tid_mm);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🇵🇰 ' + (mmIdx+1) + ' / ' + mmPool.length + '</span></div>'
-    + '<div style="background:rgba(255,209,102,.08);border:1.5px solid rgba(255,209,102,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:6px;">🇵🇰 Is Urdu meaning ka letter kaunsa hai?</div>'
-    + '<div style="font-size:28px;font-weight:700;color:#FFD166;">' + correct.meaning + '</div>'
-    + (correct.example ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;">(' + correct.example + ')</div>' : '')
-    + mmListenHtml
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-    + options.map(function(o){
-        var ans = o.upper || o.char || '?';
-        var lChar = o.char || '?';
-        var low = o.lower || ans.toLowerCase();
-        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
-          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
-          + '</button>';
-      }).join('')
-    + '</div></div>';
-}
-
-// ── STEP: Next Letter quiz — "A ke baad kaunsa aata hai?" ──
-function renderPCNextLetter(s, b){
-  var allLetters = s.letters;
-  var current = s.current;
-  var answer = s.answer;
-  if(!current || !answer){ pcNx(); return; }
-  // Options: correct + 3 random wrong
-  var pool = allLetters.filter(function(l){ return l !== answer && l !== current; });
-  pool.sort(function(){ return Math.random()-.5; });
-  var options = [answer].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-  var qId = 'pcnl_' + _pcSI;
-  var correctUpper = answer.upper || answer.char || '?';
-  _pcTotal++;
-  var curUpper = current.upper || current.char || '?';
-  var curLower = current.lower || curUpper.toLowerCase();
-  // NextLetter counter + listen
-  var nlAllLetters = s.letters; var nlIdx = 0;
-  for(var nli=0;nli<nlAllLetters.length;nli++){ if(nlAllLetters[nli].char===current.char){ nlIdx=nli; break; } }
-  var tid_nl = _storeTTS ? _storeTTS(current.pronunciation||current.name||current.char, '') : 0;
-  var nlListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_nl&&window.ttsPlay)ttsPlay(tid_nl);else if(window.spk)spk(current.name||current.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">🔡 ' + (nlIdx+1) + ' / ' + (nlAllLetters.length-1) + '</span></div>'
-    + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">🔡 Is letter ke baad kaunsa aata hai?</div>'
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">'
-    + '<div style="background:rgba(91,141,239,.15);border:1.5px solid rgba(91,141,239,.4);border-radius:14px;padding:10px 18px;text-align:center;">'
-    + '<div style="font-family:serif;font-size:52px;color:#5B8DEF;line-height:1;">' + curUpper + '</div>'
-    + '<div style="font-family:serif;font-size:28px;color:rgba(91,141,239,.5);">' + curLower + '</div>'
-    + '</div>'
-    + '<div style="font-size:28px;color:rgba(255,255,255,.4);">→</div>'
-    + '<div style="background:rgba(255,255,255,.06);border:2px dashed rgba(255,255,255,.2);border-radius:14px;padding:10px 18px;text-align:center;">'
-    + '<div style="font-family:serif;font-size:52px;color:rgba(255,255,255,.2);line-height:1;">?</div>'
-    + '<div style="font-family:serif;font-size:28px;color:rgba(255,255,255,.1);">?</div>'
-    + '</div>'
-    + '</div>'
-    + nlListenHtml
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-    + options.map(function(o){
-        var ans = o.upper || o.char || '?';
-        var lChar = o.char || '?';
-        var low = o.lower || ans.toLowerCase();
-        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
-          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
-          + '</button>';
-      }).join('')
-    + '</div></div>';
-}
-
-// ── STEP: Fill in the blank (advanced) ──
-function renderPCBlank(s, b){
-  var letters = s.letters;
-  var correct = s.fixedLetter;
-  if(!correct || !correct.example || correct.example.length < 2){ pcNx(); return; }
-  var pool = letters.filter(function(l){ return l !== correct; });
-  pool.sort(function(){ return Math.random()-.5; });
-  var options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-  var qId = 'pcblank_' + _pcSI;
-  var correctUpper = correct.upper || correct.char || '?';
-  var word = correct.example;
-  var blankPos = s.blankPos || 'first';
-  var blanked, blankIdx;
-  if(blankPos === 'middle' && word.length >= 4){
-    blankIdx = Math.floor(word.length/2);
-    blanked = word.slice(0,blankIdx) + '_' + word.slice(blankIdx+1);
-    correctUpper = (correct.upper || correct.char || word[blankIdx]).toUpperCase();
-    // find the letter for middle char
-    var midChar = word[blankIdx].toUpperCase();
-    var midLetter = letters.find(function(l){ return (l.upper||l.char||'').toUpperCase()===midChar; });
-    if(midLetter){
-      correctUpper = midLetter.upper || midLetter.char || midChar;
-      var midPool = letters.filter(function(l){ return l !== midLetter; }).sort(function(){ return Math.random()-.5; });
-      options = [midLetter].concat(midPool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-    } else {
-      blanked = '_' + word.slice(1);
-      correctUpper = correct.upper || correct.char || '?';
-      options = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-    }
-  } else {
-    blanked = '_' + word.slice(1);
-  }
-  _pcTotal++;
-  // Format blanked word nicely
-  var blankedHtml = blanked.split('').map(function(c){
-    return c === '_'
-      ? '<span style="color:#5B8DEF;font-size:40px;border-bottom:3px solid #5B8DEF;padding:0 6px;margin:0 2px;">_</span>'
-      : '<span style="font-size:36px;color:#fff;margin:0 1px;">' + c + '</span>';
-  }).join('');
-
-  // Blank counter + listen
-  var blankPool2 = letters.filter(function(l){ return l.example && l.example.length >= 2; });
-  var blankIdx2 = 0; for(var bli=0;bli<blankPool2.length;bli++){ if(blankPool2[bli].char===correct.char){ blankIdx2=bli; break; } }
-  var tid_bl = _storeTTS ? _storeTTS(correct.pronunciation||correct.name||correct.char, correct.example||'') : 0;
-  var blListenHtml = '<button class="spk-btn spk-listen" onclick="if(tid_bl&&window.ttsPlay)ttsPlay(tid_bl);else if(window.spk)spk(correct.name||correct.char);" style="padding:7px 18px;font-size:12px;margin-top:6px;">🔊 Suno</button>';
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-    + '<div style="text-align:center;margin-bottom:8px;"><span style="font-size:10px;color:rgba(255,255,255,.35);background:rgba(255,255,255,.06);border-radius:20px;padding:4px 12px;">✏️ ' + (blankIdx2+1) + ' / ' + blankPool2.length + '</span></div>'
-    + '<div style="background:rgba(91,141,239,.08);border:1.5px solid rgba(91,141,239,.3);border-radius:18px;padding:22px 20px;margin-bottom:16px;text-align:center;">'
-    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">✏️ Kaunsa letter missing hai?</div>'
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;margin-bottom:8px;">' + blankedHtml + '</div>'
-    + (correct.meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:6px;">🇵🇰 ' + correct.meaning + '</div>' : '')
-    + blListenHtml
-    + '</div>'
-    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-    + options.map(function(o){
-        var ans = o.upper || o.char || '?';
-        var lChar = o.char || '?';
-        var low = o.lower || ans.toLowerCase();
-        return '<button onclick="pcQuizAnswer(this,\'' + ans.replace(/'/g,"\\'") + '\',\'' + correctUpper.replace(/'/g,"\\'") + '\',\'' + qId + '\',\'' + lChar.replace(/'/g,"\\'") + '\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:18px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;">'
-          + '<span style="font-family:serif;font-size:34px;color:#fff;">' + ans + '</span>'
-          + '<span style="font-family:serif;font-size:20px;color:rgba(255,255,255,.4);">' + low + '</span>'
-          + '</button>';
-      }).join('')
-    + '</div></div>';
-}
-
-// ── STEP: Speed Round (15 sawal, poore 26 se, diverse types) ──
-function renderPCSpeed(s, b){
-  var letters = s.letters;
-  if(!letters || letters.length < 4){ pcNx(); return; }
-  var total = Math.min(15, letters.length * 2); // max 15
-  var qIdx = 0;
-  var correct_count = 0;
-  var speedWrong = [];
-  var usedTypes = []; // avoid same type in a row
-
-  // Shuffle letters for variety
-  var shuffledForSpeed = letters.slice().sort(function(){ return Math.random()-.5; });
-  var letterCycle = []; // ensure all letters get covered
-  while(letterCycle.length < total){
-    letterCycle = letterCycle.concat(shuffledForSpeed.slice().sort(function(){ return Math.random()-.5; }));
-  }
-  letterCycle = letterCycle.slice(0, total);
-
-  // Question types
-  var allTypes = ['name_from_letter','letter_from_sound','letter_from_example','letter_from_meaning','next_letter'];
-
-  function buildQ(){
-    if(qIdx >= total){
-      _pcScore += correct_count; _pcTotal += total;
-      var speedPct = Math.round(correct_count/total*100);
-      var col = speedPct>=80?'#58CC02':speedPct>=50?'#FFD166':'#FF4B4B';
-      b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0;animation:pcCardPop .4s ease both;">'
-        + '<div style="font-size:56px;margin-bottom:12px;">⚡</div>'
-        + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#FFD166;margin-bottom:8px;">Speed Round Mukammal!</div>'
-        + '<div style="font-size:40px;font-family:Fredoka One,sans-serif;color:'+col+';margin-bottom:16px;">' + correct_count + ' / ' + total + '</div>'
-        + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:12px;margin-bottom:16px;">'
-        + '<div style="height:10px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;">'
-        + '<div style="height:100%;width:' + speedPct + '%;background:linear-gradient(90deg,'+col+','+col+'88);border-radius:6px;transition:width 1s ease;"></div>'
-        + '</div>'
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;">' + speedPct + '% sahi jawab</div>'
-        + '</div>'
-        + (speedWrong.length > 0 ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:16px;">'
-          + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">⚠️ Practice karo:</div>'
-          + '<div style="font-family:serif;font-size:28px;color:#FF4B4B;letter-spacing:8px;">' + speedWrong.join(' ') + '</div>'
-          + '</div>' : '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.2);border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;color:#58CC02;">🌟 Sab sahi! Khabardar raho!</div>')
-        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey →</button>'
-        + '</div>';
-      return;
-    }
-
-    var correct = letterCycle[qIdx];
-    // Pick question type — avoid same as last
-    var availTypes = allTypes.filter(function(t){
-      return t !== usedTypes[usedTypes.length-1];
-    });
-    // letter_from_sound needs TTS, check
-    if(availTypes.indexOf('letter_from_sound') !== -1 && !_storeTTS){
-      availTypes = availTypes.filter(function(t){ return t !== 'letter_from_sound'; });
-    }
-    // next_letter needs ordered letters
-    var ordLetters = PC_ALPHABETS[_pcLang] || letters;
-    var curIdx = ordLetters.findIndex ? ordLetters.findIndex(function(l){ return l.char===correct.char; })
-                                      : (function(){ for(var i=0;i<ordLetters.length;i++) if(ordLetters[i].char===correct.char) return i; return -1; })();
-    if(curIdx < 0 || curIdx >= ordLetters.length-1){
-      availTypes = availTypes.filter(function(t){ return t !== 'next_letter'; });
-    }
-    // needs meaning
-    if(!correct.meaning) availTypes = availTypes.filter(function(t){ return t!=='letter_from_meaning'; });
-    // needs example
-    if(!correct.example) availTypes = availTypes.filter(function(t){ return t!=='letter_from_example'; });
-
-    if(availTypes.length === 0) availTypes = ['name_from_letter'];
-    var qType = availTypes[Math.floor(Math.random()*availTypes.length)];
-    usedTypes.push(qType);
-
-    var pool = letters.filter(function(l){ return l.char !== correct.char; }).sort(function(){ return Math.random()-.5; });
-    var qId = 'pcspeed_q';
-    var answered = false;
-    var questionHtml, correctAns, optionsFn;
-
-    if(qType === 'name_from_letter'){
-      // Show letter (upper+lower), pick name
-      correctAns = correct.name || correct.char || '?';
-      questionHtml = '<div style="text-align:center;">'
-        + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;">'
-        + '<span style="font-family:serif;font-size:70px;color:#C77DFF;line-height:1;">' + (correct.upper||correct.char) + '</span>'
-        + '<span style="font-family:serif;font-size:48px;color:rgba(199,125,255,.5);line-height:1;">' + (correct.lower||(correct.char||'?').toLowerCase()) + '</span>'
-        + '</div>'
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;">Is letter ka naam kya hai?</div>'
-        + '</div>';
-      var nameOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-      optionsFn = function(){ return nameOpts.map(function(o){
-        var ans = o.name||o.char||'?';
-        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 8px;font-family:Fredoka One,sans-serif;font-size:15px;color:#fff;cursor:pointer;">'+ans+'</button>';
-      }).join(''); };
-
-    } else if(qType === 'letter_from_sound'){
-      var pron = correct.pronunciation || correct.name || correct.char || '?';
-      var tid3 = _storeTTS ? _storeTTS(pron,'') : 0;
-      correctAns = correct.upper || correct.char || '?';
-      questionHtml = '<div style="text-align:center;margin-bottom:8px;">'
-        + (tid3 ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid3+')" style="padding:10px 24px;">🔊 Awaaz Suno</button>'
-                : '<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+pron+'\')" style="padding:10px 24px;">🔊 Awaaz Suno</button>')
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:8px;">Kaunsa letter hai? / '+pron+' /</div>'
-        + '</div>';
-      setTimeout(function(){ if(tid3&&window.ttsPlay) ttsPlay(tid3); else if(window.spk) spk(pron); }, 200);
-      var sndOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-      optionsFn = function(){ return sndOpts.map(function(o){
-        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
-        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
-      }).join(''); };
-
-    } else if(qType === 'letter_from_example'){
-      correctAns = correct.upper || correct.char || '?';
-      questionHtml = '<div style="text-align:center;">'
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">📝 Is word ka pehla letter kaunsa?</div>'
-        + '<div style="font-size:32px;font-weight:700;color:#58CC02;">' + correct.example + '</div>'
-        + (correct.meaning ? '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">🇵🇰 ' + correct.meaning + '</div>' : '')
-        + '</div>';
-      var exOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-      optionsFn = function(){ return exOpts.map(function(o){
-        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
-        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
-      }).join(''); };
-
-    } else if(qType === 'letter_from_meaning'){
-      correctAns = correct.upper || correct.char || '?';
-      questionHtml = '<div style="text-align:center;">'
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">🇵🇰 Is Urdu meaning ka letter kaunsa?</div>'
-        + '<div style="font-size:28px;font-weight:700;color:#FFD166;">' + correct.meaning + '</div>'
-        + (correct.example ? '<div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;">(' + correct.example + ')</div>' : '')
-        + '</div>';
-      var mmOpts = [correct].concat(pool.slice(0,3)).sort(function(){ return Math.random()-.5; });
-      optionsFn = function(){ return mmOpts.map(function(o){
-        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
-        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
-      }).join(''); };
-
-    } else { // next_letter
-      var nextL = ordLetters[curIdx+1];
-      correctAns = nextL ? (nextL.upper||nextL.char||'?') : '?';
-      var curUp = correct.upper||correct.char||'?'; var curLow = correct.lower||(correct.char||'?').toLowerCase();
-      questionHtml = '<div style="text-align:center;">'
-        + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;">🔡 Is letter ke baad kaunsa aata hai?</div>'
-        + '<div style="display:flex;align-items:center;justify-content:center;gap:8px;">'
-        + '<div style="background:rgba(91,141,239,.15);border:1.5px solid rgba(91,141,239,.3);border-radius:10px;padding:8px 14px;text-align:center;">'
-        + '<div style="font-family:serif;font-size:40px;color:#5B8DEF;line-height:1;">' + curUp + '</div>'
-        + '<div style="font-family:serif;font-size:22px;color:rgba(91,141,239,.5);">' + curLow + '</div>'
-        + '</div>'
-        + '<span style="font-size:20px;color:rgba(255,255,255,.3);">→ ?</span>'
-        + '</div>'
-        + '</div>';
-      var nlPool = [nextL].concat(pool.filter(function(l){ return l.char!==nextL.char; }).slice(0,3)).sort(function(){ return Math.random()-.5; });
-      optionsFn = function(){ return nlPool.map(function(o){
-        if(!o) return '';
-        var ans = o.upper||o.char||'?'; var low = o.lower||(o.char||'?').toLowerCase();
-        return '<button onclick="pcSpeedAnswer(this,\''+ans.replace(/'/g,"\\'")+'\',\''+correctAns.replace(/'/g,"\\'")+'\',\''+o.char+'\')" style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-family:serif;font-size:32px;color:#fff;">'+ans+'</span><span style="font-family:serif;font-size:18px;color:rgba(255,255,255,.4);">'+low+'</span></button>';
-      }).join(''); };
-    }
-
-    // Progress bar color
-    var prog = Math.round(qIdx/total*100);
-    b.innerHTML = '<div class="a" style="animation:pcCardPop .25s ease both;">'
-      + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
-      + '<span style="font-size:11px;color:rgba(255,255,255,.4);">⚡ Sawal ' + (qIdx+1) + ' / ' + total + '</span>'
-      + '<span style="font-size:11px;color:#58CC02;">✓ ' + correct_count + '</span>'
-      + '</div>'
-      + '<div style="height:5px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:12px;overflow:hidden;">'
-      + '<div id="pcSpeedBar" style="height:100%;background:linear-gradient(90deg,#C77DFF,#FF4B4B);border-radius:4px;width:100%;transition:width 10s linear;"></div>'
-      + '</div>'
-      + '<div style="background:rgba(199,125,255,.06);border:1px solid rgba(199,125,255,.15);border-radius:16px;padding:18px 16px;margin-bottom:14px;">'
-      + questionHtml + '</div>'
-      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="' + qId + '">'
-      + optionsFn()
-      + '</div></div>';
-
-    // Auto-play TTS for non-sound questions too
-    if(qType !== 'letter_from_sound'){
-      setTimeout(function(){
-        var pronounce = correct.pronunciation || correct.name || correct.char || '';
-        if(window.spk && pronounce) spk(pronounce);
-      }, 300);
-    }
-
-    // Start timer
-    setTimeout(function(){
-      var bar = document.getElementById('pcSpeedBar');
-      if(bar) bar.style.width = '0%';
-    }, 100);
-
-    window._pcSpeedAnswer = function(btn, selected, corr, lChar){
-      if(answered) return;
-      answered = true;
-      clearTimeout(window._pcSpeedTimer);
-      var container = document.getElementById(qId);
-      if(container){ container.querySelectorAll('button').forEach(function(bt){ bt.disabled=true; }); }
-      var ok = (selected === corr);
-      if(ok){
-        correct_count++;
-        btn.style.background='rgba(88,204,2,.3)'; btn.style.borderColor='#58CC02'; btn.style.color='#58CC02';
-      } else {
-        speedWrong.push(lChar||'?');
-        btn.style.background='rgba(255,75,75,.3)'; btn.style.borderColor='#FF4B4B'; btn.style.color='#FF4B4B';
-        // Show correct
-        if(container) container.querySelectorAll('button').forEach(function(bt){
-          var btTxt = bt.querySelector('span') ? bt.querySelector('span').textContent.trim() : bt.textContent.trim();
-          if(btTxt === corr || bt.textContent.indexOf(corr) !== -1){
-            bt.style.background='rgba(88,204,2,.3)'; bt.style.borderColor='#58CC02';
-          }
-        });
-        // Heart system in speed round
-        _pcLoseHeart();
-      }
-      qIdx++;
-      setTimeout(buildQ, 700);
-    };
-
-    window._pcSpeedTimer = setTimeout(function(){
-      if(!answered){
-        answered = true;
-        speedWrong.push(correct.char||'?');
-        // Time out = wrong
-        _pcLoseHeart();
-        qIdx++;
-        setTimeout(buildQ, 300);
-      }
-    }, 10000);
-  }
-
-  buildQ();
-}
-
-function pcSpeedAnswer(btn, selected, correct, lChar){
-  if(window._pcSpeedAnswer) window._pcSpeedAnswer(btn, selected, correct, lChar);
 }
 
 // ── STEP: Speaking intro ──
 function renderPCSpeakingIntro(b){
-  var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;animation:pcCardPop .4s ease both;">'
-    + '<div style="font-size:60px;margin-bottom:12px;animation:pcBounce 2s ease infinite;">🎤</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:8px;">Ab tum bologe! 🎤</div>'
-    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.7;">Har letter ki awaaz suno, phir mic mein bolo. Score milega!</div>'
-    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:20px;text-align:left;">'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.6);line-height:2.2;">🔊 Pehle awaaz suno<br>🎤 Phir mic mein bolo<br>📊 Score dekho (0–100%)<br>✅ 80%+ = Shabaash!<br>⏭️ Mic nahi? Skip hoga, baad mein dobara</div>'
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
+    + '<div style="font-size:56px;margin-bottom:12px;">&#127908;</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#C77DFF;margin-bottom:8px;">Pronunciation Practice</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;line-height:1.7;">Ab tum khud bologe! Har letter ki awaaz suno, phir mic mein bolo. Yeh tumhari speaking improve karega.</div>'
+    + '<div style="background:rgba(255,255,255,.05);border-radius:14px;padding:14px;margin-bottom:20px;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);line-height:2;">&#128266; Pehle suno<br>&#127906; Phir tum bolo<br>&#128218; Score dekho</div>'
     + '</div>'
-    + (micSupported
-      ? '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">🎤 Shuru Karo</button>'
-      : '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:12px;padding:12px;margin-bottom:14px;font-size:13px;color:#FF4B4B;">⚠️ Mic is device pe support nahi — speaking skip ho jayegi</div>'
-        + '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey →</button>')
+    + '<button class="bg" onclick="pcNx()" style="width:100%;">&#128062; Shuru Karo</button>'
     + '</div>';
 }
 
-// ── STEP: Speaking practice (mic-skip supported) ──
+// ── STEP: Speaking practice (RAM-style) ──
 function renderPCSpeaking(s, b){
   var l = s.letter;
   var char = l.char || l.character || l.letter || '?';
-  var upper = l.upper || char;
-  var lower = l.lower || char.toLowerCase();
   var name = l.name || l.letterName || char;
   var pron = l.pronunciation || l.sound || name;
-  var sound_hint = l.sound_hint || '';
   var example = l.example || l.word || '';
   var meaning = l.meaning || l.urdu || '';
 
@@ -14730,97 +14501,34 @@ function renderPCSpeaking(s, b){
   var resId = 'pcres_' + _pcSI;
   var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
 
-  // ✅ FIX: If mic not supported, skip this step and track it
-  if(!micSupported){
-    _pcSkippedSpeaking.push(l);
-    pcNx();
-    return;
-  }
-
-  // Gradient color
-  var colors = ['#C77DFF','#5B8DEF','#58CC02','#FFD166','#FF6B9D','#2EE59D'];
-  var ci = (char.charCodeAt(0)-65) % colors.length;
-  var col = colors[Math.max(0,ci)] || '#C77DFF';
-
-  b.innerHTML = '<div class="a" style="animation:pcCardPop .35s ease both;">'
-    + '<div style="background:linear-gradient(135deg,' + col + '14,' + col + '04);border:2px solid ' + col + '44;border-radius:22px;padding:22px 20px;text-align:center;margin-bottom:14px;">'
-    // Upper + Lower
-    + '<div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;">'
-    + '<div style="text-align:center;">'
-    + '<div style="font-size:72px;font-weight:700;color:' + col + ';font-family:serif;line-height:1;">' + upper + '</div>'
-    + '<div style="font-size:10px;color:rgba(255,255,255,.3);">Capital</div>'
-    + '</div>'
-    + '<div style="width:1px;height:50px;background:rgba(255,255,255,.1);"></div>'
-    + '<div style="text-align:center;">'
-    + '<div style="font-size:52px;color:' + col + '88;font-family:serif;line-height:1;margin-top:8px;">' + lower + '</div>'
-    + '<div style="font-size:10px;color:rgba(255,255,255,.3);">Small</div>'
-    + '</div>'
-    + '</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#fff;margin-bottom:4px;">' + name + '</div>'
+  b.innerHTML = '<div class="a">'
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.12),rgba(199,125,255,.04));border:1.5px solid rgba(199,125,255,.3);border-radius:20px;padding:20px;text-align:center;margin-bottom:16px;">'
+    + '<div style="font-size:64px;font-weight:700;color:#C77DFF;font-family:serif;">' + char + '</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#fff;margin-top:6px;">' + name + '</div>'
     + (pron !== name ? '<div style="font-size:13px;color:rgba(255,255,255,.5);">/ ' + pron + ' /</div>' : '')
-    + (sound_hint ? '<div style="background:rgba(255,255,255,.07);border-radius:8px;padding:6px 10px;font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;">💡 ' + sound_hint + '</div>' : '')
-    + (example ? '<div style="font-size:13px;color:#58CC02;margin-top:8px;">' + example + (meaning ? ' — 🇵🇰 ' + meaning : '') + '</div>' : '')
+    + (example ? '<div style="font-size:14px;color:#58CC02;margin-top:8px;">' + example + (meaning ? ' — ' + meaning : '') + '</div>' : '')
     + '</div>'
     + '<div class="spk-bar" style="margin-bottom:14px;">'
-    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="flex:1;padding:12px 16px;">🔊 Suno</button>'
-           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="flex:1;padding:12px 16px;">🐢 Dheere</button>'
+    + (tid ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')">&#128266; Suno</button>'
+           + '<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')">&#128034; Dheere</button>'
            : '')
     + '</div>'
     + '<div class="sn-mic-wrap" style="margin-bottom:14px;">'
-    + '<button class="sn-mic-btn" id="'+micId+'" onclick="pcMicSpeak(\''+micId+'\',\''+resId+'\',\''+pron.replace(/'/g,"\\'")+'\')">🎤 Bol ke Dekho</button>'
-    + '<span style="font-size:12px;color:var(--mut);flex:1;">"' + pron + '" bolo</span>'
+    + (micSupported
+        ? '<button class="sn-mic-btn" id="'+micId+'" onclick="pcMicSpeak(\''+micId+'\',\''+resId+'\',\''+pron+'\')">&#127908; Bol ke Dekho</button>'
+          + '<span style="font-size:12px;color:var(--mut);flex:1;">"' + pron + '" bolo</span>'
+        : '<span style="font-size:12px;color:var(--mut);">&#127908; Chrome mein mic available hai</span>')
     + '</div>'
     + '<div id="' + resId + '" style="margin-bottom:12px;"></div>'
-    + '<div style="display:flex;gap:8px;">'
-    + '<button class="bg" onclick="pcNx()" style="flex:1;padding:14px;">✓ Agla Letter →</button>'
-    + '<button onclick="pcSkipSpeaking(\''+char+'\')" style="padding:14px 16px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;color:rgba(255,255,255,.5);font-size:13px;cursor:pointer;">⏭ Skip</button>'
-    + '</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;">&#10003; Agla Letter &#8594;</button>'
     + '</div>';
 
+  // Auto-play
   setTimeout(function(){
     if(tid && window.ttsPlay) ttsPlay(tid);
     else if(window.spk) spk(pron);
   }, 400);
 }
-
-function pcSkipSpeaking(charName){
-  // Track this letter as skipped
-  var letters = PC_ALPHABETS[_pcLang] || [];
-  var l = letters.find(function(x){ return x.char===charName || x.upper===charName; });
-  if(l && _pcSkippedSpeaking.indexOf(l)===-1) _pcSkippedSpeaking.push(l);
-  pcNx();
-}
-
-// ── STEP: Speaking review — skipped letters dobara ──
-function renderPCSpeakingReview(b){
-  if(!_pcSkippedSpeaking || _pcSkippedSpeaking.length === 0){
-    // No skips — go to next
-    pcNx(); return;
-  }
-  var micSupported = ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
-  var names = _pcSkippedSpeaking.map(function(l){ return l.upper||l.char||'?'; }).join(', ');
-  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 24px;animation:pcCardPop .4s ease both;">'
-    + '<div style="font-size:50px;margin-bottom:10px;">🔁</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:20px;color:#FFD166;margin-bottom:8px;">Dobara Koshish Karo!</div>'
-    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.6;">Ye letters skip hue the. Ab mic mein bolo:</div>'
-    + '<div style="background:rgba(255,209,102,.1);border:1.5px solid rgba(255,209,102,.3);border-radius:14px;padding:14px;margin-bottom:20px;">'
-    + '<div style="font-family:serif;font-size:32px;color:#FFD166;letter-spacing:8px;">' + names + '</div>'
-    + '</div>'
-    + (micSupported
-      ? '<button class="bg" onclick="pcStartSkippedReview()" style="width:100%;padding:16px;">🎤 Retry Shuru Karo</button>'
-        + '<br><button onclick="pcNx()" style="width:100%;margin-top:10px;padding:12px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:14px;color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;">Chhod Do, Aagey Chalo →</button>'
-      : '<button class="bg" onclick="pcNx()" style="width:100%;padding:16px;">Aagey Chalo →</button>')
-    + '</div>';
-}
-
-window.pcStartSkippedReview = function(){
-  if(!_pcSkippedSpeaking || _pcSkippedSpeaking.length === 0){ pcNx(); return; }
-  // Insert retry steps right after current position
-  var retrySteps = _pcSkippedSpeaking.map(function(l){ return {t:'pc_speaking', letter:l}; });
-  _pcSkippedSpeaking = []; // reset
-  _pcLS = _pcLS.slice(0, _pcSI+1).concat(retrySteps).concat(_pcLS.slice(_pcSI+1));
-  pcNx();
-};
 
 function pcMicSpeak(micId, resId, expected){
   var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -14852,31 +14560,32 @@ function pcMicSpeak(micId, resId, expected){
   sr.start();
 }
 
-// ── STEP: Match exercise (Upper ↔ Lower) ──
+// ── STEP: Match exercise ──
 function renderPCMatch(s, b){
   var letters = s.letters.slice(0, 4); // max 4 pairs
   if(letters.length < 2){ pcNx(); return; }
 
-  // Left: uppercase, Right: lowercase — both shuffled
-  var leftItems  = letters.map(function(l,i){ return {id:i, text: l.upper||l.char||'?', type:'upper'}; })
-                          .sort(function(){ return Math.random()-.5; });
-  var rightItems = letters.map(function(l,i){ return {id:i, text: l.lower||(l.char||'?').toLowerCase(), type:'lower'}; })
-                          .sort(function(){ return Math.random()-.5; });
+  // Left: chars, Right: names — shuffled
+  var leftItems  = letters.map(function(l,i){ return {id:i, text: l.char||l.character||l.letter||'?', type:'char'}; });
+  var rightItems = letters.map(function(l,i){ return {id:i, text: l.name||l.letterName||(l.char||'?'), type:'name'}; });
+  rightItems.sort(function(){ return Math.random()-.5; });
 
   var matchId = 'pcmatch_' + _pcSI;
+  var _selected = null;
+  var _matched = {};
 
   b.innerHTML = '<div class="a">'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:16px;color:#C77DFF;text-align:center;margin-bottom:6px;">&#127381; Upper-Lower Match Karo</div>'
-    + '<div style="font-size:12px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:16px;">Bada letter chuno, phir chota letter se match karo</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:16px;color:#C77DFF;text-align:center;margin-bottom:6px;">&#127381; Match Karo</div>'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:16px;">Letter ko uske naam se match karo</div>'
     + '<div id="' + matchId + '" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">'
     + leftItems.map(function(it){
         return '<button id="mcL_'+it.id+'" data-id="'+it.id+'" data-side="L" onclick="pcMatchClick(this,\''+matchId+'\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 8px;font-family:serif;font-size:34px;color:#fff;cursor:pointer;">'
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:18px 8px;font-family:serif;font-size:28px;color:#fff;cursor:pointer;">'
           + it.text + '</button>';
       }).join('')
     + rightItems.map(function(it){
         return '<button id="mcR_'+it.id+'" data-id="'+it.id+'" data-side="R" onclick="pcMatchClick(this,\''+matchId+'\')" '
-          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:22px 8px;font-family:serif;font-size:34px;color:rgba(199,125,255,.8);cursor:pointer;">'
+          + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 8px;font-family:Fredoka One,sans-serif;font-size:13px;color:#fff;cursor:pointer;">'
           + it.text + '</button>';
       }).join('')
     + '</div>'
@@ -14948,54 +14657,389 @@ function pcMatchClick(btn, containerId){
   }
 }
 
-// ── STEP: Done / Final Results ──
+// ── STEP: Done ──
 function renderPCDone(s, b){
   var nfo = PRE_CLASS_INFO[s.lang] || {};
   var isRevision = s.isRevision;
   var pct = _pcTotal > 0 ? Math.round((_pcScore/_pcTotal)*100) : 0;
-  // Unique wrong letters
-  var uniqueWrong = _pcWrongLetters.filter(function(v,i,a){ return a.indexOf(v)===i; });
-  var scoreColor = pct >= 80 ? '#58CC02' : pct >= 50 ? '#FFD166' : '#FF4B4B';
-  var scoreMsg = pct >= 80 ? '&#127881; Shabaash! Zabardast!' : pct >= 50 ? '&#128077; Acha Kiya!' : '&#128170; Practice Karo!';
-
-  // Circle progress (SVG)
-  var r = 40, circ = Math.round(2*Math.PI*r);
-  var dash = Math.round(circ * pct / 100);
-  var circleSvg = '<svg width="100" height="100" viewBox="0 0 100 100" style="margin:0 auto 12px;display:block;">'
-    + '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="8"/>'
-    + '<circle cx="50" cy="50" r="' + r + '" fill="none" stroke="' + scoreColor + '" stroke-width="8" stroke-linecap="round" '
-    + 'stroke-dasharray="' + dash + ' ' + circ + '" stroke-dashoffset="' + Math.round(circ*0.25) + '" style="transition:stroke-dasharray 1s ease;"/>'
-    + '<text x="50" y="50" dominant-baseline="middle" text-anchor="middle" font-family="Fredoka One,sans-serif" font-size="20" fill="' + scoreColor + '">' + pct + '%</text>'
+  var col = pct>=80?'#58CC02':pct>=50?'#FFD166':'#FF4B4B';
+  var wrongHtml = '';
+  if(_pcWrongLetters.length > 0){
+    var uniq = [], seen = {};
+    _pcWrongLetters.forEach(function(c){ if(!seen[c]){ seen[c]=1; uniq.push(c); } });
+    wrongHtml = '<div style="background:rgba(255,75,75,.08);border:1px solid rgba(255,75,75,.2);border-radius:14px;padding:12px;margin-bottom:14px;">'
+      + '<div style="font-size:11px;color:rgba(255,75,75,.7);margin-bottom:8px;font-weight:700;">&#128337; Dobara practice karo:</div>'
+      + '<div style="display:flex;flex-wrap:wrap;gap:8px;">'
+      + uniq.map(function(c){ return '<span style="background:rgba(255,75,75,.15);border:1px solid rgba(255,75,75,.3);border-radius:10px;padding:5px 12px;font-family:serif;font-size:20px;color:#FF4B4B;">'+c+'</span>'; }).join('')
+      + '</div></div>';
+  }
+  var r=36, circ=2*Math.PI*r;
+  var dash = circ - (pct/100)*circ;
+  var scoreCircle = '<svg width="96" height="96" viewBox="0 0 96 96" style="margin:0 auto 10px;display:block;">'
+    + '<circle cx="48" cy="48" r="'+r+'" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="6"/>'
+    + '<circle cx="48" cy="48" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="6" stroke-linecap="round"'
+    + ' stroke-dasharray="'+circ.toFixed(1)+'" stroke-dashoffset="'+dash.toFixed(1)+'" transform="rotate(-90 48 48)"/>'
+    + '<text x="48" y="54" text-anchor="middle" font-family="Fredoka One,sans-serif" font-size="20" fill="'+col+'">'+pct+'%</text>'
     + '</svg>';
-
-  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 30px;">'
-    + '<div style="font-size:56px;margin-bottom:8px;animation:heartbeat 1.5s ease infinite;">&#127941;</div>'
-    + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#C77DFF;margin-bottom:6px;">'
-    + (isRevision ? 'Revision Mukammal! &#127881;' : 'Pre-Class Mukammal! &#127881;') + '</div>'
-    + '<div style="font-size:14px;color:rgba(255,255,255,.6);margin-bottom:16px;">' + scoreMsg + '</div>'
-    + circleSvg
-    + '<div style="background:rgba(255,255,255,.05);border-radius:16px;padding:16px;margin-bottom:14px;text-align:left;">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
-    + '<span style="font-size:13px;color:rgba(255,255,255,.6);">&#9989; Sahi jawab</span>'
-    + '<span style="font-family:Fredoka One,sans-serif;font-size:16px;color:#58CC02;">' + _pcScore + ' / ' + _pcTotal + '</span>'
-    + '</div>'
-    + (uniqueWrong.length > 0
-      ? '<div style="background:rgba(255,75,75,.1);border:1px solid rgba(255,75,75,.2);border-radius:10px;padding:10px;margin-top:8px;">'
-        + '<div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;">&#9888;&#65039; Practice karo:</div>'
-        + '<div style="font-family:serif;font-size:22px;color:#FF4B4B;letter-spacing:6px;">' + uniqueWrong.join(' ') + '</div>'
-        + '</div>'
-      : '<div style="font-size:12px;color:#58CC02;margin-top:4px;">&#127775; Sab letters perfect!</div>')
-    + '</div>'
-    + '<div style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);border-radius:14px;padding:12px;margin-bottom:18px;font-family:Fredoka One,sans-serif;font-size:15px;color:#FFD166;">&#11088; +' + (nfo.xp||50) + ' XP mila!</div>'
+  var xpGain = nfo.xp || 50;
+  b.innerHTML = '<div class="a" style="text-align:center;padding:16px 0 30px;">'
+    + scoreCircle
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:24px;color:#C77DFF;margin-bottom:4px;">'
+    + (isRevision ? 'Revision Mukammal!' : 'Pre-Class Complete!') + '</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px;">'
+    + (_pcScore + '/' + _pcTotal + ' sahi jawab') + '</div>'
+    + (pct>=80
+       ? '<div style="background:rgba(88,204,2,.1);border:1px solid rgba(88,204,2,.25);border-radius:14px;padding:10px;margin-bottom:14px;font-size:13px;color:#58CC02;">&#127881; Zabardast performance!</div>'
+       : pct>=50
+       ? '<div style="background:rgba(255,209,0,.08);border:1px solid rgba(255,209,0,.2);border-radius:14px;padding:10px;margin-bottom:14px;font-size:13px;color:#FFD166;">&#128515; Acha hai! Thodi aur practice karo</div>'
+       : '<div style="background:rgba(255,75,75,.08);border:1px solid rgba(255,75,75,.2);border-radius:14px;padding:10px;margin-bottom:14px;font-size:13px;color:#FF4B4B;">&#128553; Dobara practice karo!</div>')
+    + wrongHtml
+    + (!isRevision ? '<div style="background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);border-radius:14px;padding:10px;margin-bottom:16px;font-family:Fredoka One,sans-serif;font-size:15px;color:#FFD166;">&#11088; +'+xpGain+' XP milega!</div>' : '')
     + (isRevision
-        ? '<button class="bg" onclick="exitLesson()" style="width:100%;padding:16px;">&#127968; Dashboard Pe Wapas</button>'
-        : '<button class="bg" onclick="pcFinishAndComplete(\'' + s.lang + '\')" style="width:100%;margin-bottom:10px;padding:16px;">&#127941; Badge Lo!</button>'
-          + '<button class="bo" onclick="exitLesson()" style="width:100%;padding:14px;">Baad Mein</button>')
+        ? '<button class="bg" onclick="exitLesson()" style="width:100%;min-height:52px;">&#127968; Dashboard Pe Wapas</button>'
+        : '<button class="bg" onclick="pcFinishAndComplete(\'' + s.lang + '\')" style="width:100%;margin-bottom:10px;min-height:52px;">&#127941; Badge Lo!</button>'
+          + '<button class="bo" onclick="exitLesson()" style="width:100%;min-height:44px;">Baad Mein</button>')
+    + '</div>';
+  if(!isRevision && typeof launchConfetti === 'function') setTimeout(launchConfetti, 400);
+}
+
+// Safe data store for quiz answers — avoids passing special chars through onclick HTML
+window._pcQData = {};
+
+// ── STEP: Listening Practice ──
+function renderPCListen(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var name = l.name || l.letterName || char;
+  var pron = l.pronunciation || l.sound || name;
+  var tid = _storeTTS ? _storeTTS(pron, l.example||'') : 0;
+  var qId = 'pclisten_'+_pcSI;
+  _pcTotal++;
+  // Store answer data safely (no HTML encoding issues)
+  window._pcQData[qId] = { correct: char, options: s.options };
+  var optHtml = s.options.map(function(o, oi){
+    var oc = o.char || o.character || o.letter || '?';
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="pcListenAnswer(this)" '
+      + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:32px;color:#fff;cursor:pointer;min-height:72px;touch-action:manipulation;">'
+      + oc + '</button>';
+  }).join('');
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:18px;padding:20px;margin-bottom:16px;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:14px;">&#128266; Is awaaz ka letter kaunsa hai?</div>'
+    + (tid
+      ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="font-size:15px;padding:12px 24px;min-height:52px;touch-action:manipulation;">&#128266; Awaaz Suno</button>'
+        + ' <button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="min-height:52px;touch-action:manipulation;">&#128034; Dheere</button>'
+      : '<button class="spk-btn spk-listen" onclick="pcPlayFallback(\''+_pcSafeId(pron)+'\')" style="min-height:52px;touch-action:manipulation;">&#128266; Awaaz Suno</button>')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+  setTimeout(function(){ if(tid && window.ttsPlay) ttsPlay(tid); else if(window.spk) spk(pron); }, 500);
+}
+
+function pcListenAnswer(btn){
+  var qId = btn.dataset.qid;
+  var oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  var selected = data.options[oi].char || data.options[oi].character || data.options[oi].letter || '?';
+  var correct = data.correct;
+  container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+  var ok = selected === correct;
+  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  _pcApplyFeedback(btn, container, ok, correct, 'char');
+  _pcAddNext(container.parentNode);
+}
+
+// ── STEP: Recognition Quiz ──
+function renderPCRecog(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var name = l.name || l.letterName || char;
+  var qId = 'pcrecog_'+_pcSI;
+  _pcTotal++;
+  window._pcQData[qId] = { correct: name, options: s.options };
+  var optHtml = s.options.map(function(o, oi){
+    var on = o.name || o.letterName || (o.char||'?');
+    var op = o.pronunciation || o.sound || on;
+    var display = on + (op !== on ? ' / '+op : '');
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="pcRecogAnswer(this)" '
+      + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 8px;font-family:Fredoka One,sans-serif;font-size:12px;color:#fff;cursor:pointer;min-height:60px;line-height:1.4;touch-action:manipulation;">'
+      + display + '</button>';
+  }).join('');
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;background:linear-gradient(135deg,rgba(199,125,255,.15),rgba(199,125,255,.05));border:1.5px solid rgba(199,125,255,.35);border-radius:20px;padding:28px;margin-bottom:16px;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:10px;">Is letter ka naam/pronunciation kya hai?</div>'
+    + '<div style="font-size:72px;font-family:serif;color:#C77DFF;font-weight:700;animation:letterPop .4s cubic-bezier(.34,1.56,.64,1);">'+char+'</div>'
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+}
+
+function pcRecogAnswer(btn){
+  var qId = btn.dataset.qid;
+  var oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  var selected = data.options[oi].name || data.options[oi].letterName || (data.options[oi].char||'?');
+  var correct = data.correct;
+  container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+  var ok = selected === correct;
+  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  _pcApplyFeedback(btn, container, ok, correct, 'name');
+  _pcAddNext(container.parentNode);
+}
+
+// ── STEP: Example Word Match ──
+function renderPCExampleMatch(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var example = l.example || char;
+  var qId = 'pcex_'+_pcSI;
+  _pcTotal++;
+  window._pcQData[qId] = { correct: char, options: s.options };
+  var optHtml = s.options.map(function(o, oi){
+    var oc = o.char || o.character || o.letter || '?';
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="pcExAnswer(this)" '
+      + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:32px;color:#fff;cursor:pointer;min-height:72px;touch-action:manipulation;">'
+      + oc + '</button>';
+  }).join('');
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;background:rgba(88,204,2,.08);border:1px solid rgba(88,204,2,.2);border-radius:18px;padding:20px;margin-bottom:16px;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:10px;">&#128218; Is misaal ki shuru kaunsa letter hai?</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:26px;color:#58CC02;animation:letterPop .4s cubic-bezier(.34,1.56,.64,1);">'+example+'</div>'
+    + (l.meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:6px;">('+l.meaning+')</div>' : '')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+}
+
+function pcExAnswer(btn){
+  var qId = btn.dataset.qid;
+  var oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  var selected = data.options[oi].char || data.options[oi].character || data.options[oi].letter || '?';
+  var correct = data.correct;
+  container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+  var ok = selected === correct;
+  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  _pcApplyFeedback(btn, container, ok, correct, 'char');
+  _pcAddNext(container.parentNode);
+}
+
+// ── STEP: Fill in the Blank ──
+function renderPCFillBlank(s, b){
+  var l = s.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var example = l.example || '';
+  var qId = 'pcfill_'+_pcSI;
+  _pcTotal++;
+  window._pcQData[qId] = { correct: char, options: s.options };
+  var optHtml = s.options.map(function(o, oi){
+    var oc = o.char || o.character || o.letter || '?';
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="pcFillAnswer(this)" '
+      + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:20px 10px;font-family:serif;font-size:32px;color:#fff;cursor:pointer;min-height:72px;touch-action:manipulation;">'
+      + oc + '</button>';
+  }).join('');
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;background:rgba(91,141,239,.08);border:1px solid rgba(91,141,239,.2);border-radius:18px;padding:24px;margin-bottom:16px;">'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:12px;">&#9998; Kaunsa letter missing hai?</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:28px;color:#5B8DEF;letter-spacing:4px;">'
+    + '<span style="display:inline-block;border-bottom:3px solid #C77DFF;min-width:30px;color:#C77DFF;font-size:28px;animation:blink 1s ease infinite;">?</span>'
+    + (example.length > 1 ? example.slice(1) : '')
+    + '</div>'
+    + (l.meaning ? '<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:8px;">('+l.meaning+')</div>' : '')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+}
+
+function pcFillAnswer(btn){
+  var qId = btn.dataset.qid;
+  var oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  var selected = data.options[oi].char || data.options[oi].character || data.options[oi].letter || '?';
+  var correct = data.correct;
+  container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+  var ok = selected === correct;
+  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  _pcApplyFeedback(btn, container, ok, correct, 'char');
+  _pcAddNext(container.parentNode);
+}
+
+// ── STEP: Speed Round ──
+var _pcSpeedState = null;
+
+function renderPCSpeed(s, b){
+  var qs = s.questions;
+  if(!qs || !qs.length){ pcNx(); return; }
+  _pcSpeedState = { questions:qs, current:0, score:0, total:qs.length, timer:null };
+  _pcSpeedRender();
+}
+
+function _pcSpeedRender(){
+  var bd = document.getElementById('lBd');
+  var state = _pcSpeedState;
+  if(!state || !bd) return;
+  if(state.current >= state.questions.length){ _pcSpeedFinish(bd); return; }
+  var q = state.questions[state.current];
+  var l = q.letter;
+  var char = l.char || l.character || l.letter || '?';
+  var name = l.name || l.letterName || char;
+  var pron = l.pronunciation || l.sound || name;
+  var tid = _storeTTS ? _storeTTS(pron, l.example||'') : 0;
+  var qId = 'pcspd_'+state.current;
+  // Store data safely
+  window._pcQData[qId] = { correct: q.qtype === 'listen' ? char : name, options: q.options, qtype: q.qtype };
+
+  var qHtml, optHtml;
+  if(q.qtype === 'listen'){
+    qHtml = '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:12px;">&#128266; Awaaz sun ke sahi letter dhundo:</div>'
+      + (tid
+        ? '<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="min-height:48px;touch-action:manipulation;">&#128266; Awaaz Suno</button>'
+        : '');
+    optHtml = q.options.map(function(o, oi){
+      var oc = o.char || o.character || o.letter || '?';
+      return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="_pcSpeedAnswer(this)" '
+        + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 8px;font-family:serif;font-size:28px;color:#fff;cursor:pointer;min-height:64px;touch-action:manipulation;">'
+        + oc + '</button>';
+    }).join('');
+    if(tid) setTimeout(function(){ if(window.ttsPlay) ttsPlay(tid); }, 300);
+  } else {
+    qHtml = '<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:10px;">Is letter ka naam kya hai?</div>'
+      + '<div style="font-size:56px;font-family:serif;color:#C77DFF;font-weight:700;animation:letterPop .4s cubic-bezier(.34,1.56,.64,1);">'+char+'</div>';
+    optHtml = q.options.map(function(o, oi){
+      var on = o.name || o.letterName || (o.char||'?');
+      var op = o.pronunciation || o.sound || on;
+      var display = on + (op !== on ? ' / '+op : '');
+      return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="_pcSpeedAnswer(this)" '
+        + 'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:12px 6px;font-family:Fredoka One,sans-serif;font-size:11px;color:#fff;cursor:pointer;min-height:56px;line-height:1.4;touch-action:manipulation;">'
+        + display + '</button>';
+    }).join('');
+  }
+
+  bd.innerHTML = '<div class="a">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:13px;color:#FFD166;">&#9889; Speed Round</div>'
+    + '<div id="pcspeed_timer" style="font-family:Fredoka One,sans-serif;font-size:22px;color:#FF4B4B;min-width:40px;text-align:right;">5</div>'
+    + '</div>'
+    + '<div style="height:6px;background:rgba(255,255,255,.07);border-radius:6px;overflow:hidden;margin-bottom:12px;">'
+    + '<div id="pcspeed_timerbar" style="height:100%;width:100%;border-radius:6px;background:linear-gradient(90deg,#FFD166,#FF4B4B);transition:width 5s linear;"></div>'
+    + '</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:10px;">Sawaal '+(state.current+1)+'/'+state.total+' | Score: '+state.score+'</div>'
+    + '<div style="text-align:center;background:rgba(199,125,255,.08);border:1px solid rgba(199,125,255,.2);border-radius:16px;padding:16px;margin-bottom:14px;">'
+    + qHtml + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+
+  if(state.timer) clearInterval(state.timer);
+  var timeLeft = 5;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    var tb = document.getElementById('pcspeed_timerbar');
+    if(tb) tb.style.width = '0%';
+  }); });
+  state.timer = setInterval(function(){
+    timeLeft--;
+    var td = document.getElementById('pcspeed_timer');
+    if(td) td.textContent = timeLeft;
+    if(timeLeft <= 0){
+      clearInterval(state.timer); state.timer = null;
+      var c2 = document.getElementById(qId);
+      if(c2) c2.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+      _pcWrongLetters.push(char); _pcTotal++;
+      state.current++;
+      setTimeout(_pcSpeedRender, 600);
+    }
+  }, 1000);
+}
+
+function _pcSpeedAnswer(btn){
+  var state = _pcSpeedState; if(!state) return;
+  if(state.timer){ clearInterval(state.timer); state.timer=null; }
+  var qId = btn.dataset.qid;
+  var oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
+  var selected, correct = data.correct;
+  if(data.qtype === 'listen'){
+    selected = data.options[oi].char || data.options[oi].character || data.options[oi].letter || '?';
+  } else {
+    selected = data.options[oi].name || data.options[oi].letterName || (data.options[oi].char||'?');
+  }
+  var ok = selected === correct;
+  if(ok){ _pcScore++; state.score++; } else _pcWrongLetters.push(correct);
+  _pcTotal++;
+  btn.style.background = ok ? 'rgba(88,204,2,.3)' : 'rgba(255,75,75,.3)';
+  btn.style.borderColor = ok ? '#58CC02' : '#FF4B4B';
+  btn.style.color = ok ? '#58CC02' : '#FF4B4B';
+  var fb = document.createElement('div');
+  fb.style.cssText = 'text-align:center;padding:6px;font-family:Fredoka One,sans-serif;font-size:14px;color:'+(ok?'#58CC02':'#FF4B4B')+';';
+  fb.textContent = ok ? '\u2713 Sahi!' : '\u2717 Galat \u2014 '+correct;
+  container.parentNode.appendChild(fb);
+  state.current++;
+  setTimeout(_pcSpeedRender, 700);
+}
+
+function _pcSpeedFinish(b){
+  var state = _pcSpeedState; if(!state) return;
+  var col = state.score >= 8 ? '#58CC02' : state.score >= 5 ? '#FFD166' : '#FF4B4B';
+  b.innerHTML = '<div class="a" style="text-align:center;padding:24px 0;">'
+    + '<div style="font-size:56px;margin-bottom:10px;animation:heartbeat 1s ease infinite;">&#9889;</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:22px;color:#FFD166;margin-bottom:6px;">Speed Round Khatam!</div>'
+    + '<div style="font-family:Fredoka One,sans-serif;font-size:48px;color:'+col+';margin-bottom:4px;">'+state.score+'/'+state.total+'</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;">'+(state.score>=8?'Zabardast! Tum champion ho!':state.score>=5?'Acha performance!':'Thodi aur practice karo!')+'</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;min-height:52px;touch-action:manipulation;">&#9989; Results Dekho!</button>'
     + '</div>';
 }
 
+// ── Shared helpers ──
+function _pcSafeId(text){
+  // Store text in a lookup table, return safe numeric ID
+  if(!window._pcTextStore) window._pcTextStore = {};
+  var id = 'pts_'+Object.keys(window._pcTextStore).length;
+  window._pcTextStore[id] = text;
+  return id;
+}
+
+function pcPlayFallback(safeId){
+  var text = window._pcTextStore && window._pcTextStore[safeId];
+  if(text && window.spk) spk(text);
+}
+
+function _pcApplyFeedback(btn, container, ok, correct, type){
+  btn.style.background  = ok ? 'rgba(88,204,2,.3)'  : 'rgba(255,75,75,.3)';
+  btn.style.borderColor = ok ? '#58CC02' : '#FF4B4B';
+  btn.style.color       = ok ? '#58CC02' : '#FF4B4B';
+  if(!ok){
+    container.querySelectorAll('button').forEach(function(b2){
+      var val = type==='char'
+        ? (b2.textContent.trim())
+        : (b2.textContent.trim());
+      if(val === correct || val.indexOf(correct)===0){
+        b2.style.background  = 'rgba(88,204,2,.3)';
+        b2.style.borderColor = '#58CC02';
+        b2.style.color       = '#58CC02';
+      }
+    });
+  }
+}
+
+function _pcAddNext(parent){
+  var fb = document.createElement('div');
+  fb.style.cssText = 'text-align:center;padding:10px 0 4px;font-family:Fredoka One,sans-serif;font-size:16px;animation:fadeInUp .3s ease;';
+  // feedback text is already applied via _pcApplyFeedback's button colors — just add Next
+  var nx = document.createElement('button');
+  nx.className = 'bg';
+  nx.style.cssText = 'width:100%;margin-top:10px;min-height:52px;touch-action:manipulation;';
+  nx.textContent = 'Agla \u2192';
+  nx.onclick = pcNx;
+  parent.appendChild(fb);
+  parent.appendChild(nx);
+}
+
 function pcFinishAndComplete(lang){
-  var pauseBtn = document.getElementById('pcPauseBtn'); if(pauseBtn) pauseBtn.style.display = 'none';
   exitLesson();
   setTimeout(function(){
     if(typeof completePreClass === 'function') completePreClass(lang);
@@ -22234,15 +22278,18 @@ function getGoalTarget() {
 }
 
 // ── Add mins to today (called on lesson end) ──
+// ✅ FIX: Float mins ko floor se integer mein convert — accurate tracking
 function addGoalMins(mins) {
   if (!mins || mins <= 0) return;
   _goalCheckDay();
   var prevMins = getGoalTodayMins();
   var target   = getGoalTarget();
   var total = parseInt(localStorage.getItem(_gKey(GOAL_TOTAL_KEY)) || '0');
-  var newVal = prevMins + Math.round(mins);
+  var addInt = Math.floor(mins); // sirf puri minutes save karo
+  if (addInt <= 0) return;
+  var newVal = prevMins + addInt;
   localStorage.setItem(_gKey(GOAL_TODAY_KEY), String(newVal));
-  localStorage.setItem(_gKey(GOAL_TOTAL_KEY), String(total + Math.round(mins)));
+  localStorage.setItem(_gKey(GOAL_TOTAL_KEY), String(total + addInt));
 
   if (prevMins < target && newVal >= target) {
     _onGoalComplete(target);
@@ -22354,28 +22401,40 @@ function _showGoalCelebration(targetMins, totalComp) {
   }, 8000);
 }
 
-// ── Start session timer (call when lesson begins) ──
+// ── Start session timer (call when lesson/preclass begins) ──
+// ✅ FIX: Real stopwatch — Date.now() se accurate elapsed time
 function goalSessionStart() {
-  if (_goalTimer) return; // already running
+  if (_goalTimer) {
+    // Already running — don't double-start
+    return;
+  }
   _goalSessionStart = Date.now();
-  // Update ring every 30 seconds
+  // Tick every 60 seconds — add exactly 1 real minute
   _goalTimer = setInterval(function() {
-    var elapsed = Math.floor((Date.now() - _goalSessionStart) / 60000);
-    if (elapsed > 0) {
-      addGoalMins(0.5); // tick every 30s = 0.5 min
-    }
-  }, 30000);
+    if (!_goalSessionStart) return;
+    addGoalMins(1); // 1 real minute har 60 seconds pe
+    updateGoalRing();
+  }, 60000);
 }
 
-// ── End session timer (call when lesson ends) ──
+// ── End session timer (call when lesson/preclass ends) ──
+// ✅ FIX: Bachi hui seconds bhi count karo (e.g. 90s session = 1.5 min = 1 min saved)
 function goalSessionEnd() {
   if (!_goalSessionStart) return;
-  var elapsedMs = Date.now() - _goalSessionStart;
-  var elapsedMin = elapsedMs / 60000;
+  var elapsedMs  = Date.now() - _goalSessionStart;
+  var elapsedMin = elapsedMs / 60000; // exact float minutes
   clearInterval(_goalTimer);
   _goalTimer = null;
   _goalSessionStart = null;
-  addGoalMins(elapsedMin);
+  // Sirf bachi hui partial minute save karo (interval ne puri minutes pehle hi save ki hain)
+  // Calculation: floor(elapsed) minutes already saved by interval, save the remainder
+  var fullMins = Math.floor(elapsedMin);
+  var remainder = elapsedMin - fullMins;
+  // Save remainder only if >= 0.25 min (15 seconds) — noise filter
+  if (remainder >= 0.25) {
+    addGoalMins(Math.round(remainder)); // round to nearest minute
+  }
+  updateGoalRing();
 }
 
 // ── Set goal from settings card ──
@@ -22521,10 +22580,14 @@ function closeGoalModal() {
 }
 
 // ── Hook into existing lesson flow ──
-// Patch goLesson to start timer, and markL / exitLesson to end it
+// Patch goLesson to start timer, and exitLesson to end it
+// ✅ FIX: markL se addGoalMins(2) hataya — fake time tha
+// ✅ FIX: goalSessionStart/End real Date.now() stopwatch pe based hai
+// ✅ FIX: Pre-class (launchPreClassLesson) mein bhi timer hook kiya
 (function patchLessonForGoal() {
   function tryPatch() {
     if (typeof window.goLesson === 'function' && typeof window.exitLesson === 'function') {
+
       var _origGoLesson = window.goLesson;
       window.goLesson = function() {
         goalSessionStart();
@@ -22538,16 +22601,30 @@ function closeGoalModal() {
         updateGoalRing();
       };
 
-      // Also patch markL (lesson complete) to add XP-based time
-      if (typeof window.markL === 'function') {
-        var _origMarkL = window.markL;
-        window.markL = function() {
-          _origMarkL.apply(this, arguments);
-          // Each lesson card ≈ 2 minutes average
-          addGoalMins(2);
-          updateGoalRing();
+      // ✅ markL se fake addGoalMins(2) bilkul nahi — real time only
+      // markL sirf vocab count update karta hai, time nahi
+
+      // ✅ Pre-class hook — launchPreClassLesson
+      if (typeof window.launchPreClassLesson === 'function') {
+        var _origPCL = window.launchPreClassLesson;
+        window.launchPreClassLesson = function() {
+          goalSessionStart();
+          _origPCL.apply(this, arguments);
         };
+      } else {
+        // launchPreClassLesson baad mein define hoti hai — retry once
+        setTimeout(function(){
+          if (typeof window.launchPreClassLesson === 'function' && !window._pcGoalPatched) {
+            window._pcGoalPatched = true;
+            var _origPCL2 = window.launchPreClassLesson;
+            window.launchPreClassLesson = function() {
+              goalSessionStart();
+              _origPCL2.apply(this, arguments);
+            };
+          }
+        }, 800);
       }
+
     } else {
       setTimeout(tryPatch, 300);
     }
@@ -23654,6 +23731,323 @@ function closeGoalModal() {
       if(typeof showToast==='function') showToast('📋 Text copy ho gaya!','var(--g)');
     }
   };
+
+})();
+</script>
+<!-- ══════════════════════════════════════════════
+     PAUSE OVERLAY
+══════════════════════════════════════════════ -->
+<div id="pauseOverlay">
+  <div class="pause-box">
+    <div class="pause-emoji">⏸️</div>
+    <div class="pause-title">Game Paused</div>
+    <div class="pause-sub" id="pauseSubText">Lesson pause hai — continue ya shuru se shuru karo!</div>
+    <button class="pause-btn-continue" onclick="hidePauseScreen()">▶️ Continue Karo</button>
+    <button class="pause-btn-restart" onclick="pauseRestartLesson()">🔄 Shuru Se Karo</button>
+    <div class="pause-divider"></div>
+    <button class="pause-btn-dash" onclick="pauseGoToDashboard()">🏠 Dashboard Pe Jao</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     NO HEARTS OVERLAY
+══════════════════════════════════════════════ -->
+<div id="noHeartsOverlay">
+  <div class="nho-box">
+    <div class="nho-emoji">💔</div>
+    <div class="nho-title">Hearts Khatam!</div>
+    <div class="nho-sub">5 galtiyan ho gaeen. Hearts wapis aane mein waqt lagta hai.</div>
+    <div class="nho-timer" id="nhoTimerDisplay">⏳ 3:00</div>
+    <div class="nho-sub" style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:16px;">Har 3 minute mein 1 heart wapas aata hai (max 5)</div>
+    <button class="nho-btn-go" onclick="nhoUpgradePro()">👑 Pro Lo — Unlimited Hearts</button>
+    <button class="nho-btn-dash" onclick="nhoGoToDashboard()">🏠 Dashboard Pe Jao</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ❤️ HEART SYSTEM — Free Users Only (Pro/Demo = unlimited)
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  var MAX_HEARTS = 5;
+  var REGEN_MS   = 3 * 60 * 1000; // 3 min
+  var HS_KEY     = 'su_hearts_v1';
+
+  function _getHS(){ try{ return JSON.parse(localStorage.getItem(HS_KEY)||'null'); }catch(e){ return null; } }
+  function _saveHS(s){ try{ localStorage.setItem(HS_KEY, JSON.stringify(s)); }catch(e){} }
+
+  function _regenHearts(){
+    var hs = _getHS() || { hearts: MAX_HEARTS, lastLostAt: null };
+    if(hs.hearts >= MAX_HEARTS){ hs.hearts = MAX_HEARTS; hs.lastLostAt = null; _saveHS(hs); return hs; }
+    if(!hs.lastLostAt){ _saveHS(hs); return hs; }
+    var regened = Math.floor((Date.now() - hs.lastLostAt) / REGEN_MS);
+    if(regened > 0){
+      hs.hearts = Math.min(MAX_HEARTS, hs.hearts + regened);
+      hs.lastLostAt = hs.hearts >= MAX_HEARTS ? null : hs.lastLostAt + regened * REGEN_MS;
+      _saveHS(hs);
+    }
+    return hs;
+  }
+
+  window.getHearts = function(){
+    if(typeof isPro==='function' && (isPro()||isDemo())) return MAX_HEARTS;
+    return _regenHearts().hearts;
+  };
+
+  window.loseHeart = function(){
+    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))) return true;
+    var hs = _regenHearts();
+    if(hs.hearts <= 0) return false;
+    hs.hearts = Math.max(0, hs.hearts - 1);
+    if(!hs.lastLostAt) hs.lastLostAt = Date.now();
+    _saveHS(hs);
+    _renderHeartBar();
+    _shakeLastHeart(hs.hearts);
+    if(hs.hearts <= 0){ setTimeout(showNoHeartsOverlay, 600); return false; }
+    return true;
+  };
+
+  window.hasHearts = function(){
+    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))) return true;
+    return _regenHearts().hearts > 0;
+  };
+
+  window._renderHeartBar = function(){
+    var htEl = document.getElementById('lHt');
+    if(!htEl) return;
+    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))){ htEl.textContent='♾️'; return; }
+    var h = _regenHearts().hearts;
+    var html='';
+    for(var i=0;i<MAX_HEARTS;i++){
+      html+='<span class="heart-icon'+(i>=h?' lost':'')+'" id="hrt_'+i+'">'+(i<h?'❤️':'🖤')+'</span>';
+    }
+    htEl.innerHTML = html;
+  };
+
+  function _shakeLastHeart(remaining){
+    var el = document.getElementById('hrt_'+remaining);
+    if(!el) return;
+    el.classList.add('shake');
+    setTimeout(function(){ el.classList.remove('shake'); el.classList.add('lost'); el.textContent='🖤'; }, 400);
+  }
+
+  // ── Regen ticker — har 10s check ──
+  var _regenTick = null;
+  window._startHeartRegenTicker = function(){
+    if(_regenTick) clearInterval(_regenTick);
+    _regenTick = setInterval(function(){
+      if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))) return;
+      var before = (_getHS()||{}).hearts||0;
+      var hs = _regenHearts();
+      if(hs.hearts > before){
+        // Heart wapas aaya
+        var idx = hs.hearts - 1;
+        var el = document.getElementById('hrt_'+idx);
+        if(el){ el.textContent='❤️'; el.classList.remove('lost'); el.classList.add('regen'); setTimeout(function(){ el.classList.remove('regen'); },600); }
+        _renderHeartBar();
+        if(typeof showToast==='function') showToast('❤️ Heart wapas aa gaya! ('+hs.hearts+'/'+MAX_HEARTS+')','#FF4B4B');
+        var ov = document.getElementById('noHeartsOverlay');
+        if(ov && ov.classList.contains('show')){ ov.classList.remove('show'); if(window._nhoTimer) clearInterval(window._nhoTimer); }
+      }
+    }, 10000);
+  };
+  window._stopHeartRegenTicker = function(){
+    if(_regenTick){ clearInterval(_regenTick); _regenTick=null; }
+  };
+
+  // ── No Hearts Overlay ──
+  window.showNoHeartsOverlay = function(){
+    var ov = document.getElementById('noHeartsOverlay'); if(!ov) return;
+    ov.classList.add('show');
+    if(window._nhoTimer) clearInterval(window._nhoTimer);
+    var timerEl = document.getElementById('nhoTimerDisplay');
+    function tick(){
+      var hs = _regenHearts();
+      if(hs.hearts > 0){ clearInterval(window._nhoTimer); ov.classList.remove('show'); _renderHeartBar(); if(typeof showToast==='function') showToast('❤️ Heart wapas aa gaya! Continue karo!','#2EE59D'); return; }
+      if(!hs.lastLostAt){ if(timerEl) timerEl.textContent='⏳ --:--'; return; }
+      var diff = Math.max(0, hs.lastLostAt + REGEN_MS - Date.now());
+      var m=Math.floor(diff/60000), s=Math.floor((diff%60000)/1000);
+      if(timerEl) timerEl.textContent='⏳ '+m+':'+(s<10?'0':'')+s;
+    }
+    tick();
+    window._nhoTimer = setInterval(tick, 1000);
+  };
+
+  window.nhoGoToDashboard = function(){
+    var ov=document.getElementById('noHeartsOverlay'); if(ov) ov.classList.remove('show');
+    if(window._nhoTimer) clearInterval(window._nhoTimer);
+    window._stopHeartRegenTicker();
+    goalSessionEnd(); save(); showScreen('dashboard'); renderDash();
+  };
+  window.nhoUpgradePro = function(){
+    var ov=document.getElementById('noHeartsOverlay'); if(ov) ov.classList.remove('show');
+    if(window._nhoTimer) clearInterval(window._nhoTimer);
+    if(typeof showToast==='function') showToast('👑 Pro ke liye admin se rabta karo!','#FFD700');
+    goalSessionEnd(); save(); showScreen('dashboard'); renderDash();
+  };
+
+  // ── Sync hl watcher — lesson hl decrease => loseHeart ──
+  var _hlPrev = 5, _hlWatch = null;
+  window._startHLWatch = function(){
+    if(_hlWatch) clearInterval(_hlWatch);
+    _hlPrev = typeof window.hl !== 'undefined' ? window.hl : 5;
+    _hlWatch = setInterval(function(){
+      if(typeof window.hl==='undefined') return;
+      if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))) return;
+      if(window.hl < _hlPrev){
+        var diff = _hlPrev - window.hl;
+        for(var i=0;i<diff;i++) if(typeof window.loseHeart==='function') window.loseHeart();
+      }
+      _hlPrev = window.hl;
+    }, 300);
+  };
+  window._stopHLWatch = function(){
+    if(_hlWatch){ clearInterval(_hlWatch); _hlWatch=null; }
+  };
+
+  // ── Patch goLesson + exitLesson + launchPreClassLesson ──
+  function _patchForHearts(){
+    if(typeof window.goLesson==='function' && !window._heartsPatchedGoLesson){
+      window._heartsPatchedGoLesson = true;
+      var _o = window.goLesson;
+      window.goLesson = function(){
+        window._startHeartRegenTicker();
+        window._startHLWatch();
+        _renderHeartBar();
+        _o.apply(this,arguments);
+      };
+    }
+    if(typeof window.exitLesson==='function' && !window._heartsPatchedExit){
+      window._heartsPatchedExit = true;
+      var _oe = window.exitLesson;
+      window.exitLesson = function(){
+        window._stopHeartRegenTicker();
+        window._stopHLWatch();
+        _oe.apply(this,arguments);
+      };
+    }
+    if(typeof window.launchPreClassLesson==='function' && !window._heartsPatchedPC){
+      window._heartsPatchedPC = true;
+      var _opc = window.launchPreClassLesson;
+      window.launchPreClassLesson = function(){
+        window._startHeartRegenTicker();
+        _renderHeartBar();
+        _opc.apply(this,arguments);
+      };
+    }
+  }
+  // Try now + retry
+  _patchForHearts();
+  setTimeout(_patchForHearts, 500);
+  setTimeout(_patchForHearts, 1500);
+
+})();
+
+// ═══════════════════════════════════════════════════════════════
+// ⏸️ PAUSE SYSTEM — Sab Users
+// ═══════════════════════════════════════════════════════════════
+(function(){
+  var PAUSE_KEY = 'su_pause_state_v1';
+  function _savePause(ctx,extra){ try{ localStorage.setItem(PAUSE_KEY,JSON.stringify({ctx:ctx,extra:extra||{},savedAt:Date.now()})); }catch(e){} }
+  function _loadPause(){ try{ return JSON.parse(localStorage.getItem(PAUSE_KEY)||'null'); }catch(e){ return null; } }
+  function _clearPause(){ try{ localStorage.removeItem(PAUSE_KEY); }catch(e){} }
+
+  window.showPauseScreen = function(){
+    var ov = document.getElementById('pauseOverlay'); if(!ov) return;
+    var ctx = 'lesson';
+    document.querySelectorAll('.screen.active').forEach(function(s){ ctx = s.id; });
+    var subEl = document.getElementById('pauseSubText');
+    if(subEl){
+      if(ctx==='pastpapers') subEl.textContent='Paper pause hai — continue ya shuru se shuru karo!';
+      else subEl.textContent='Lesson pause hai — continue ya shuru se shuru karo!';
+    }
+    _savePause(ctx, { si: typeof si!=='undefined'?si:0, pcSI: typeof _pcSI!=='undefined'?_pcSI:0 });
+    // Goal timer pause
+    if(typeof goalSessionEnd==='function') goalSessionEnd();
+    ov.classList.add('show');
+  };
+
+  window.hidePauseScreen = function(){
+    var ov = document.getElementById('pauseOverlay'); if(ov) ov.classList.remove('show');
+    // Goal timer resume
+    if(typeof goalSessionStart==='function') goalSessionStart();
+    _clearPause();
+  };
+
+  window.pauseRestartLesson = function(){
+    var ov = document.getElementById('pauseOverlay'); if(ov) ov.classList.remove('show');
+    var ps = _loadPause();
+    var ctx = ps&&ps.ctx ? ps.ctx : 'lesson';
+    _clearPause();
+    if(ctx==='pastpapers'){ if(typeof ppStartAttempt==='function') ppStartAttempt(); }
+    else { if(typeof goLesson==='function') goLesson(); }
+  };
+
+  window.pauseGoToDashboard = function(){
+    var ov = document.getElementById('pauseOverlay'); if(ov) ov.classList.remove('show');
+    // State already saved — don't clear, user wapas aa sakta hai
+    if(typeof save==='function') save();
+    if(typeof showScreen==='function') showScreen('dashboard');
+    if(typeof renderDash==='function') renderDash();
+  };
+
+  // ── Resume banner on dashboard ──
+  function _checkResumeBanner(){
+    var ps = _loadPause();
+    if(!ps||!ps.ctx) return;
+    if(Date.now()-(ps.savedAt||0) > 30*60*1000){ _clearPause(); return; }
+    var old = document.getElementById('resumeBanner'); if(old) old.remove();
+    var ctx = ps.ctx;
+    var icon = ctx==='pastpapers'?'📝':'📚';
+    var label = ctx==='pastpapers'?'Paper Continue Karo':'Lesson Continue Karo';
+    var b = document.createElement('div');
+    b.id = 'resumeBanner';
+    b.style.cssText = 'margin:10px 16px 0;';
+    b.innerHTML = '<div style="background:linear-gradient(135deg,rgba(46,229,157,.12),rgba(91,141,239,.08));border:2px solid rgba(46,229,157,.45);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px;">'
+      +'<div style="font-size:26px;flex-shrink:0;animation:pauseFloat 2.5s ease infinite;">'+icon+'</div>'
+      +'<div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#2EE59D;">Wahan Se Shuru Karo</div>'
+      +'<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px;">Session save hua hai</div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0;">'
+      +'<button onclick="resumePausedLesson()" style="background:linear-gradient(135deg,#2EE59D,#1BC47D);border:none;border-radius:10px;padding:7px 14px;font-family:\'Fredoka One\',sans-serif;font-size:12px;color:#0A0918;cursor:pointer;box-shadow:0 3px 0 #14A363;">▶️ '+label+'</button>'
+      +'<button onclick="discardPausedLesson()" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:5px 14px;font-family:\'Fredoka One\',sans-serif;font-size:11px;color:rgba(255,255,255,.45);cursor:pointer;">✕ Hatao</button>'
+      +'</div></div>';
+    var target = document.getElementById('dashSkeletonTarget');
+    if(target) target.insertBefore(b, target.firstChild);
+  }
+
+  window.resumePausedLesson = function(){
+    var ps = _loadPause(); if(!ps){ _clearPause(); return; }
+    var ctx = ps.ctx;
+    var old = document.getElementById('resumeBanner'); if(old) old.remove();
+    _clearPause();
+    if(ctx==='pastpapers'){ if(typeof ppStartAttempt==='function') ppStartAttempt(); return; }
+    var savedSI = ps.extra&&ps.extra.si!=null ? ps.extra.si : 0;
+    if(typeof goLesson==='function'){
+      goLesson();
+      setTimeout(function(){
+        if(typeof si!=='undefined' && typeof LS!=='undefined' && LS.length>0){
+          si = Math.min(savedSI, LS.length-1);
+          if(typeof renderStep==='function') renderStep();
+        }
+      }, 500);
+    }
+  };
+
+  window.discardPausedLesson = function(){
+    _clearPause();
+    var old = document.getElementById('resumeBanner');
+    if(old){ old.style.transition='opacity .3s,transform .3s'; old.style.opacity='0'; old.style.transform='translateY(-10px)'; setTimeout(function(){ old.remove(); },320); }
+  };
+
+  // ── Hook renderDash ──
+  function _hookRD(){
+    if(typeof window.renderDash==='function' && !window._pauseHookedRD){
+      window._pauseHookedRD = true;
+      var _b = window.renderDash;
+      window.renderDash = function(){ _b.apply(this,arguments); setTimeout(_checkResumeBanner,200); };
+    }
+  }
+  _hookRD(); setTimeout(_hookRD,500); setTimeout(_hookRD,1500);
 
 })();
 </script>
