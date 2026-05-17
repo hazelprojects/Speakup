@@ -193,75 +193,6 @@ body { padding-top: 48px; }
 #pcspeed_timerbar.urgent {
   animation: timerUrgent .4s ease infinite;
 }
-
-/* ═══════════════════════════════════════════════
-   HEART SYSTEM — Free Users
-═══════════════════════════════════════════════ */
-.heart-icon { font-size:18px; transition:transform .2s,filter .2s; line-height:1; display:inline-block; }
-.heart-icon.lost { filter:grayscale(1) opacity(.35); }
-.heart-icon.shake { animation:heartShake .4s ease; }
-.heart-icon.regen { animation:heartRegen .5s cubic-bezier(.34,1.56,.64,1); }
-@keyframes heartShake {
-  0%,100%{ transform:translateX(0) scale(1); }
-  25%{ transform:translateX(-5px) scale(.85); }
-  50%{ transform:translateX(5px) scale(.85); }
-  75%{ transform:translateX(-4px) scale(.9); }
-}
-@keyframes heartRegen {
-  0%{ transform:scale(0) rotate(-20deg); filter:grayscale(1) opacity(.3); }
-  60%{ transform:scale(1.3) rotate(5deg); filter:none; }
-  100%{ transform:scale(1) rotate(0); filter:none; }
-}
-#noHeartsOverlay {
-  position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:99998;
-  display:none; align-items:center; justify-content:center;
-  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-}
-#noHeartsOverlay.show { display:flex; }
-.nho-box {
-  background:linear-gradient(135deg,#1a0505,#2d0a0a,#1a0505);
-  border:2px solid rgba(255,75,75,.55); border-radius:28px;
-  padding:32px 24px; text-align:center; max-width:300px; width:90%;
-  box-shadow:0 20px 60px rgba(255,75,75,.25);
-  animation:nhoPopIn .4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes nhoPopIn { from{transform:scale(.6);opacity:0;} to{transform:scale(1);opacity:1;} }
-.nho-emoji { font-size:64px; margin-bottom:12px; animation:nhoBeat 1.5s ease infinite; }
-@keyframes nhoBeat { 0%,100%{transform:scale(1);} 14%{transform:scale(1.2);} 28%{transform:scale(1);} 42%{transform:scale(1.15);} }
-.nho-title { font-family:'Fredoka One',sans-serif; font-size:24px; color:#FF4B4B; margin-bottom:8px; }
-.nho-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:8px; line-height:1.5; }
-.nho-timer { font-family:'Fredoka One',sans-serif; font-size:28px; color:#FF9A3C; margin-bottom:20px; }
-.nho-btn-go { width:100%; padding:14px; border-radius:16px; border:none; background:linear-gradient(135deg,#FF4B4B,#cc2222); color:#fff; font-family:'Fredoka One',sans-serif; font-size:16px; cursor:pointer; box-shadow:0 5px 0 #991111; margin-bottom:10px; }
-.nho-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.07); color:rgba(255,255,255,.6); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; }
-
-/* ═══════════════════════════════════════════════
-   PAUSE SCREEN — Game Style
-═══════════════════════════════════════════════ */
-#pauseOverlay {
-  position:fixed; inset:0; background:rgba(0,0,0,.92); z-index:99997;
-  display:none; align-items:center; justify-content:center;
-  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
-}
-#pauseOverlay.show { display:flex; }
-.pause-box {
-  background:linear-gradient(135deg,#0d0a1e,#1a0f3a,#0d0a1e);
-  border:2px solid rgba(91,141,239,.5); border-radius:28px;
-  padding:32px 24px; text-align:center; max-width:300px; width:90%;
-  box-shadow:0 20px 60px rgba(91,141,239,.25);
-  animation:pausePopIn .4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes pausePopIn { from{transform:scale(.65) translateY(30px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
-.pause-emoji { font-size:60px; margin-bottom:10px; animation:pauseFloat 2.5s ease infinite; }
-@keyframes pauseFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
-.pause-title { font-family:'Fredoka One',sans-serif; font-size:26px; color:#5B8DEF; margin-bottom:6px; text-shadow:0 0 16px rgba(91,141,239,.5); }
-.pause-sub { font-size:13px; color:rgba(255,255,255,.45); margin-bottom:24px; line-height:1.5; }
-.pause-btn-continue { width:100%; padding:16px; border-radius:18px; border:none; background:linear-gradient(135deg,#2EE59D,#1BC47D); color:#0A0918; font-family:'Fredoka One',sans-serif; font-size:17px; cursor:pointer; box-shadow:0 5px 0 #14A363; margin-bottom:10px; transition:transform .15s; }
-.pause-btn-continue:active { transform:scale(.97); }
-.pause-btn-restart { width:100%; padding:14px; border-radius:16px; border:2px solid rgba(255,150,0,.4); background:rgba(255,150,0,.1); color:#FF9A3C; font-family:'Fredoka One',sans-serif; font-size:15px; cursor:pointer; margin-bottom:10px; transition:transform .15s; }
-.pause-btn-restart:active { transform:scale(.97); }
-.pause-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:rgba(255,255,255,.5); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; transition:transform .15s; }
-.pause-btn-dash:active { transform:scale(.97); }
-.pause-divider { height:1px; background:rgba(255,255,255,.08); margin:14px 0; }
 </style>
 
 <style>
@@ -3694,7 +3625,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
     <div style="width:1px;height:24px;background:var(--bdr);flex-shrink:0;"></div>
 
     <!-- Streak -->
-    <div style="display:flex;align-items:center;gap:2px;cursor:pointer;" onclick="showToast('🔥 '+document.getElementById('topStreak').textContent+' din ki streak!','var(--o)')">
+    <div style="display:flex;align-items:center;gap:2px;cursor:pointer;" onclick="showStreakScreen()">
       <div style="font-size:16px;" id="topStreakIcon">🔥</div>
       <div style="font-family:'Fredoka One',sans-serif;font-size:13px;color:var(--o);" id="topStreak">0</div>
     </div>
@@ -3706,7 +3637,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
     </div>
 
     <!-- XP -->
-    <div style="display:flex;align-items:center;gap:2px;">
+    <div style="display:flex;align-items:center;gap:2px;cursor:pointer;" onclick="showXpScreen()" title="XP details">
       <div style="width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#CE82FF,#9b49d9);display:flex;align-items:center;justify-content:center;">
         <div style="font-size:8px;">⭐</div>
       </div>
@@ -4318,10 +4249,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--txt);min-h
 
 <!-- LESSON -->
 <div class="screen" id="lesson" style="">
-  <div class="lh">
-    <button class="lc" onclick="exitLesson()" style="position: relative; overflow: hidden;">✕</button>
-    <div class="lpb"><div class="lpf" id="lPf" style="width: 2%;"></div></div>
-    <div class="lhts" id="lHt">❤️❤️❤️❤️❤️❤️❤️</div>
+  <div class="lh" style="display:flex;align-items:center;gap:6px;">
+    <button class="lc" onclick="exitLesson()" style="position:relative;overflow:hidden;flex-shrink:0;">✕</button>
+    <div class="lpb" style="flex:1;"><div class="lpf" id="lPf" style="width:2%;"></div></div>
+    <div class="lhts" id="lHt" style="flex-shrink:0;">❤️❤️❤️❤️❤️</div>
     <button id="pauseBtn" onclick="showPauseScreen()" style="background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent;">⏸️</button>
   </div>
   <div class="lb" id="lBd" style="opacity: 1; transform: translateX(0px);"><div class="vc a observed anim-entrance" id="vc3" style="animation-delay: 0s; position: relative; overflow: hidden;"><div class="vct"><div class="vcn">2</div><div><div class="vcw">Bread</div><div class="vcu">روٹی / ڈبل روٹی</div><div class="vcp">/BRED/</div></div></div><div class="vcb"><div class="vce">"Give me some bread."</div></div><div class="vcp2">💡 Naan, chapati, aur double roti sab ke liye</div><div class="vmcard" style="border-color:#FF6B35;background:linear-gradient(135deg,#FF6B3518,#FF6B3508);"><div class="vmcard-emoji">🍞</div><div class="vmcard-body"><div class="vmcard-scene">Roti / Slice</div><div class="vmcard-trick" style="color:#FF6B35">🧠 Bread = Roti</div></div></div><div class="vsits"><div class="vsits-title">📍 Kahaan Use Karein:</div><div class="vsit"><span class="vsit-em">🍳</span><div><div class="vsit-pl">Breakfast</div><div class="vsit-ex">"Bread and butter."</div></div></div><div class="vsit"><span class="vsit-em">🍽️</span><div><div class="vsit-pl">Dinner</div><div class="vsit-ex">"Eat with bread."</div></div></div><div class="vsit"><span class="vsit-em">🛒</span><div><div class="vsit-pl">Market</div><div class="vsit-ex">"Buy some bread."</div></div></div></div><div class="vmistake">⚠️ ⚠️ Galti: Bread qabil-e-ginti nahi, "a bread" ghalat hai, "a piece of bread" kahein.</div><div class="spk-bar"><button class="spk-btn spk-listen" onclick="ttsPlay(3)" style="position: relative; overflow: hidden;">🔊 Word + Example</button><button class="spk-btn spk-slow" onclick="ttsSlow(3)">🐢 Dheere Suno</button></div><div id="ram_container_2"><div class="ram-box"><div class="ram-title">🎤 Repeat After Me</div><div class="ram-word" id="ram_word_2">Bread</div><div class="ram-pron" id="ram_pron_2">/BRED/</div><div class="ram-steps" id="ram_steps_2"><div class="ram-step active" id="ram_s1_2">🔊 Step 1: Pehle suno</div><div class="ram-step" id="ram_s2_2">🎤 Step 2: Mic mein bolo</div><div class="ram-step" id="ram_s3_2">📊 Step 3: Score dekho</div></div><div style="display:flex;gap:8px;margin-top:12px;"><button class="spk-btn spk-listen" data-ramid="2" onclick="ramListenById(this)">🔊 Suno</button><button class="spk-btn spk-mic" id="ram_micbtn_2" data-ramid="2" onclick="ramRecordById(this)">🎤 Bolo</button><button class="spk-btn spk-slow" data-ramid="2" onclick="ramSlowById(this)">🐢 Dheere</button></div><div id="ram_result_2"></div></div></div></div><div class="a" style="padding:8px 0 20px;"><button class="bg" onclick="markL(3)">✅ Samajh Gaya! →</button><button class="bo" onclick="ttsPlay(3)">🔊 Dobara Suno</button></div></div>
@@ -11343,9 +11274,17 @@ function isUnlimitedHearts(){
 // Dashboard top mein hearts display update karo
 function updateTopHeartsDisplay(){
   const th = document.getElementById('topHearts');
-  const wrap = document.getElementById('topHeartsWrap');
   if(!th) return;
-  if(isUnlimitedHearts()){
+  if(!isPro()){
+    // Free user — su_hearts_v1 se live hearts lo
+    try{
+      var hs = JSON.parse(localStorage.getItem('su_hearts_v1')||'null') || {hearts:5,lastLostAt:null};
+      var regenMs = 3*60*1000;
+      if(hs.lastLostAt){ var rg=Math.floor((Date.now()-hs.lastLostAt)/regenMs); if(rg>0) hs.hearts=Math.min(5,hs.hearts+rg); }
+      th.textContent = Math.max(0,Math.min(5,hs.hearts));
+    }catch(e){ th.textContent = 5; }
+    th.style.fontSize = '13px';
+  } else if(isUnlimitedHearts()){
     th.textContent = '∞';
     th.style.fontSize = '20px';
   } else {
@@ -11353,7 +11292,7 @@ function updateTopHeartsDisplay(){
     const maxHearts = getAdminMaxHearts();
     const hearts = cs.hearts !== undefined ? Math.max(0, Math.min(cs.hearts, maxHearts)) : maxHearts;
     th.textContent = hearts;
-    th.style.fontSize = '16px';
+    th.style.fontSize = '13px';
   }
 }
 
@@ -11374,15 +11313,9 @@ function resetHeartsOnDashboard(){
   updateTopHeartsDisplay();
 }
 
-// Heart icon click handler — Pro users ke liye mode toggle popup
+// Heart icon click handler — sabke liye heart screen kholo
 function onTopHeartClick(){
-  if(!isPro()){
-    // Free user — Pro upgrade screen dikhao
-    showProScreen();
-    return;
-  }
-  // Pro user — mode select popup dikhao
-  showHeartModePopup();
+  showHeartScreen();
 }
 
 function showHeartModePopup(){
@@ -13243,8 +13176,28 @@ function pickCourseFromModal(days){
 }
 
 // SCREENS
-function showScreen(id){
+// ── Back Button / History System ──
+var _suNavHistory = [];   // apna stack
+var _suNavIgnore  = false; // popstate loop rokne ke liye
+
+// Screens jinhe back pe dashboard pe le jaana chahiye
+var _DASH_SCREENS = ['dashboard','lesson','pastpapers','ppAttempt','certificate','certificate-v2'];
+
+function showScreen(id, _fromPop){
   const prev=document.querySelector('.screen.active');
+  const prevId = prev ? prev.id : null;
+
+  // History push — sirf jab user ne navigate kiya (back se nahi)
+  if(!_fromPop){
+    if(prevId && prevId !== id){
+      _suNavHistory.push(prevId);
+    }
+    // Browser history mein entry dalo taake back button kaam kare
+    try{
+      history.pushState({suScreen: id}, '', '#'+id);
+    }catch(e){}
+  }
+
   if(prev&&prev.id!==id){
     prev.style.transition='opacity .18s ease,transform .18s ease';
     prev.style.opacity='0';
@@ -13273,6 +13226,42 @@ function showScreen(id){
   }
   window.scrollTo(0,0);
 }
+
+// ── Back button handler ──
+window.addEventListener('popstate', function(e){
+  if(_suNavIgnore) return;
+
+  // Agar koi overlay khula ho — pehle use band karo
+  var overlays = ['noHeartsOverlay','pauseOverlay','heartModePopup','shareCardOverlay'];
+  for(var i=0;i<overlays.length;i++){
+    var ov = document.getElementById(overlays[i]);
+    if(ov && (ov.classList.contains('show') || ov.classList.contains('open'))){
+      ov.classList.remove('show','open');
+      // Apna entry wapas push karo — warna ek aur back ho jayegi
+      try{ history.pushState({suScreen: (document.querySelector('.screen.active')||{}).id||'dashboard'},'','#current'); }catch(ex){}
+      return;
+    }
+  }
+
+  // Apne stack se pichla screen lo
+  var goTo = _suNavHistory.length > 0 ? _suNavHistory.pop() : 'dashboard';
+
+  // Lesson / pastpaper screens pe wapas na jao — dashboard pe jao
+  if(goTo === 'lesson' || goTo === 'ppAttempt') goTo = 'dashboard';
+
+  showScreen(goTo, true);
+
+  // Agar dashboard pe gaye toh renderDash bhi chalao
+  if(goTo === 'dashboard' && typeof renderDash === 'function') renderDash();
+});
+
+// Pehli entry dalo taake app band na ho
+try{
+  if(history.state === null || !history.state.suScreen){
+    history.replaceState({suScreen:'dashboard'}, '', '#dashboard');
+  }
+}catch(e){}
+
 function exitLesson(){save();showScreen('dashboard');renderDash();}
 function tab(t){
   // ── Sab nav buttons se on class hatao ──
@@ -14136,6 +14125,9 @@ function launchPreClassLesson(lang, isRevision){
   // Score reset
   _pcScore = 0; _pcTotal = 0; _pcWrongLetters = [];
 
+  // ✅ Heart system — free users ke liye ticker start karo
+  if(typeof window._startHeartRegenTicker === 'function') window._startHeartRegenTicker();
+
   // Steps build karo
   _pcLS = buildPreClassSteps(lang, nfo, letters, adPc, isRevision);
   _pcSI = 0;
@@ -14145,103 +14137,114 @@ function launchPreClassLesson(lang, isRevision){
   // Lesson screen kholo
   showScreen('lesson');
   var pb = document.getElementById('lPf'); if(pb) pb.style.width = '0%';
-  var ht = document.getElementById('lHt'); if(ht) ht.textContent = '\u2728 Pre-Class';
+  var ht = document.getElementById('lHt');
+  if(ht){
+    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))){
+      ht.textContent = '✨ Pre-Class';
+    } else {
+      ht.textContent = '✨ Pre-Class';
+      // Heart bar render karo (free users)
+      setTimeout(function(){ if(typeof window._renderHeartBar==='function') window._renderHeartBar(); }, 200);
+    }
+  }
   setTimeout(function(){ renderPCStep(); }, 160);
 }
 
-// ── Build full pre-class lesson steps ──
+
+// ═══════════════════════════════════════════════════════════════
+// ✅ NEW: 6-letter BATCH system + Mega Quiz
+// ═══════════════════════════════════════════════════════════════
 function buildPreClassSteps(lang, nfo, letters, adPc, isRevision){
   var steps = [];
-  var desc = (adPc && adPc.description) ? adPc.description : ('Is pre-class mein ' + nfo.t + ' ke basic characters seekhenge.');
+  var desc = (adPc&&adPc.description)?adPc.description:('Is pre-class mein '+nfo.t+' ke basic characters seekhenge.');
   var totalLetters = letters.length;
+  var BATCH = 6;
 
-  // STEP 1: Welcome Screen
-  steps.push({t:'pc_header', nfo:nfo, desc:desc, isRevision:isRevision, totalLetters:totalLetters});
-
-  if(totalLetters === 0){
-    steps.push({t:'pc_nodata', nfo:nfo, desc:desc});
-    steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
+  steps.push({t:'pc_header',nfo:nfo,desc:desc,isRevision:isRevision,totalLetters:totalLetters});
+  if(totalLetters===0){
+    steps.push({t:'pc_nodata',nfo:nfo,desc:desc});
+    steps.push({t:'pc_done',lang:lang,isRevision:isRevision});
     return steps;
   }
 
-  // STEP 2: Letter Cards (har letter ek card)
-  letters.forEach(function(l, i){
-    steps.push({t:'pc_letter', letter:l, num:i+1, total:totalLetters});
+  var allBatchLetters=[];
+  var batches=[];
+  for(var bi=0;bi<totalLetters;bi+=BATCH) batches.push(letters.slice(bi,bi+BATCH));
+
+  batches.forEach(function(batch,bIdx){
+    var batchNum=bIdx+1, batchTotal=batches.length;
+    allBatchLetters=allBatchLetters.concat(batch);
+
+    // Batch intro
+    steps.push({t:'pc_batch_intro',batchNum:batchNum,batchTotal:batchTotal,batch:batch,nfo:nfo});
+
+    // Phase 1: Parhai
+    steps.push({t:'pc_phase_banner',phase:1,icon:'BOOK',title:'Parhai — Dekho aur Suno',sub:'Har letter ko dhyan se dekho',batchNum:batchNum});
+    batch.forEach(function(l,li){
+      steps.push({t:'pc_letter',letter:l,num:li+1,total:batch.length,batchNum:batchNum,allLetterNum:bIdx*BATCH+li+1,totalLetters:totalLetters});
+    });
+
+    // Phase 2: Quiz
+    if(batch.length>=2){
+      var quizCount=Math.min(batch.length,4+Math.floor(Math.random()*3));
+      steps.push({t:'pc_phase_banner',phase:2,icon:'QUIZ',title:'Quiz Time — '+quizCount+' Sawaal',sub:'Kya yaad raha? Test karo!',batchNum:batchNum,quizCount:quizCount});
+      var qPool=_pcShuffle(batch.slice());
+      var qtypes=['pc_example_q','pc_listen','pc_recog','pc_fillblank'];
+      for(var qi=0;qi<quizCount;qi++){
+        var ql=qPool[qi%qPool.length];
+        var qt=qtypes[qi%qtypes.length];
+        if(qt==='pc_fillblank'&&(!ql.example||ql.example.length<2)) qt='pc_example_q';
+        var pool4=allBatchLetters.length>=4?allBatchLetters:letters;
+        var dist=_pcPickDistractors(ql,pool4,3);
+        steps.push({t:qt,letter:ql,options:_pcShuffle([ql].concat(dist)),quizNum:qi+1,quizTotal:quizCount});
+      }
+    }
+
+    // Phase 3: Speaking
+    steps.push({t:'pc_phase_banner',phase:3,icon:'MIC',title:'Sunna & Bolna',sub:'Suno phir mic mein bolo!',batchNum:batchNum});
+    batch.forEach(function(l){
+      steps.push({t:'pc_speaking',letter:l,batchMode:true});
+    });
   });
 
-  // STEP 3: Listening Practice (sound sunke letter dhundo)
-  if(totalLetters >= 3){
-    var listenBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
-    listenBatch.forEach(function(l){
-      var distractors = _pcPickDistractors(l, letters, 3);
-      steps.push({t:'pc_listen', letter:l, options: _pcShuffle([l].concat(distractors))});
+  // Mega Quiz
+  if(totalLetters>=4){
+    steps.push({t:'pc_mega_intro',totalLetters:totalLetters});
+
+    var megaQs=[];
+    var mPool=_pcShuffle(allBatchLetters.slice());
+    var fillL=mPool.filter(function(l){return l.example&&l.example.length>=2;});
+    fillL.slice(0,Math.ceil(totalLetters*0.4)).forEach(function(l){
+      var d=_pcPickDistractors(l,allBatchLetters,3);
+      megaQs.push({qtype:'mega_fill',letter:l,options:_pcShuffle([l].concat(d))});
     });
-  }
-
-  // STEP 4: Recognition Quiz (character dekh ke naam/pronunciation guess karo)
-  if(totalLetters >= 3){
-    var recogBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
-    recogBatch.forEach(function(l){
-      var distractors = _pcPickDistractors(l, letters, 3);
-      steps.push({t:'pc_recog', letter:l, options: _pcShuffle([l].concat(distractors))});
+    var exL=mPool.filter(function(l){return l.example;});
+    exL.slice(0,Math.ceil(totalLetters*0.35)).forEach(function(l){
+      var d=_pcPickDistractors(l,allBatchLetters,3);
+      megaQs.push({qtype:'mega_example',letter:l,options:_pcShuffle([l].concat(d))});
     });
-  }
-
-  // STEP 5: Speaking Practice
-  if(totalLetters > 0){
-    steps.push({t:'pc_speaking_intro'});
-    var spkBatch = letters.slice(0, Math.min(totalLetters, 8));
-    spkBatch.forEach(function(l){
-      steps.push({t:'pc_speaking', letter:l});
+    mPool.slice(0,Math.ceil(totalLetters*0.25)).forEach(function(l){
+      var d=_pcPickDistractors(l,allBatchLetters,3);
+      megaQs.push({qtype:'mega_listen',letter:l,options:_pcShuffle([l].concat(d))});
     });
+    megaQs=_pcShuffle(megaQs);
+    var megaTotal=Math.max(26,Math.min(megaQs.length,totalLetters));
+    megaQs=megaQs.slice(0,megaTotal);
+
+    // Speaking in mega
+    steps.push({t:'pc_mega_speaking_intro'});
+    var mSpk=_pcShuffle(allBatchLetters.slice()).slice(0,Math.min(10,totalLetters));
+    mSpk.forEach(function(l){ steps.push({t:'pc_speaking',letter:l,megaMode:true}); });
+
+    // Speed quiz
+    steps.push({t:'pc_mega_speed_intro',total:megaQs.length});
+    steps.push({t:'pc_mega_speed',questions:megaQs,totalQ:megaQs.length});
   }
 
-  // STEP 6: Uppercase ↔ Lowercase Match
-  if(totalLetters >= 4){
-    var matchLetters = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 6));
-    steps.push({t:'pc_match', letters:matchLetters});
-  }
-
-  // STEP 7: Example Word Match
-  if(totalLetters >= 4){
-    var exBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 8));
-    exBatch.forEach(function(l){
-      if(l.example){
-        var distractors = _pcPickDistractors(l, letters, 3);
-        steps.push({t:'pc_example_match', letter:l, options: _pcShuffle([l].concat(distractors))});
-      }
-    });
-  }
-
-  // STEP 8: Fill in the Blank
-  if(totalLetters >= 4){
-    var fillBatch = _pcShuffle(letters.slice()).slice(0, Math.min(totalLetters, 6));
-    fillBatch.forEach(function(l){
-      if(l.example && l.example.length > 1){
-        var distractors = _pcPickDistractors(l, letters, 3);
-        steps.push({t:'pc_fillblank', letter:l, options: _pcShuffle([l].concat(distractors))});
-      }
-    });
-  }
-
-  // STEP 9: Speed Round (10 random mixed questions, 5s timer)
-  if(totalLetters >= 4){
-    var speedPool = _pcShuffle(letters.slice());
-    var speedQs = [];
-    for(var si=0; si<10 && si<totalLetters; si++){
-      var sl = speedPool[si % speedPool.length];
-      var types = ['listen','recog'];
-      var sType = types[si % 2];
-      var sdist = _pcPickDistractors(sl, letters, 3);
-      speedQs.push({letter:sl, qtype:sType, options: _pcShuffle([sl].concat(sdist))});
-    }
-    steps.push({t:'pc_speed', questions:speedQs});
-  }
-
-  // STEP 10: Final Results
-  steps.push({t:'pc_done', lang:lang, isRevision:isRevision});
+  steps.push({t:'pc_done',lang:lang,isRevision:isRevision});
   return steps;
 }
+
 
 // ── Helper: Shuffle array ──
 function _pcShuffle(arr){
@@ -14260,41 +14263,74 @@ function _pcPickDistractors(correct, allLetters, n){
 }
 
 // ── Render current pre-class step ──
+// ── Render lock — double-click/glitch prevent ──
+var _pcRendering = false;
+var _pcRenderTimer = null;
+
 function renderPCStep(){
+  // Agar pehle se render ho raha hai toh cancel karo
+  if(_pcRenderTimer) { clearTimeout(_pcRenderTimer); _pcRenderTimer = null; }
+  
   var tot = _pcLS.length;
   var pb = document.getElementById('lPf');
   if(pb) pb.style.width = Math.round((_pcSI/tot)*100) + '%';
   var step = _pcLS[_pcSI];
   var bd = document.getElementById('lBd');
   if(!bd || !step) return;
+
+  _pcRendering = true;
   bd.scrollTop = 0;
-  bd.style.transition = 'opacity .15s ease,transform .15s ease';
-  bd.style.opacity = '0'; bd.style.transform = 'translateX(-12px)';
-  setTimeout(function(){
-    if(step.t==='pc_header')         renderPCHeader(step, bd);
-    else if(step.t==='pc_nodata')     renderPCNoData(step, bd);
-    else if(step.t==='pc_letter')     renderPCLetter(step, bd);
-    else if(step.t==='pc_listen')     renderPCListen(step, bd);
-    else if(step.t==='pc_recog')      renderPCRecog(step, bd);
-    else if(step.t==='pc_quiz')       renderPCQuiz(step, bd);
-    else if(step.t==='pc_speaking_intro') renderPCSpeakingIntro(bd);
-    else if(step.t==='pc_speaking')   renderPCSpeaking(step, bd);
-    else if(step.t==='pc_match')      renderPCMatch(step, bd);
-    else if(step.t==='pc_example_match') renderPCExampleMatch(step, bd);
-    else if(step.t==='pc_fillblank')  renderPCFillBlank(step, bd);
-    else if(step.t==='pc_speed')      renderPCSpeed(step, bd);
-    else if(step.t==='pc_done')       renderPCDone(step, bd);
-    else pcNx();
-    bd.style.transform = 'translateX(14px)';
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
-      bd.style.transition = 'opacity .3s ease,transform .35s cubic-bezier(.34,1.56,.64,1)';
-      bd.style.opacity = '1'; bd.style.transform = 'translateX(0)';
-      setTimeout(function(){bd.style.transition='';},380);
-    });});
-  }, 150);
+
+  // Step 1: Fade out instantly (no transform — avoids glitch)
+  bd.style.transition = 'opacity .12s ease';
+  bd.style.opacity = '0';
+
+  _pcRenderTimer = setTimeout(function(){
+    _pcRenderTimer = null;
+    // Step 2: Render new content while invisible
+    bd.style.transform = 'translateX(0)'; // reset any leftover transform
+    if(step.t==='pc_header')               renderPCHeader(step, bd);
+    else if(step.t==='pc_nodata')           renderPCNoData(step, bd);
+    else if(step.t==='pc_batch_intro')      renderPCBatchIntro(step, bd);
+    else if(step.t==='pc_phase_banner')     renderPCPhaseBanner(step, bd);
+    else if(step.t==='pc_letter')           renderPCLetter(step, bd);
+    else if(step.t==='pc_listen')           renderPCListen(step, bd);
+    else if(step.t==='pc_recog')            renderPCRecog(step, bd);
+    else if(step.t==='pc_example_q')        renderPCExampleQ(step, bd);
+    else if(step.t==='pc_fillblank')        renderPCFillBlank(step, bd);
+    else if(step.t==='pc_quiz')             renderPCQuiz(step, bd);
+    else if(step.t==='pc_speaking_intro')   renderPCSpeakingIntro(bd);
+    else if(step.t==='pc_speaking')         renderPCSpeaking(step, bd);
+    else if(step.t==='pc_match')            renderPCMatch(step, bd);
+    else if(step.t==='pc_example_match')    renderPCExampleMatch(step, bd);
+    else if(step.t==='pc_speed')            renderPCSpeed(step, bd);
+    else if(step.t==='pc_mega_intro')       renderPCMegaIntro(step, bd);
+    else if(step.t==='pc_mega_speaking_intro') renderPCMegaSpeakingIntro(bd);
+    else if(step.t==='pc_mega_speed_intro') renderPCMegaSpeedIntro(step, bd);
+    else if(step.t==='pc_mega_speed')       renderPCMegaSpeed(step, bd);
+    else if(step.t==='pc_done')             renderPCDone(step, bd);
+    else { _pcRendering = false; pcNx(); return; }
+
+    // Step 3: Fade in smoothly
+    bd.style.transition = 'opacity .25s ease';
+    requestAnimationFrame(function(){
+      bd.style.opacity = '1';
+      setTimeout(function(){
+        bd.style.transition = '';
+        _pcRendering = false;
+      }, 260);
+    });
+  }, 120);
 }
 
 function pcNx(){
+  // Rendering lock — double tap se protect karo
+  if(_pcRendering) return;
+  // Heart check — free users: agar hearts khatam toh aage nahi jana
+  if(typeof hasHearts==='function' && !hasHearts()){
+    if(typeof showNoHeartsOverlay==='function') showNoHeartsOverlay();
+    return;
+  }
   _pcSI++;
   if(_pcSI < _pcLS.length) renderPCStep();
 }
@@ -14784,7 +14820,7 @@ function pcRecogAnswer(btn){
   var correct = data.correct;
   container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
   var ok = selected === correct;
-  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  if(ok) _pcScore++; else { _pcWrongLetters.push(correct); if(typeof loseHeart==='function') loseHeart(); }
   _pcApplyFeedback(btn, container, ok, correct, 'name');
   _pcAddNext(container.parentNode);
 }
@@ -14822,7 +14858,7 @@ function pcExAnswer(btn){
   var correct = data.correct;
   container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
   var ok = selected === correct;
-  if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  if(ok) _pcScore++; else { _pcWrongLetters.push(correct); if(typeof loseHeart==='function') loseHeart(); }
   _pcApplyFeedback(btn, container, ok, correct, 'char');
   _pcAddNext(container.parentNode);
 }
@@ -14864,6 +14900,7 @@ function pcFillAnswer(btn){
   container.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
   var ok = selected === correct;
   if(ok) _pcScore++; else _pcWrongLetters.push(correct);
+  if(!ok && typeof loseHeart==="function") loseHeart();
   _pcApplyFeedback(btn, container, ok, correct, 'char');
   _pcAddNext(container.parentNode);
 }
@@ -14948,6 +14985,7 @@ function _pcSpeedRender(){
       var c2 = document.getElementById(qId);
       if(c2) c2.querySelectorAll('button').forEach(function(b){ b.disabled=true; });
       _pcWrongLetters.push(char); _pcTotal++;
+      if(typeof loseHeart==='function') loseHeart();
       state.current++;
       setTimeout(_pcSpeedRender, 600);
     }
@@ -14969,7 +15007,7 @@ function _pcSpeedAnswer(btn){
     selected = data.options[oi].name || data.options[oi].letterName || (data.options[oi].char||'?');
   }
   var ok = selected === correct;
-  if(ok){ _pcScore++; state.score++; } else _pcWrongLetters.push(correct);
+  if(ok){ _pcScore++; state.score++; } else { _pcWrongLetters.push(correct); if(typeof loseHeart==='function') loseHeart(); }
   _pcTotal++;
   btn.style.background = ok ? 'rgba(88,204,2,.3)' : 'rgba(255,75,75,.3)';
   btn.style.borderColor = ok ? '#58CC02' : '#FF4B4B';
@@ -15027,19 +15065,474 @@ function _pcApplyFeedback(btn, container, ok, correct, type){
 }
 
 function _pcAddNext(parent){
-  var fb = document.createElement('div');
-  fb.style.cssText = 'text-align:center;padding:10px 0 4px;font-family:Fredoka One,sans-serif;font-size:16px;animation:fadeInUp .3s ease;';
-  // feedback text is already applied via _pcApplyFeedback's button colors — just add Next
   var nx = document.createElement('button');
   nx.className = 'bg';
-  nx.style.cssText = 'width:100%;margin-top:10px;min-height:52px;touch-action:manipulation;';
-  nx.textContent = 'Agla \u2192';
-  nx.onclick = pcNx;
-  parent.appendChild(fb);
+  nx.style.cssText = 'width:100%;margin-top:12px;min-height:52px;touch-action:manipulation;';
+  nx.textContent = 'Agla →';
+  nx.onclick = function(){
+    if(_pcRendering) return; // double tap guard
+    nx.disabled = true;      // ek baar click ke baad disable
+    pcNx();
+  };
   parent.appendChild(nx);
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// 🆕 NEW RENDER FUNCTIONS — Batch System + Mega Quiz
+// ══════════════════════════════════════════════════════════════
+
+// ── CSS for new components (injected once) ──
+(function _injectPCStyles(){
+  if(document.getElementById('pcBatchStyles')) return;
+  var s = document.createElement('style');
+  s.id = 'pcBatchStyles';
+  s.textContent = `
+@keyframes batchPop { from{transform:scale(.5) rotate(-8deg);opacity:0;} 60%{transform:scale(1.1) rotate(2deg);} to{transform:scale(1) rotate(0);opacity:1;} }
+@keyframes phaseSlide { from{transform:translateY(30px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+@keyframes letterEntrance { 0%{transform:scale(0) rotate(-15deg);opacity:0;filter:blur(8px);} 60%{transform:scale(1.15) rotate(3deg);opacity:1;filter:none;} 100%{transform:scale(1) rotate(0);opacity:1;filter:none;} }
+@keyframes cardFlip { 0%{transform:rotateY(-90deg) scale(.8);opacity:0;} 60%{transform:rotateY(8deg) scale(1.05);opacity:1;} 100%{transform:rotateY(0) scale(1);opacity:1;} }
+@keyframes shimmer { 0%{background-position:-200% center;} 100%{background-position:200% center;} }
+@keyframes countPop { 0%,100%{transform:scale(1);} 50%{transform:scale(1.3);} }
+@keyframes megaEntrance { from{transform:scale(.7) translateY(40px);opacity:0;} 60%{transform:scale(1.05) translateY(-5px);opacity:1;} to{transform:scale(1) translateY(0);opacity:1;} }
+@keyframes timerUrgent2 { 0%,100%{background:rgba(255,75,75,.15);} 50%{background:rgba(255,75,75,.35);} }
+.pc-batch-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(199,125,255,.15);border:1.5px solid rgba(199,125,255,.4);border-radius:20px;padding:5px 14px;font-family:'Fredoka One',sans-serif;font-size:12px;color:#C77DFF; }
+.pc-phase-dot { width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0; }
+.pc-quiz-counter { font-family:'Fredoka One',sans-serif;font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:10px; }
+.pc-mega-timer-bar { height:8px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;margin-bottom:12px; }
+.pc-mega-timer-fill { height:100%;border-radius:8px;background:linear-gradient(90deg,#2EE59D,#FFD166,#FF4B4B);transition:width 10s linear; }
+
+/* ── Heart System ── */
+.heart-icon { font-size:16px; transition:transform .2s,filter .2s; line-height:1; display:inline-block; }
+.heart-icon.lost { filter:grayscale(1) opacity(.35); }
+.heart-icon.shake { animation:heartShake .4s ease; }
+.heart-icon.regen { animation:heartRegen .5s cubic-bezier(.34,1.56,.64,1); }
+@keyframes heartShake { 0%,100%{transform:translateX(0) scale(1);} 25%{transform:translateX(-4px) scale(.85);} 50%{transform:translateX(4px) scale(.85);} 75%{transform:translateX(-3px) scale(.9);} }
+@keyframes heartRegen { 0%{transform:scale(0) rotate(-20deg);filter:grayscale(1) opacity(.3);} 60%{transform:scale(1.3) rotate(5deg);filter:none;} 100%{transform:scale(1) rotate(0);filter:none;} }
+
+/* ── No Hearts Overlay ── */
+#noHeartsOverlay {
+  position:fixed; inset:0; z-index:99998;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  display:none; align-items:center; justify-content:center;
+}
+#noHeartsOverlay.show { display:flex; }
+.nho-box {
+  background:linear-gradient(135deg,#1a0505,#2d0a0a,#1a0505);
+  border:2px solid rgba(255,75,75,.55); border-radius:28px;
+  padding:32px 24px; text-align:center; max-width:300px; width:90%;
+  box-shadow:0 20px 60px rgba(255,75,75,.25);
+  animation:nhoPopIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes nhoPopIn { from{transform:scale(.6);opacity:0;} to{transform:scale(1);opacity:1;} }
+.nho-emoji { font-size:64px; margin-bottom:12px; animation:nhoBeat 1.5s ease infinite; }
+@keyframes nhoBeat { 0%,100%{transform:scale(1);} 14%{transform:scale(1.2);} 28%{transform:scale(1);} 42%{transform:scale(1.15);} }
+.nho-title { font-family:'Fredoka One',sans-serif; font-size:24px; color:#FF4B4B; margin-bottom:8px; }
+.nho-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:8px; line-height:1.5; }
+.nho-timer { font-family:'Fredoka One',sans-serif; font-size:28px; color:#FF9A3C; margin-bottom:20px; }
+.nho-btn-go { width:100%; padding:14px; border-radius:16px; border:none; background:linear-gradient(135deg,#FF4B4B,#cc2222); color:#fff; font-family:'Fredoka One',sans-serif; font-size:16px; cursor:pointer; box-shadow:0 5px 0 #991111; margin-bottom:10px; }
+.nho-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.07); color:rgba(255,255,255,.6); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; }
+
+/* ── Pause Overlay ── */
+#pauseOverlay {
+  position:fixed; inset:0; z-index:99997;
+  background:rgba(0,0,0,.92);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  display:none; align-items:center; justify-content:center;
+}
+#pauseOverlay.show { display:flex; }
+.pause-box {
+  background:linear-gradient(135deg,#0d0a1e,#1a0f3a,#0d0a1e);
+  border:2px solid rgba(91,141,239,.5); border-radius:28px;
+  padding:32px 24px; text-align:center; max-width:300px; width:90%;
+  box-shadow:0 20px 60px rgba(91,141,239,.25);
+  animation:pausePopIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes pausePopIn { from{transform:scale(.65) translateY(30px);opacity:0;} to{transform:scale(1) translateY(0);opacity:1;} }
+.pause-emoji { font-size:60px; margin-bottom:10px; animation:pauseFloat 2.5s ease infinite; }
+@keyframes pauseFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+.pause-title { font-family:'Fredoka One',sans-serif; font-size:26px; color:#5B8DEF; margin-bottom:6px; text-shadow:0 0 16px rgba(91,141,239,.5); }
+.pause-sub { font-size:13px; color:rgba(255,255,255,.45); margin-bottom:24px; line-height:1.5; }
+.pause-btn-continue { width:100%; padding:16px; border-radius:18px; border:none; background:linear-gradient(135deg,#2EE59D,#1BC47D); color:#0A0918; font-family:'Fredoka One',sans-serif; font-size:17px; cursor:pointer; box-shadow:0 5px 0 #14A363; margin-bottom:10px; }
+.pause-btn-restart { width:100%; padding:14px; border-radius:16px; border:2px solid rgba(255,150,0,.4); background:rgba(255,150,0,.1); color:#FF9A3C; font-family:'Fredoka One',sans-serif; font-size:15px; cursor:pointer; margin-bottom:10px; }
+.pause-btn-dash { width:100%; padding:12px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06); color:rgba(255,255,255,.5); font-family:'Fredoka One',sans-serif; font-size:14px; cursor:pointer; }
+.pause-divider { height:1px; background:rgba(255,255,255,.08); margin:14px 0; }
+`;
+  document.head.appendChild(s);
+})();
+
+// ── BATCH INTRO ──
+function renderPCBatchIntro(s, b){
+  var first = s.batch[0];
+  var last  = s.batch[s.batch.length-1];
+  var fc = first ? (first.char||first.character||'?') : '?';
+  var lc = last  ? (last.char||last.character||'?') : '?';
+  var phaseColors = ['#C77DFF','#FFD166','#2EE59D'];
+  var phases = [
+    {icon:'📖', label:'Parhai'},
+    {icon:'❓', label:'Quiz'},
+    {icon:'🎤', label:'Speaking'}
+  ];
+  b.innerHTML = '<div class="a" style="text-align:center;padding:16px 0 24px;">'
+    + '<div style="font-size:64px;margin-bottom:6px;animation:batchPop .5s cubic-bezier(.34,1.56,.64,1);">📦</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:22px;color:#C77DFF;margin-bottom:4px;animation:phaseSlide .4s ease;">Batch ' + s.batchNum + ' / ' + s.batchTotal + '</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:16px;">Letters: <b style="color:#fff;font-size:16px;font-family:serif;">' + fc + ' → ' + lc + '</b></div>'
+    + '<div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">'
+    + s.batch.map(function(l){
+        var c = l.char||l.character||l.letter||'?';
+        return '<div style="background:rgba(199,125,255,.12);border:1.5px solid rgba(199,125,255,.3);border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;font-family:serif;color:#C77DFF;animation:cardFlip .5s ease;">'+c+'</div>';
+      }).join('')
+    + '</div>'
+    + '<div style="background:rgba(255,255,255,.04);border-radius:16px;padding:14px;margin-bottom:20px;">'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;">Is batch mein:</div>'
+    + '<div style="display:flex;justify-content:center;gap:12px;">'
+    + phases.map(function(p,i){ return '<div style="text-align:center;"><div style="font-size:22px;">'+p.icon+'</div><div style="font-size:10px;color:'+phaseColors[i]+';margin-top:2px;font-family:\'Fredoka One\',sans-serif;">'+p.label+'</div></div>'; }).join('')
+    + '</div></div>'
+    + '<button class="bg" onclick="if(!_pcRendering){this.disabled=true;pcNx();}" style="width:100%;min-height:52px;font-size:17px;touch-action:manipulation;">▶️ Shuru Karo!</button>'
+    + '</div>';
+}
+
+// ── PHASE BANNER ──
+function renderPCPhaseBanner(s, b){
+  var configs = {
+    1: {bg:'rgba(199,125,255,.12)',border:'rgba(199,125,255,.4)',color:'#C77DFF',iconBg:'rgba(199,125,255,.2)',emoji:'📖'},
+    2: {bg:'rgba(255,209,102,.08)',border:'rgba(255,209,102,.35)',color:'#FFD166',iconBg:'rgba(255,209,102,.15)',emoji:'❓'},
+    3: {bg:'rgba(46,229,157,.08)',border:'rgba(46,229,157,.3)',color:'#2EE59D',iconBg:'rgba(46,229,157,.15)',emoji:'🎤'}
+  };
+  var cfg = configs[s.phase] || configs[1];
+  var emoji = s.phase===1?'📖':s.phase===2?'❓':'🎤';
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 28px;">'
+    + '<div style="width:80px;height:80px;border-radius:50%;background:'+cfg.iconBg+';border:2px solid '+cfg.border+';display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:38px;animation:batchPop .45s cubic-bezier(.34,1.56,.64,1);">'+emoji+'</div>'
+    + ''
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:24px;color:'+cfg.color+';margin-bottom:6px;animation:phaseSlide .4s ease;">'+s.title+'</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;">'+s.sub+'</div>'
+    + '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:20px;">'
+    + [1,2,3].map(function(p){
+        var active = p <= s.phase;
+        var current = p === s.phase;
+        return '<div style="height:6px;width:'+(current?'40px':'24px')+';border-radius:6px;background:'+(active?cfg.color:'rgba(255,255,255,.1)')+';transition:all .3s ease;'+(current?'box-shadow:0 0 10px '+cfg.color+';':'')+'"></div>';
+      }).join('')
+    + '</div>'
+    + '<button class="bg" onclick="if(!_pcRendering){this.disabled=true;pcNx();}" style="width:100%;min-height:52px;touch-action:manipulation;background:linear-gradient(135deg,'+cfg.color+','+cfg.color+'cc);">▶️ Shuru!</button>'
+    + '</div>';
+}
+
+// ── ENHANCED LETTER CARD (Urdu + animations) ──
+function renderPCLetter(s, b){
+  var l = s.letter;
+  var char    = l.char||l.character||l.letter||'?';
+  var name    = l.name||l.letterName||char;
+  var pron    = l.pronunciation||l.sound||l.phonetic||'';
+  var example = l.example||l.word||'';
+  var meaning = l.meaning||l.urdu||l.translation||'';
+  var upper   = l.upper||l.uppercase||'';
+  var lower   = l.lower||l.lowercase||'';
+  var ttsText = pron||name||char;
+  var tid = _storeTTS ? _storeTTS(ttsText, example) : 0;
+
+  // Batch progress dots
+  var dotsHtml = '';
+  if(s.total){
+    dotsHtml = '<div style="display:flex;gap:5px;justify-content:center;margin-bottom:8px;">'
+      + Array.from({length:s.total},function(_,i){
+          return '<div style="width:8px;height:8px;border-radius:50%;background:'+(i<s.num?'#C77DFF':'rgba(255,255,255,.12)')+';transition:all .3s;'+(i===s.num-1?'box-shadow:0 0 8px #C77DFF;':'')+'"></div>';
+        }).join('')
+      + '</div>';
+  }
+
+  b.innerHTML = '<div class="a">'
+    + '<div style="text-align:center;margin-bottom:8px;">'
+    + dotsHtml
+    + '<span style="font-size:11px;color:rgba(255,255,255,.35);">Letter '+s.num+' / '+s.total+(s.totalLetters?' &nbsp;|&nbsp; Overall: '+s.allLetterNum+'/'+s.totalLetters:'')+'</span>'
+    + '</div>'
+    // Main letter card
+    + '<div style="background:linear-gradient(135deg,rgba(199,125,255,.18),rgba(199,125,255,.06));border:2px solid rgba(199,125,255,.4);border-radius:24px;padding:28px 20px;text-align:center;margin-bottom:14px;position:relative;overflow:hidden;">'
+    + '<div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#C77DFF,transparent);animation:shimmer 2s ease infinite;background-size:200% 100%;"></div>'
+    + '<div style="font-size:86px;font-weight:700;color:#C77DFF;font-family:serif;animation:letterEntrance .6s cubic-bezier(.34,1.56,.64,1);line-height:1.1;">'+char+'</div>'
+    + (upper||lower ? '<div style="font-size:14px;color:rgba(255,255,255,.45);margin-top:4px;margin-bottom:4px;">'+(upper?'A: <b style="color:#fff;">'+upper+'</b>&nbsp;&nbsp;':'')+(lower?'a: <b style="color:#fff;">'+lower+'</b>':'')+'</div>' : '')
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:20px;color:#fff;margin-top:6px;">'+name+'</div>'
+    + (pron?'<div style="font-size:14px;color:rgba(255,255,255,.45);margin-top:3px;">/ '+pron+' /</div>':'')
+    + '</div>'
+    // Example word box
+    + (example?'<div style="background:linear-gradient(135deg,rgba(88,204,2,.1),rgba(88,204,2,.04));border:1.5px solid rgba(88,204,2,.3);border-radius:18px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">'
+      + '<div style="font-size:28px;flex-shrink:0;">📚</div>'
+      + '<div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:3px;">Misal:</div>'
+      + '<div style="font-size:20px;color:#58CC02;font-weight:700;font-family:serif;">'
+      + '<span style="color:#FFD166;font-size:22px;">'+char+'</span>'
+      + example.slice(1)
+      + '</div>'
+      + (meaning?'<div style="font-size:15px;color:rgba(255,255,255,.65);margin-top:4px;font-family:\'Noto Nastaliq Urdu\',\'Jameel Noori Nastaleeq\',serif;direction:rtl;text-align:right;">'+meaning+'</div>':'')
+      + '</div>'
+      + '</div>':'')
+    // Buttons
+    + '<div class="spk-bar" style="margin-bottom:14px;">'
+    + (tid?'<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="touch-action:manipulation;">🔊 Suno</button>'
+          +'<button class="spk-btn spk-slow" onclick="ttsSlow('+tid+')" style="touch-action:manipulation;">🐢 Dheere</button>'
+         :'<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+ttsText+'\')" style="touch-action:manipulation;">🔊 Suno</button>')
+    + '</div>'
+    + '<button class="bg" onclick="if(!_pcRendering){this.disabled=true;pcNx();}" style="width:100%;min-height:52px;touch-action:manipulation;">✓ Samajh Gaya! →</button>'
+    + '</div>';
+  setTimeout(function(){ if(tid&&window.ttsPlay) ttsPlay(tid); else if(window.spk) spk(ttsText); }, 500);
+}
+
+// ── EXAMPLE QUESTION (word se letter dhundo) ──
+function renderPCExampleQ(s, b){
+  var l = s.letter;
+  var char = l.char||l.character||l.letter||'?';
+  var example = l.example||char;
+  var meaning = l.meaning||l.urdu||'';
+  var qId = 'pcexq_'+_pcSI;
+  _pcTotal++;
+  window._pcQData[qId] = {correct:char, options:s.options};
+  var counterHtml = s.quizTotal
+    ? '<div class="pc-quiz-counter">Sawaal '+s.quizNum+' / '+s.quizTotal+'</div>'
+    : '';
+  var optHtml = s.options.map(function(o,oi){
+    var oc = o.char||o.character||o.letter||'?';
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="pcExQAnswer(this)" '
+      +'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:18px 8px;font-family:serif;font-size:34px;color:#fff;cursor:pointer;min-height:70px;touch-action:manipulation;">'+oc+'</button>';
+  }).join('');
+  b.innerHTML = '<div class="a">'
+    + counterHtml
+    + '<div style="text-align:center;background:rgba(88,204,2,.08);border:1.5px solid rgba(88,204,2,.25);border-radius:20px;padding:22px;margin-bottom:16px;">'
+    + '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;">📚 Yeh word kis letter se shuru hota hai?</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:30px;color:#58CC02;animation:letterEntrance .5s cubic-bezier(.34,1.56,.64,1);">'+example+'</div>'
+    + (meaning?'<div style="font-size:14px;color:rgba(255,255,255,.5);margin-top:6px;font-family:\'Noto Nastaliq Urdu\',serif;direction:rtl;">'+meaning+'</div>':'')
+    + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+}
+function pcExQAnswer(btn){
+  var qId=btn.dataset.qid, oi=parseInt(btn.dataset.oi);
+  var data=window._pcQData[qId]; if(!data) return;
+  var container=document.getElementById(qId); if(!container) return;
+  var sel=data.options[oi].char||data.options[oi].character||data.options[oi].letter||'?';
+  var ok=(sel===data.correct);
+  container.querySelectorAll('button').forEach(function(b){b.disabled=true;});
+  if(ok) _pcScore++; else { _pcWrongLetters.push(data.correct); if(typeof loseHeart==='function') loseHeart(); }
+  _pcApplyFeedback(btn,container,ok,data.correct,'char');
+  _pcAddNext(container.parentNode);
+}
+
+// ── MEGA QUIZ INTRO ──
+function renderPCMegaIntro(s, b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:18px 0 28px;">'
+    + '<div style="font-size:72px;margin-bottom:8px;animation:megaEntrance .6s cubic-bezier(.34,1.56,.64,1);">🏆</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">Sab Batches Complete!</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:28px;color:#FFD166;margin-bottom:6px;text-shadow:0 0 20px rgba(255,209,102,.5);">MEGA QUIZ</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.7;">Sab '+s.totalLetters+' letters ka grand test!<br>Speaking practice + 10-second speed quiz.</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;">'
+    + ['🎤 Speaking','⚡ Speed Quiz','💔 Retry'].map(function(item){
+        return '<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 6px;font-size:11px;color:rgba(255,255,255,.6);text-align:center;">'+item+'</div>';
+      }).join('')
+    + '</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;min-height:52px;font-size:17px;background:linear-gradient(135deg,#FFD166,#FF9A3C);color:#0A0918;touch-action:manipulation;">🚀 Mega Quiz Shuru!</button>'
+    + '</div>';
+}
+
+// ── MEGA SPEAKING INTRO ──
+function renderPCMegaSpeakingIntro(b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 28px;">'
+    + '<div style="font-size:60px;margin-bottom:10px;animation:batchPop .5s ease;">🎤</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:24px;color:#2EE59D;margin-bottom:8px;">Speaking Practice</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.7;">Ab sab seekhe letters ek baar aur practice karo.<br>Suno phir mic mein bolo!</div>'
+    + '<button class="bg" onclick="if(!_pcRendering){this.disabled=true;pcNx();}" style="width:100%;min-height:52px;background:linear-gradient(135deg,#2EE59D,#1BC47D);color:#0A0918;touch-action:manipulation;">🎤 Practice Shuru!</button>'
+    + '</div>';
+}
+
+// ── MEGA SPEED INTRO ──
+function renderPCMegaSpeedIntro(s, b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 28px;">'
+    + '<div style="font-size:64px;margin-bottom:10px;animation:batchPop .5s ease;">⚡</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:26px;color:#FF4B4B;margin-bottom:6px;">Speed Quiz!</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:16px;line-height:1.7;"><b style="color:#FFD166;">'+s.total+' sawaal</b> — har sawaal ke liye sirf <b style="color:#FF4B4B;">10 second</b>!<br>Fill in the blank, word se letter dhundo.</div>'
+    + '<div style="background:rgba(255,75,75,.08);border:1.5px solid rgba(255,75,75,.25);border-radius:16px;padding:14px;margin-bottom:20px;font-size:12px;color:rgba(255,255,255,.55);line-height:1.9;">'
+    + '⏱️ 10 sec per sawaal<br>💔 Galat = heart minus<br>🔄 Galat sawal end mein dobara aayenge'
+    + '</div>'
+    + '<button class="bg" onclick="if(!_pcRendering){this.disabled=true;pcNx();}" style="width:100%;min-height:52px;font-size:17px;background:linear-gradient(135deg,#FF4B4B,#cc2222);touch-action:manipulation;">⚡ Speed Quiz Shuru!</button>'
+    + '</div>';
+}
+
+// ── MEGA SPEED QUIZ ──
+var _megaSpeedState = null;
+
+function renderPCMegaSpeed(s, b){
+  _megaSpeedState = {
+    questions: s.questions.slice(),
+    wrongQueue: [],
+    current: 0,
+    totalQ: s.totalQ,
+    score: 0,
+    done: false,
+    retryMode: false,
+    bd: b
+  };
+  _megaSpeedRender();
+}
+
+function _megaSpeedRender(){
+  var st = _megaSpeedState;
+  if(!st) return;
+  var b = st.bd;
+  if(!b) b = document.getElementById('lBd');
+  if(!b) return;
+
+  // Check if done
+  if(st.current >= st.questions.length){
+    if(st.wrongQueue.length > 0 && !st.retryMode){
+      // Retry mode for wrong answers
+      st.retryMode = true;
+      st.questions = _pcShuffle(st.wrongQueue.slice());
+      st.wrongQueue = [];
+      st.current = 0;
+      _megaSpeedRetryIntro(b);
+      return;
+    }
+    _megaSpeedFinish(b);
+    return;
+  }
+
+  var q = st.questions[st.current];
+  var l = q.letter;
+  var char = l.char||l.character||l.letter||'?';
+  var example = l.example||char;
+  var meaning = l.meaning||l.urdu||'';
+  var qId = 'megaspeed_'+(_pcSI)+'_'+st.current;
+  window._pcQData[qId] = {correct:char, options:q.options, qtype:q.qtype};
+
+  var remaining = st.questions.length - st.current;
+  var counterTxt = (st.retryMode?'🔄 Retry — ':'')+'Sawaal '+(st.current+1)+'/'+st.questions.length+' | '+remaining+' Baaki | Score: '+st.score;
+
+  // Question HTML
+  var qHtml = '';
+  if(q.qtype==='mega_fill'){
+    // "D_G" — fill in first letter
+    var rest = example.length>1 ? example.slice(1) : '';
+    qHtml = '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px;">✏️ Is word ka pehla letter kya hai?</div>'
+      + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:32px;color:#5B8DEF;letter-spacing:4px;">'
+      + '<span style="border-bottom:3px solid #C77DFF;color:#C77DFF;min-width:30px;display:inline-block;text-align:center;animation:blink 1s ease infinite;font-size:34px;">?</span>'
+      + '<span style="color:#fff;">'+rest+'</span>'
+      + '</div>'
+      + (meaning?'<div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;font-family:\'Noto Nastaliq Urdu\',serif;direction:rtl;">'+meaning+'</div>':'');
+  } else if(q.qtype==='mega_example'){
+    qHtml = '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px;">📚 Yeh word kis letter se shuru hota hai?</div>'
+      + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:28px;color:#58CC02;animation:letterEntrance .4s ease;">'+example+'</div>'
+      + (meaning?'<div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:6px;font-family:\'Noto Nastaliq Urdu\',serif;direction:rtl;">'+meaning+'</div>':'');
+  } else {
+    // mega_listen — pronunciation
+    var pron = l.pronunciation||l.sound||l.name||char;
+    var tid = _storeTTS ? _storeTTS(pron,'') : 0;
+    qHtml = '<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px;">🔊 Awaaz sun ke letter dhundo:</div>'
+      + (tid?'<button class="spk-btn spk-listen" onclick="ttsPlay('+tid+')" style="font-size:14px;padding:10px 20px;touch-action:manipulation;">🔊 Suno</button>'
+            :'<button class="spk-btn spk-listen" onclick="if(window.spk)spk(\''+pron+'\')" style="font-size:14px;padding:10px 20px;touch-action:manipulation;">🔊 Suno</button>');
+    setTimeout(function(){ if(tid&&window.ttsPlay) ttsPlay(tid); else if(window.spk) spk(pron); },600);
+  }
+
+  var optHtml = q.options.map(function(o,oi){
+    var oc = o.char||o.character||o.letter||'?';
+    return '<button data-qid="'+qId+'" data-oi="'+oi+'" onclick="_megaSpeedAnswer(this)" '
+      +'style="background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:14px;padding:16px 8px;font-family:serif;font-size:30px;color:#fff;cursor:pointer;min-height:68px;touch-action:manipulation;">'+oc+'</button>';
+  }).join('');
+
+  b.innerHTML = '<div class="a">'
+    + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:12px;color:#FFD166;">'+(st.retryMode?'🔄 Retry':'⚡ Mega Quiz')+'</div>'
+    + '<div id="megaSpeedTimer" style="font-family:\'Fredoka One\',sans-serif;font-size:26px;color:#FF4B4B;min-width:36px;text-align:right;">10</div>'
+    + '</div>'
+    + '<div class="pc-mega-timer-bar"><div id="megaSpeedBar" class="pc-mega-timer-fill" style="width:100%;"></div></div>'
+    + '<div class="pc-quiz-counter">'+counterTxt+'</div>'
+    + '<div style="text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:18px;margin-bottom:14px;">'
+    + qHtml + '</div>'
+    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="'+qId+'">'
+    + optHtml + '</div></div>';
+
+  // Start 10-second countdown
+  if(st.timer) clearInterval(st.timer);
+  var timeLeft = 10;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    var tb = document.getElementById('megaSpeedBar');
+    if(tb) tb.style.width = '0%';
+  }); });
+  st.timer = setInterval(function(){
+    timeLeft--;
+    var td = document.getElementById('megaSpeedTimer');
+    if(td){ td.textContent = timeLeft; if(timeLeft<=3) td.style.color='#FF4B4B'; else td.style.color='#FFD166'; }
+    if(timeLeft<=0){
+      clearInterval(st.timer); st.timer=null;
+      var c2=document.getElementById(qId);
+      if(c2) c2.querySelectorAll('button').forEach(function(bb){bb.disabled=true;});
+      // Time up = wrong
+      st.wrongQueue.push(q);
+      _pcWrongLetters.push(char);
+      _pcTotal++;
+      if(typeof loseHeart==='function') loseHeart();
+      st.current++;
+      setTimeout(_megaSpeedRender, 800);
+    }
+  }, 1000);
+}
+
+function _megaSpeedAnswer(btn){
+  var st = _megaSpeedState; if(!st) return;
+  if(st.timer){ clearInterval(st.timer); st.timer=null; }
+  var qId = btn.dataset.qid, oi = parseInt(btn.dataset.oi);
+  var data = window._pcQData[qId]; if(!data) return;
+  var container = document.getElementById(qId); if(!container) return;
+  container.querySelectorAll('button').forEach(function(b){b.disabled=true;});
+  var sel = data.options[oi].char||data.options[oi].character||data.options[oi].letter||'?';
+  var ok = (sel===data.correct);
+  if(ok){ st.score++; _pcScore++; } else {
+    st.wrongQueue.push(st.questions[st.current]);
+    _pcWrongLetters.push(data.correct);
+    if(typeof loseHeart==='function') loseHeart();
+  }
+  _pcTotal++;
+  btn.style.background = ok?'rgba(88,204,2,.3)':'rgba(255,75,75,.3)';
+  btn.style.borderColor = ok?'#58CC02':'#FF4B4B';
+  btn.style.color = ok?'#58CC02':'#FF4B4B';
+  if(!ok){
+    container.querySelectorAll('button').forEach(function(b2){
+      if(b2.textContent.trim()===data.correct){ b2.style.background='rgba(88,204,2,.3)'; b2.style.borderColor='#58CC02'; b2.style.color='#58CC02'; }
+    });
+  }
+  var fb = document.createElement('div');
+  fb.style.cssText = 'text-align:center;padding:6px;font-family:\'Fredoka One\',sans-serif;font-size:14px;color:'+(ok?'#58CC02':'#FF4B4B')+';animation:phaseSlide .3s ease;';
+  fb.innerHTML = ok?'✓ Sahi! 🎉':'✗ Galat — <b>'+data.correct+'</b>';
+  container.parentNode.appendChild(fb);
+  st.current++;
+  setTimeout(_megaSpeedRender, 700);
+}
+
+function _megaSpeedRetryIntro(b){
+  b.innerHTML = '<div class="a" style="text-align:center;padding:20px 0 28px;">'
+    + '<div style="font-size:60px;margin-bottom:10px;animation:batchPop .5s ease;">🔄</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:24px;color:#FF9A3C;margin-bottom:8px;">Galat Jawab — Dobara!</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px;line-height:1.7;">'
+    + (_megaSpeedState?_megaSpeedState.questions.length:0)+' galat sawal dobara aayenge.<br>Is baar zaroor sahi karo!</div>'
+    + '<button class="bg" onclick="_megaSpeedRender()" style="width:100%;min-height:52px;background:linear-gradient(135deg,#FF9A3C,#cc6600);touch-action:manipulation;">🔄 Dobara Try Karo!</button>'
+    + '</div>';
+}
+
+function _megaSpeedFinish(b){
+  var st = _megaSpeedState||{score:0,totalQ:0};
+  var pct = st.totalQ>0 ? Math.round((st.score/st.totalQ)*100) : 0;
+  var col = pct>=80?'#58CC02':pct>=50?'#FFD166':'#FF4B4B';
+  var msg = pct>=80?'🎉 Zabardast! Tum champion ho!':pct>=50?'💪 Acha! Thodi aur practice karo!':'📚 Dobara seekho aur phir try karo!';
+  b.innerHTML = '<div class="a" style="text-align:center;padding:22px 0 28px;">'
+    + '<div style="font-size:72px;margin-bottom:8px;animation:megaEntrance .6s ease;">🏆</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:22px;color:#FFD166;margin-bottom:4px;">Mega Quiz Khatam!</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:52px;color:'+col+';margin-bottom:4px;">'+pct+'%</div>'
+    + '<div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:'+col+';margin-bottom:4px;">'+st.score+' / '+st.totalQ+' sahi</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:20px;">'+msg+'</div>'
+    + '<button class="bg" onclick="pcNx()" style="width:100%;min-height:52px;font-size:16px;touch-action:manipulation;">🎓 Natija Dekho!</button>'
+    + '</div>';
+}
+
+
 function pcFinishAndComplete(lang){
+  if(typeof window._stopHeartRegenTicker==='function') window._stopHeartRegenTicker();
   exitLesson();
   setTimeout(function(){
     if(typeof completePreClass === 'function') completePreClass(lang);
@@ -22278,18 +22771,15 @@ function getGoalTarget() {
 }
 
 // ── Add mins to today (called on lesson end) ──
-// ✅ FIX: Float mins ko floor se integer mein convert — accurate tracking
 function addGoalMins(mins) {
   if (!mins || mins <= 0) return;
   _goalCheckDay();
   var prevMins = getGoalTodayMins();
   var target   = getGoalTarget();
   var total = parseInt(localStorage.getItem(_gKey(GOAL_TOTAL_KEY)) || '0');
-  var addInt = Math.floor(mins); // sirf puri minutes save karo
-  if (addInt <= 0) return;
-  var newVal = prevMins + addInt;
+  var newVal = prevMins + Math.round(mins);
   localStorage.setItem(_gKey(GOAL_TODAY_KEY), String(newVal));
-  localStorage.setItem(_gKey(GOAL_TOTAL_KEY), String(total + addInt));
+  localStorage.setItem(_gKey(GOAL_TOTAL_KEY), String(total + Math.round(mins)));
 
   if (prevMins < target && newVal >= target) {
     _onGoalComplete(target);
@@ -22401,40 +22891,28 @@ function _showGoalCelebration(targetMins, totalComp) {
   }, 8000);
 }
 
-// ── Start session timer (call when lesson/preclass begins) ──
-// ✅ FIX: Real stopwatch — Date.now() se accurate elapsed time
+// ── Start session timer (call when lesson begins) ──
 function goalSessionStart() {
-  if (_goalTimer) {
-    // Already running — don't double-start
-    return;
-  }
+  if (_goalTimer) return; // already running
   _goalSessionStart = Date.now();
-  // Tick every 60 seconds — add exactly 1 real minute
+  // Update ring every 30 seconds
   _goalTimer = setInterval(function() {
-    if (!_goalSessionStart) return;
-    addGoalMins(1); // 1 real minute har 60 seconds pe
-    updateGoalRing();
-  }, 60000);
+    var elapsed = Math.floor((Date.now() - _goalSessionStart) / 60000);
+    if (elapsed > 0) {
+      addGoalMins(0.5); // tick every 30s = 0.5 min
+    }
+  }, 30000);
 }
 
-// ── End session timer (call when lesson/preclass ends) ──
-// ✅ FIX: Bachi hui seconds bhi count karo (e.g. 90s session = 1.5 min = 1 min saved)
+// ── End session timer (call when lesson ends) ──
 function goalSessionEnd() {
   if (!_goalSessionStart) return;
-  var elapsedMs  = Date.now() - _goalSessionStart;
-  var elapsedMin = elapsedMs / 60000; // exact float minutes
+  var elapsedMs = Date.now() - _goalSessionStart;
+  var elapsedMin = elapsedMs / 60000;
   clearInterval(_goalTimer);
   _goalTimer = null;
   _goalSessionStart = null;
-  // Sirf bachi hui partial minute save karo (interval ne puri minutes pehle hi save ki hain)
-  // Calculation: floor(elapsed) minutes already saved by interval, save the remainder
-  var fullMins = Math.floor(elapsedMin);
-  var remainder = elapsedMin - fullMins;
-  // Save remainder only if >= 0.25 min (15 seconds) — noise filter
-  if (remainder >= 0.25) {
-    addGoalMins(Math.round(remainder)); // round to nearest minute
-  }
-  updateGoalRing();
+  addGoalMins(elapsedMin);
 }
 
 // ── Set goal from settings card ──
@@ -22580,14 +23058,10 @@ function closeGoalModal() {
 }
 
 // ── Hook into existing lesson flow ──
-// Patch goLesson to start timer, and exitLesson to end it
-// ✅ FIX: markL se addGoalMins(2) hataya — fake time tha
-// ✅ FIX: goalSessionStart/End real Date.now() stopwatch pe based hai
-// ✅ FIX: Pre-class (launchPreClassLesson) mein bhi timer hook kiya
+// Patch goLesson to start timer, and markL / exitLesson to end it
 (function patchLessonForGoal() {
   function tryPatch() {
     if (typeof window.goLesson === 'function' && typeof window.exitLesson === 'function') {
-
       var _origGoLesson = window.goLesson;
       window.goLesson = function() {
         goalSessionStart();
@@ -22601,30 +23075,16 @@ function closeGoalModal() {
         updateGoalRing();
       };
 
-      // ✅ markL se fake addGoalMins(2) bilkul nahi — real time only
-      // markL sirf vocab count update karta hai, time nahi
-
-      // ✅ Pre-class hook — launchPreClassLesson
-      if (typeof window.launchPreClassLesson === 'function') {
-        var _origPCL = window.launchPreClassLesson;
-        window.launchPreClassLesson = function() {
-          goalSessionStart();
-          _origPCL.apply(this, arguments);
+      // Also patch markL (lesson complete) to add XP-based time
+      if (typeof window.markL === 'function') {
+        var _origMarkL = window.markL;
+        window.markL = function() {
+          _origMarkL.apply(this, arguments);
+          // Each lesson card ≈ 2 minutes average
+          addGoalMins(2);
+          updateGoalRing();
         };
-      } else {
-        // launchPreClassLesson baad mein define hoti hai — retry once
-        setTimeout(function(){
-          if (typeof window.launchPreClassLesson === 'function' && !window._pcGoalPatched) {
-            window._pcGoalPatched = true;
-            var _origPCL2 = window.launchPreClassLesson;
-            window.launchPreClassLesson = function() {
-              goalSessionStart();
-              _origPCL2.apply(this, arguments);
-            };
-          }
-        }, 800);
       }
-
     } else {
       setTimeout(tryPatch, 300);
     }
@@ -23734,6 +24194,8 @@ function closeGoalModal() {
 
 })();
 </script>
+
+
 <!-- ══════════════════════════════════════════════
      PAUSE OVERLAY
 ══════════════════════════════════════════════ -->
@@ -23748,6 +24210,426 @@ function closeGoalModal() {
     <button class="pause-btn-dash" onclick="pauseGoToDashboard()">🏠 Dashboard Pe Jao</button>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════
+     ❤️ HEART INFO SCREEN
+══════════════════════════════════════════════ -->
+<div class="screen" id="heartScreen" style="background:var(--bg);overflow-y:auto;min-height:100vh;">
+  <div style="background:linear-gradient(135deg,#1a0010,#2d0020,#1a0010);padding:52px 20px 28px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,75,75,.18),transparent 70%);pointer-events:none;"></div>
+    <button onclick="showScreen('dashboard');renderDash();" style="position:absolute;top:14px;left:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 14px;color:var(--mut);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">← Wapas</button>
+    <div style="font-size:11px;color:#FF4B4B;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">❤️ HEARTS</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:26px;color:#fff;margin-bottom:4px;">Apke Hearts</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);">Galti karo toh heart ghatta hai</div>
+  </div>
+  <div style="padding:16px 16px 100px;" id="heartScreenBody">
+    <div style="text-align:center;padding:32px;color:var(--mut);">⏳ Load ho raha hai...</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ⭐ XP INFO SCREEN
+══════════════════════════════════════════════ -->
+<div class="screen" id="xpScreen" style="background:var(--bg);overflow-y:auto;min-height:100vh;">
+  <div style="background:linear-gradient(135deg,#0d0020,#1a0040,#0d0020);padding:52px 20px 28px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(206,130,255,.18),transparent 70%);pointer-events:none;"></div>
+    <button onclick="showScreen('dashboard');renderDash();" style="position:absolute;top:14px;left:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 14px;color:var(--mut);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">← Wapas</button>
+    <div style="font-size:11px;color:#CE82FF;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">⭐ XP</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:26px;color:#fff;margin-bottom:4px;">Apka XP</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);">Lesson karo, XP kamao, league mein upar jao</div>
+  </div>
+  <div style="padding:16px 16px 100px;" id="xpScreenBody">
+    <div style="text-align:center;padding:32px;color:var(--mut);">⏳ Load ho raha hai...</div>
+  </div>
+</div>
+
+<style>
+/* ── Heart Screen ── */
+.hs-hearts-row{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 0 8px;}
+.hs-heart{font-size:32px;transition:all .3s;}
+.hs-heart.lost{filter:grayscale(1);opacity:.35;}
+.hs-regen-card{background:rgba(255,75,75,.08);border:1.5px solid rgba(255,75,75,.3);border-radius:18px;padding:16px 18px;margin-bottom:12px;}
+.hs-info-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;margin-bottom:12px;}
+.hs-mode-card{border-radius:16px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:transform .15s;}
+.hs-mode-card:active{transform:scale(.97);}
+/* ── XP Screen ── */
+.xs-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.xs-stat{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 14px;text-align:center;}
+.xs-stat-val{font-family:'Fredoka One',sans-serif;font-size:26px;color:#CE82FF;}
+.xs-stat-lbl{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px;}
+.xs-league-badge{border-radius:20px;padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.xs-how-card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;margin-bottom:12px;}
+.xs-how-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.xs-how-row:last-child{border-bottom:none;padding-bottom:0;}
+.xs-how-ico{font-size:22px;flex-shrink:0;width:34px;text-align:center;}
+.xs-how-val{font-family:'Fredoka One',sans-serif;font-size:15px;color:#CE82FF;margin-left:auto;}
+</style>
+
+<script>
+// ════════════════════════════════════════
+// ❤️ HEART SCREEN
+// ════════════════════════════════════════
+function showHeartScreen(){
+  renderHeartScreen();
+  showScreen('heartScreen');
+}
+function renderHeartScreen(){
+  var body=document.getElementById('heartScreenBody');
+  if(!body) return;
+  var isFree=!isPro();
+  var isUnlim=!isFree&&isUnlimitedHearts();
+  var regenMs=3*60*1000;
+  var freeHLeft=5;
+  if(isFree){
+    try{
+      var hs=JSON.parse(localStorage.getItem('su_hearts_v1')||'null')||{hearts:5,lastLostAt:null};
+      if(hs.lastLostAt){ var rg=Math.floor((Date.now()-hs.lastLostAt)/regenMs); if(rg>0) hs.hearts=Math.min(5,hs.hearts+rg); }
+      freeHLeft=Math.max(0,Math.min(5,hs.hearts));
+    }catch(e){}
+  }
+  var proH=getAdminMaxHearts();
+  if(!isFree&&!isUnlim){ try{ proH=Math.max(0,CS().hearts!==undefined?CS().hearts:proH); }catch(e){} }
+
+  var html='';
+  // Big hearts display
+  html+='<div style="background:linear-gradient(135deg,rgba(255,75,75,.1),rgba(255,75,75,.04));border:2px solid rgba(255,75,75,.3);border-radius:22px;padding:20px 18px 18px;margin-bottom:14px;text-align:center;">';
+  html+='<div style="font-size:12px;color:rgba(255,75,75,.8);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;">ABHI KE HEARTS</div>';
+  html+='<div class="hs-hearts-row">';
+  if(isUnlim){
+    html+='<span style="font-size:44px;">♾️</span>';
+  } else {
+    var total=isFree?5:getAdminMaxHearts(), left=isFree?freeHLeft:proH;
+    for(var i=0;i<total;i++) html+='<span class="hs-heart'+(i>=left?' lost':'')+'">❤️</span>';
+  }
+  html+='</div>';
+  if(isUnlim){ html+='<div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#2EE59D;margin-top:8px;">Unlimited — koi tension nahi!</div>'; }
+  else { var lc=isFree?freeHLeft:proH, mc=isFree?5:getAdminMaxHearts(); html+='<div style="font-family:\'Fredoka One\',sans-serif;font-size:20px;color:#FF4B4B;margin-top:8px;">'+lc+' / '+mc+' Hearts</div>'; }
+  html+='</div>';
+
+  // Free regen timer — sirf tab dikhe jab hearts < 5 hon
+  if(isFree && freeHLeft < 5){
+    try{
+      var hs2=JSON.parse(localStorage.getItem('su_hearts_v1')||'{}');
+      var diff=hs2.lastLostAt?Math.max(0,(hs2.lastLostAt+regenMs)-Date.now()):0;
+      var mm=Math.floor(diff/60000),ss=Math.floor((diff%60000)/1000);
+      html+='<div class="hs-regen-card"><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:26px;">⏳</div><div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#FF4B4B;margin-bottom:3px;">Agla Heart Wapas Aayega</div><div style="font-family:\'Fredoka One\',sans-serif;font-size:22px;color:#fff;" id="hsRegenTimer">'+mm+':'+(ss<10?'0':'')+ss+'</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;">Har 3 minute mein 1 heart regenerate hota hai</div></div></div></div>';
+    }catch(e){}
+  }
+  // Puray hearts houn toh "Full" message
+  if(isFree && freeHLeft >= 5){
+    html+='<div style="background:rgba(46,229,157,.08);border:1.5px solid rgba(46,229,157,.35);border-radius:16px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:10px;"><div style="font-size:24px;">✅</div><div style="font-family:\'Fredoka One\',sans-serif;font-size:15px;color:#2EE59D;">Hearts Full Hain! Lesson shuru karo!</div></div>';
+  }
+
+  // How hearts work
+  html+='<div class="hs-info-card"><div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#FF4B4B;margin-bottom:12px;">💡 Hearts Kaise Kaam Karte Hain</div>';
+  var infoRows = isFree ? [
+    {ico:'❌',txt:'Galat jawab dene pe 1 heart ghatta hai',val:'–1 ❤️'},
+    {ico:'⏳',txt:'Har 3 minute mein 1 heart wapas aata hai',val:'+1 ❤️'},
+    {ico:'💔',txt:'Sab hearts khatam — lesson ruk jaata hai',val:'Game Over'},
+    {ico:'👑',txt:'Pro lo — unlimited hearts, koi rukawat nahi',val:'Pro'},
+  ] : [
+    {ico:'❌',txt:'Galat jawab dene pe 1 heart ghatta hai',val:'–1 ❤️'},
+    {ico:'🏠',txt:'Dashboard pe aane se hearts reset ho jaate hain',val:'Reset'},
+    {ico:'💔',txt:'Sab hearts khatam — lesson ruk jaata hai',val:'Game Over'},
+  ];
+  infoRows.forEach(function(r){
+    html+='<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);"><div style="font-size:20px;width:28px;text-align:center;">'+r.ico+'</div><div style="flex:1;font-size:13px;color:rgba(255,255,255,.65);">'+r.txt+'</div><div style="font-family:\'Fredoka One\',sans-serif;font-size:13px;color:#FF4B4B;flex-shrink:0;">'+r.val+'</div></div>';
+  });
+  html+='</div>';
+
+  // Pro upgrade or mode toggle
+  if(isFree){
+    html+='<div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,130,0,.06));border:2px solid rgba(255,215,0,.4);border-radius:18px;padding:18px;text-align:center;margin-bottom:14px;"><div style="font-size:32px;margin-bottom:8px;">👑</div><div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#FFD700;margin-bottom:6px;">Pro Lo — Unlimited Hearts</div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:14px;">Galti ki chinta khatam — jitna chaaho seekho!</div><button onclick="showProScreen();" style="background:linear-gradient(135deg,#FFD700,#FF9500);border:none;border-radius:14px;padding:12px 28px;font-family:\'Fredoka One\',sans-serif;font-size:15px;color:#000;cursor:pointer;box-shadow:0 4px 16px rgba(255,200,0,.4);">🚀 Pro Upgrade</button></div>';
+  } else {
+    var cur=getHeartMode();
+    html+='<div class="hs-info-card"><div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#CE82FF;margin-bottom:12px;">⚙️ Heart Mode — Pro</div>';
+    html+='<div class="hs-mode-card" onclick="setHeartMode(\'unlimited\');renderHeartScreen();" style="background:'+(cur==='unlimited'?'rgba(46,229,157,.1)':'rgba(255,255,255,.03)')+';border:2px solid '+(cur==='unlimited'?'#2EE59D':'rgba(255,255,255,.1')+');">';
+    html+='<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:22px;">♾️</span><div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#fff;">Unlimited Hearts</div><div style="font-size:12px;color:rgba(255,255,255,.4);">Galti karo — lesson nahi rukta</div></div>'+(cur==='unlimited'?'<span style="font-size:18px;">✅</span>':'')+'</div></div>';
+    html+='<div class="hs-mode-card" onclick="setHeartMode(\'5hearts\');renderHeartScreen();" style="background:'+(cur==='5hearts'?'rgba(255,75,75,.1)':'rgba(255,255,255,.03)')+';border:2px solid '+(cur==='5hearts'?'#FF4B4B':'rgba(255,255,255,.1')+');">';
+    html+='<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:22px;">❤️</span><div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#fff;">5 Hearts Mode</div><div style="font-size:12px;color:rgba(255,255,255,.4);">5 galti pe lesson khatam — challenge mode</div></div>'+(cur==='5hearts'?'<span style="font-size:18px;">✅</span>':'')+'</div></div>';
+    html+='</div>';
+  }
+
+  body.innerHTML=html;
+
+  // Start regen countdown
+  if(isFree&&freeHLeft<5){
+    setTimeout(function(){
+      var tel=document.getElementById('hsRegenTimer');
+      if(!tel) return;
+      var iv=setInterval(function(){
+        if(!document.getElementById('hsRegenTimer')){clearInterval(iv);return;}
+        var h3=JSON.parse(localStorage.getItem('su_hearts_v1')||'{}');
+        if(!h3.lastLostAt){tel.textContent='Tayar! ✅';clearInterval(iv);return;}
+        var d=Math.max(0,(h3.lastLostAt+regenMs)-Date.now());
+        var m=Math.floor(d/60000),s=Math.floor((d%60000)/1000);
+        tel.textContent=m+':'+(s<10?'0':'')+s;
+        if(d===0) clearInterval(iv);
+      },1000);
+    },100);
+  }
+}
+
+// ════════════════════════════════════════
+// ⭐ XP SCREEN
+// ════════════════════════════════════════
+function showXpScreen(){
+  renderXpScreen();
+  showScreen('xpScreen');
+}
+function renderXpScreen(){
+  var body=document.getElementById('xpScreenBody');
+  if(!body) return;
+  var cs2=CS();
+  var myXP=cs2.xp||0;
+  var lessonsD=cs2.done?cs2.done.length:0;
+  var streak2=cs2.streak||0;
+
+  var LG=[
+    {id:'bronze',name:'Bronze League',icon:'🥉',color:'#CD7F32',minXP:0},
+    {id:'silver',name:'Silver League',icon:'🥈',color:'#C0C0C0',minXP:500},
+    {id:'gold',  name:'Gold League',  icon:'🥇',color:'#FFD700',minXP:1500},
+    {id:'diamond',name:'Diamond League',icon:'💎',color:'#9FFFFF',minXP:5000},
+  ];
+  var myL=LG[0];
+  for(var i=LG.length-1;i>=0;i--){if(myXP>=LG[i].minXP){myL=LG[i];break;}}
+  var nxtL=null;
+  for(var j=0;j<LG.length;j++){if(LG[j].minXP>myXP){nxtL=LG[j];break;}}
+  var prog=100,xpToNext=0;
+  if(nxtL){var tot=nxtL.minXP-myL.minXP,dn=myXP-myL.minXP;prog=Math.min(100,Math.round((dn/tot)*100));xpToNext=nxtL.minXP-myXP;}
+
+  var html='';
+  // Big XP
+  html+='<div style="background:linear-gradient(135deg,rgba(206,130,255,.12),rgba(91,141,239,.08));border:2px solid rgba(206,130,255,.35);border-radius:22px;padding:22px 18px;margin-bottom:14px;text-align:center;">';
+  html+='<div style="font-size:11px;color:rgba(206,130,255,.8);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">TOTAL XP</div>';
+  html+='<div style="font-family:\'Fredoka One\',sans-serif;font-size:52px;color:#CE82FF;line-height:1;">'+myXP+'</div>';
+  html+='<div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;">⭐ Experience Points</div></div>';
+
+  // Stats
+  html+='<div class="xs-stat-row">';
+  html+='<div class="xs-stat"><div class="xs-stat-val">'+lessonsD+'</div><div class="xs-stat-lbl">📚 Lessons Mukamal</div></div>';
+  html+='<div class="xs-stat"><div class="xs-stat-val">'+streak2+'</div><div class="xs-stat-lbl">🔥 Din Ki Streak</div></div>';
+  html+='</div>';
+
+  // League
+  html+='<div class="xs-league-badge" style="background:linear-gradient(135deg,'+myL.color+'18,'+myL.color+'08);border:2px solid '+myL.color+'55;">';
+  html+='<div style="font-size:40px;">'+myL.icon+'</div><div style="flex:1;">';
+  html+='<div style="font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px;">MERI LEAGUE</div>';
+  html+='<div style="font-family:\'Fredoka One\',sans-serif;font-size:18px;color:'+myL.color+';">'+myL.name+'</div>';
+  if(nxtL){
+    html+='<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;">'+xpToNext+' XP aur chahiye → '+nxtL.name+'</div>';
+    html+='<div style="margin-top:8px;height:6px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;"><div style="height:100%;width:'+prog+'%;background:linear-gradient(90deg,'+myL.color+','+nxtL.color+');border-radius:6px;"></div></div>';
+    html+='<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;">'+prog+'% complete</div>';
+  } else {
+    html+='<div style="font-size:12px;color:#9FFFFF;margin-top:4px;">🏆 Max League! Zabardast!</div>';
+  }
+  html+='</div></div>';
+
+  // All leagues
+  html+='<div class="xs-how-card"><div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#CE82FF;margin-bottom:12px;">🏆 Saari Leagues</div>';
+  LG.forEach(function(l){
+    var isA=l.id===myL.id, isP=myXP>=l.minXP;
+    html+='<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;margin-bottom:8px;'+(isA?'background:'+l.color+'18;border:1.5px solid '+l.color+'55;':'background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);')+'">';
+    html+='<span style="font-size:24px;'+(isP?'':'filter:grayscale(1);opacity:.4;')+'">'+l.icon+'</span>';
+    html+='<div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:'+(isA?l.color:isP?'#fff':'rgba(255,255,255,.4)')+';">'+l.name+'</div>';
+    html+='<div style="font-size:11px;color:rgba(255,255,255,.35);">'+l.minXP+'+ XP'+(isA?' — Abhi Yahan Ho!':isP?' ✅':'')+'</div></div>';
+    if(isA) html+='<span style="font-size:16px;">👈</span>';
+    html+='</div>';
+  });
+  html+='</div>';
+
+  // How to earn XP
+  html+='<div class="xs-how-card"><div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#CE82FF;margin-bottom:4px;">💡 XP Kaise Kamao</div>';
+  [{ico:'📚',txt:'Lesson mukamal karo',val:'+XP'},
+   {ico:'🎯',txt:'Pre-Class quiz karo',val:'+50'},
+   {ico:'🔥',txt:'Streak active rakho',val:'Bonus'},
+   {ico:'⚡',txt:'XP Boost activate karo',val:'2x'},
+   {ico:'🧩',txt:'Puzzle solve karo',val:'+30'},
+   {ico:'📝',txt:'Past paper attempt karo',val:'+XP'},
+  ].forEach(function(w){
+    html+='<div class="xs-how-row"><div class="xs-how-ico">'+w.ico+'</div><div style="flex:1;font-size:13px;color:rgba(255,255,255,.65);">'+w.txt+'</div><div class="xs-how-val">'+w.val+'</div></div>';
+  });
+  html+='</div>';
+
+  body.innerHTML=html;
+}
+</script>
+
+<!-- ══════════════════════════════════════════════
+     🔥 STREAK SCREEN
+══════════════════════════════════════════════ -->
+<div class="screen" id="streakScreen" style="background:var(--bg);overflow-y:auto;min-height:100vh;">
+  <div style="background:linear-gradient(135deg,#1a0800,#2d1500,#1a0800);padding:52px 20px 28px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(255,150,0,.2),transparent 70%);pointer-events:none;"></div>
+    <button onclick="showScreen('dashboard');renderDash();" style="position:absolute;top:14px;left:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 14px;color:var(--mut);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;">← Wapas</button>
+    <div style="font-size:11px;color:var(--o);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">🔥 STREAK</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:26px;color:#fff;margin-bottom:4px;">Apki Streak</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);">Har roz seekho — streak barha'o</div>
+  </div>
+  <div style="padding:16px 16px 100px;" id="streakScreenBody">
+    <div style="text-align:center;padding:32px;color:var(--mut);">⏳ Load ho raha hai...</div>
+  </div>
+</div>
+
+<style>
+.ss-milestone-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:8px;}
+.ss-milestone-row.reached{background:linear-gradient(135deg,rgba(255,150,0,.12),rgba(255,80,0,.06));border:1.5px solid rgba(255,150,0,.4);}
+.ss-milestone-row.locked{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.07);opacity:.55;}
+.ss-ms-ico{font-size:26px;width:36px;text-align:center;flex-shrink:0;}
+.ss-ms-badge{font-family:'Fredoka One',sans-serif;font-size:13px;color:var(--o);}
+.ss-ms-days{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+.ss-ms-tick{font-size:18px;margin-left:auto;flex-shrink:0;}
+.ss-tip-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.ss-tip-row:last-child{border-bottom:none;}
+.ss-tip-ico{font-size:20px;width:28px;text-align:center;flex-shrink:0;margin-top:1px;}
+.ss-freeze-card{background:rgba(91,141,239,.1);border:1.5px solid rgba(91,141,239,.35);border-radius:18px;padding:16px 18px;margin-bottom:12px;}
+</style>
+
+<script>
+// ════════════════════════════════════════
+// 🔥 STREAK SCREEN
+// ════════════════════════════════════════
+function showStreakScreen(){
+  renderStreakScreen();
+  showScreen('streakScreen');
+}
+
+function renderStreakScreen(){
+  var body = document.getElementById('streakScreenBody');
+  if(!body) return;
+
+  var cs2  = CS();
+  var streak = cs2.streak || 0;
+  var isp  = isPro();
+
+  // Streak freeze count
+  var freezeCount = 0;
+  try{
+    var fd = JSON.parse(localStorage.getItem('speakup_streak_freeze')||'{"count":0}');
+    freezeCount = fd.count || 0;
+  }catch(e){}
+
+  // Milestones
+  var MS = [
+    {days:3,   emoji:'🔥',  badge:'🥉 3-Day Streak!'},
+    {days:7,   emoji:'🔥🔥',badge:'🥈 1 Week Streak!'},
+    {days:14,  emoji:'💥',  badge:'🏅 2-Week Fire!'},
+    {days:30,  emoji:'⚡',  badge:'🥇 Month Master!'},
+    {days:60,  emoji:'🌟',  badge:'💎 Diamond Streak!'},
+    {days:100, emoji:'👑',  badge:'👑 Legend Mode!'},
+  ];
+
+  // Next milestone
+  var nextMS = null;
+  for(var i=0;i<MS.length;i++){ if(MS[i].days > streak){ nextMS=MS[i]; break; } }
+  var daysToNext = nextMS ? nextMS.days - streak : 0;
+
+  // Streak message
+  var msg = streak===0 ? 'Aaj pehla din shuru karo! 🌟'
+           : streak<5  ? 'Acha shuru! Jaari raho 💪'
+           : streak<10 ? 'Maza aa raha hai! Rokna mat 🔥'
+           : streak<30 ? 'Koi nahi rok sakta tujhe! ⚡'
+           : streak<60 ? 'Ek mahine ka ustaa! 🏆'
+           :             'Tum legend ho! 👑';
+
+  var html = '';
+
+  // ── Big streak display ──
+  html += '<div style="background:linear-gradient(135deg,rgba(255,150,0,.12),rgba(255,80,0,.06));border:2px solid rgba(255,150,0,.4);border-radius:22px;padding:22px 18px;margin-bottom:14px;text-align:center;">';
+  html += '<div style="font-size:11px;color:rgba(255,150,0,.8);font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">MERI STREAK</div>';
+  html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:64px;line-height:1;animation:streakFire 1.5s ease infinite;">'+(streak>0?'🔥':'💤')+'</div>';
+  html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:52px;color:var(--o);line-height:1.1;margin-top:4px;">'+streak+'</div>';
+  html += '<div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">Din Ka Streak</div>';
+  html += '<div style="font-size:14px;color:#fff;margin-top:10px;font-family:\'Fredoka One\',sans-serif;">'+msg+'</div>';
+  html += '</div>';
+
+  // ── Next milestone progress ──
+  if(nextMS){
+    var prog = Math.min(100, Math.round((streak / nextMS.days)*100));
+    html += '<div style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;margin-bottom:14px;">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">';
+    html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#fff;">Agla Milestone</div>';
+    html += '<div style="font-size:13px;color:var(--o);font-weight:700;">'+daysToNext+' din baaki</div>';
+    html += '</div>';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
+    html += '<div style="font-size:28px;">'+nextMS.emoji+'</div>';
+    html += '<div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:15px;color:var(--o);">'+nextMS.badge+'</div>';
+    html += '<div style="font-size:11px;color:rgba(255,255,255,.4);">'+nextMS.days+' din lgataar seekho</div></div>';
+    html += '</div>';
+    html += '<div style="height:8px;background:rgba(255,255,255,.07);border-radius:8px;overflow:hidden;">';
+    html += '<div style="height:100%;width:'+prog+'%;background:linear-gradient(90deg,#FF6B00,#FF9A3C);border-radius:8px;transition:width 1s ease;"></div>';
+    html += '</div>';
+    html += '<div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;">'+streak+' / '+nextMS.days+' din ('+prog+'%)</div>';
+    html += '</div>';
+  } else {
+    html += '<div style="background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.4);border-radius:18px;padding:14px 18px;margin-bottom:14px;text-align:center;">';
+    html += '<div style="font-size:28px;margin-bottom:6px;">👑</div>';
+    html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:#FFD700;">Sab Milestones Haasil! Legend Ho Tum!</div>';
+    html += '</div>';
+  }
+
+  // ── Streak Freeze (Pro) ──
+  if(isp){
+    html += '<div class="ss-freeze-card">';
+    html += '<div style="display:flex;align-items:center;gap:12px;">';
+    html += '<div style="font-size:32px;">🧊</div>';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:15px;color:#5B8DEF;margin-bottom:3px;">Streak Freeze</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.5);">Ek din miss hone pe streak nahi tooti</div>';
+    html += '</div>';
+    html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:22px;color:#5B8DEF;flex-shrink:0;">'+freezeCount+'</div>';
+    html += '</div>';
+    if(freezeCount > 0){
+      html += '<div style="margin-top:10px;background:rgba(91,141,239,.12);border-radius:10px;padding:8px 12px;font-size:12px;color:rgba(255,255,255,.6);">✅ Aapke paas '+freezeCount+' Streak Freeze hain — safe ho!</div>';
+    } else {
+      html += '<div style="margin-top:10px;background:rgba(255,75,75,.1);border-radius:10px;padding:8px 12px;font-size:12px;color:rgba(255,100,100,.8);">⚠️ Koi freeze nahi — kal zaroor seekho!</div>';
+    }
+    html += '<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:8px;">Pro users ko har hafte 2 naye freezes milte hain (max 5)</div>';
+    html += '</div>';
+  } else {
+    // Free user — freeze promote
+    html += '<div style="background:linear-gradient(135deg,rgba(91,141,239,.1),rgba(91,141,239,.04));border:1.5px dashed rgba(91,141,239,.4);border-radius:18px;padding:16px 18px;margin-bottom:12px;">';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
+    html += '<div style="font-size:28px;">🧊</div>';
+    html += '<div style="flex:1;"><div style="font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#5B8DEF;margin-bottom:2px;">Streak Freeze — Pro Feature</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.4);">Ek din miss hone pe streak nahi tooti</div></div>';
+    html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:11px;color:rgba(255,255,255,.3);flex-shrink:0;background:rgba(255,255,255,.06);border-radius:8px;padding:3px 8px;">🔒 Pro</div>';
+    html += '</div>';
+    html += '<button onclick="showProScreen();" style="width:100%;padding:11px;background:linear-gradient(135deg,#5B8DEF,#3A6BD4);border:none;border-radius:12px;font-family:\'Fredoka One\',sans-serif;font-size:14px;color:#fff;cursor:pointer;">👑 Pro Lo — Streak Freeze Pao</button>';
+    html += '</div>';
+  }
+
+  // ── All Milestones ──
+  html += '<div style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;margin-bottom:12px;">';
+  html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:var(--o);margin-bottom:12px;">🏆 Saare Milestones</div>';
+  MS.forEach(function(m){
+    var reached = streak >= m.days;
+    html += '<div class="ss-milestone-row '+(reached?'reached':'locked')+'">';
+    html += '<div class="ss-ms-ico">'+m.emoji+'</div>';
+    html += '<div style="flex:1;"><div class="ss-ms-badge">'+m.badge+'</div>';
+    html += '<div class="ss-ms-days">'+m.days+' din lgataar</div></div>';
+    html += '<div class="ss-ms-tick">'+(reached?'✅':'🔒')+'</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // ── Tips ──
+  html += '<div style="background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 18px;margin-bottom:12px;">';
+  html += '<div style="font-family:\'Fredoka One\',sans-serif;font-size:16px;color:var(--o);margin-bottom:4px;">💡 Streak Kaise Barhayen</div>';
+  [
+    {ico:'📅',txt:'Har roz ek lesson zaroor karo — chahe chhota ho'},
+    {ico:'⏰',txt:'Ek waqt set karo — subah ya raat, routine bano'},
+    {ico:'🎯',txt:'Pre-Class quiz bhi streak mein count hota hai'},
+    {ico:'🧊',txt:'Pro: Streak Freeze use karo agar din miss ho'},
+    {ico:'🔔',txt:'Notification on rakho — reminder milega'},
+  ].forEach(function(t){
+    html += '<div class="ss-tip-row"><div class="ss-tip-ico">'+t.ico+'</div><div style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.5;">'+t.txt+'</div></div>';
+  });
+  html += '</div>';
+
+  body.innerHTML = html;
+}
+</script>
 
 <!-- ══════════════════════════════════════════════
      NO HEARTS OVERLAY
@@ -23815,12 +24697,14 @@ function closeGoalModal() {
   window._renderHeartBar = function(){
     var htEl = document.getElementById('lHt');
     if(!htEl) return;
-    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))){ htEl.textContent='♾️'; return; }
+    if(typeof isPro==='function' && (isPro()||(typeof isDemo==='function'&&isDemo()))){ htEl.innerHTML='<span style="font-size:14px;">♾️</span>'; return; }
     var h = _regenHearts().hearts;
-    var html='';
+    // Compact heart display for header
+    var html='<span style="display:inline-flex;align-items:center;gap:2px;">';
     for(var i=0;i<MAX_HEARTS;i++){
-      html+='<span class="heart-icon'+(i>=h?' lost':'')+'" id="hrt_'+i+'">'+(i<h?'❤️':'🖤')+'</span>';
+      html+='<span class="heart-icon'+(i>=h?' lost':'')+'" id="hrt_'+i+'" style="font-size:14px;">'+(i<h?'❤️':'🖤')+'</span>';
     }
+    html+='</span>';
     htEl.innerHTML = html;
   };
 
@@ -24051,5 +24935,6 @@ function closeGoalModal() {
 
 })();
 </script>
+
 
 </body></html>
