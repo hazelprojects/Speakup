@@ -14567,26 +14567,59 @@ function renderPCSpeaking(s, b){
 }
 
 function pcMicSpeak(micId, resId, expected){
+  expected = expected.replace(/[^a-z0-9]/gi,'').toLowerCase();
   var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SRClass){ document.getElementById(resId).innerHTML='<div style="color:var(--mut);font-size:12px;">🎤 Mic is browser mein nahi chala.</div>'; return; }
+  var resEl = document.getElementById(resId);
+  if(!SRClass){ if(resEl) resEl.innerHTML='<div style="color:var(--mut);font-size:12px;">🎤 Mic is browser mein nahi chala.</div>'; return; }
   var btn = document.getElementById(micId);
   if(btn){ btn.textContent='🔴 Sun raha hun...'; btn.style.background='rgba(255,75,75,.3)'; btn.disabled=true; }
   var sr = new SRClass();
   sr.lang = 'en-US'; sr.continuous = false; sr.interimResults = false;
   sr.onresult = function(ev){
-    var spoken = ev.results[0][0].transcript.trim().toLowerCase();
-    var exp = expected.toLowerCase().replace(/[^a-z0-9 ]/g,'');
-    // Direct match OR short sound match (e.g. "apple" accepted for "ay" = letter A)
-    var directMatch = (spoken === exp || spoken.indexOf(exp) !== -1 || exp.indexOf(spoken) !== -1);
-    var firstLetterMatch = exp.length <= 3 && spoken.length > 0 && spoken[0] === exp[0];
+    var spoken = ev.results[0][0].transcript.trim().toLowerCase().replace(/[^a-z0-9 ]/g,'');
+    var exp = expected.toLowerCase().replace(/[^a-z0-9]/g,'');
+
+    // Phonetic map: each letter sound + acceptable spoken words
+    var phoneticMap = {
+      'ay':['a','ay','aye','ei','eigh'],'bee':['b','be','bee','bi'],'see':['c','see','sea','si','ce'],
+      'dee':['d','de','dee','di'],'ee':['e','ee','eh','ea'],'ef':['f','ef','eff','ph'],
+      'jee':['g','ge','gee','gi','jay'],'aitch':['h','aitch','haitch','hah','ach'],
+      'eye':['i','eye','ai','aye','ie'],'jay':['j','jay','jae','je'],
+      'kay':['k','kay','ke','ka'],'el':['l','el','ell','elle'],
+      'em':['m','em','mm','hmm'],'en':['n','en','nn'],
+      'oh':['o','oh','ow','eau','oo'],'pee':['p','pe','pee','pi'],
+      'cue':['q','cue','queue','ku','kyu'],'ar':['r','ar','are','err','er'],
+      'es':['s','es','ess','ace','ss'],'tee':['t','te','tee','ti','tea'],
+      'you':['u','you','yoo','yu','oo','yew'],'vee':['v','ve','vee','vi'],
+      'doubleyou':['w','doubleyou','doubleu','double','dubya'],
+      'ex':['x','ex','eks','ecks'],'why':['y','why','wai','wie','yee'],
+      'zee':['z','ze','zee','zed','zzz']
+    };
+
     var score;
-    if(directMatch || firstLetterMatch){
+    var expClean = exp.replace(/ /g,'');
+
+    // 1. Exact match
+    if(spoken === exp || spoken === expClean){
       score = 100;
-    } else {
-      score = (spoken.split('').filter(function(c){ return exp.indexOf(c)!==-1; }).length / Math.max(spoken.length, exp.length) * 100);
+    }
+    // 2. Phonetic map match
+    else if(phoneticMap[expClean] && phoneticMap[expClean].indexOf(spoken) !== -1){
+      score = 100;
+    }
+    // 3. Spoken contains the expected sound as a word
+    else if(spoken.split(' ').indexOf(exp) !== -1 || spoken.split(' ').indexOf(expClean) !== -1){
+      score = 100;
+    }
+    // 4. Expected is part of spoken (e.g. spoken="ay" inside "okay")
+    else if(spoken.indexOf(expClean) !== -1 && expClean.length >= 2){
+      score = 90;
+    }
+    // 5. Fuzzy character match (last resort)
+    else {
+      score = (spoken.split('').filter(function(c){ return expClean.indexOf(c)!==-1; }).length / Math.max(spoken.length, expClean.length) * 100);
     }
     var pct = Math.round(score);
-    var resEl = document.getElementById(resId);
 
     if(pct >= 80){
       // ✅ SAHI JAWAB — green celebration box + auto next
