@@ -2058,6 +2058,42 @@ ZAROORI RULES:
     </div>
   </div>
 
+  <!-- 📞 SUPPORT CONTACT INFO -->
+  <div class="card" style="border-color:rgba(37,211,102,.4);background:linear-gradient(135deg,rgba(37,211,102,.07),rgba(37,211,102,.03));">
+    <div class="card-title" style="color:#25D366;">📞 Support Contact Info</div>
+    <div class="card-sub">Users ko Settings screen mein yahi number aur Gmail dikhega — direct admin se rabta ke liye</div>
+
+    <div style="margin-top:14px;">
+      <div class="inp-label">📱 WhatsApp Number</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input class="inp" id="supportPhoneInp" type="tel" placeholder="e.g. 03410101415" value="03410101415" style="margin:0;flex:1;">
+        <div style="font-size:11px;color:var(--mut);white-space:nowrap;">Pakistan format</div>
+      </div>
+      <div style="font-size:11px;color:var(--mut);margin-top:4px;line-height:1.6;">⚠️ 0 se shuru karo — 03XXXXXXXXX format mein (system khud international format banayega)</div>
+    </div>
+
+    <div style="margin-top:14px;">
+      <div class="inp-label">📧 Support Gmail</div>
+      <input class="inp" id="supportEmailInp" type="email" placeholder="e.g. Adeelmakhial@gmail.com" value="Adeelmakhial@gmail.com" style="margin:0;">
+    </div>
+
+    <!-- Preview -->
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(255,255,255,.04);border-radius:12px;border:1px solid rgba(255,255,255,.08);">
+      <div style="font-size:11px;color:var(--mut);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">👁️ Preview — Users ko aisa dikhega</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:16px;">📱</span>
+        <span id="supportPhonePreview" style="font-size:13px;color:rgba(255,255,255,.7);">03410101415</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">📩</span>
+        <span id="supportEmailPreview" style="font-size:13px;color:rgba(255,255,255,.7);">Adeelmakhial@gmail.com</span>
+      </div>
+    </div>
+
+    <button onclick="saveSupportContact()" class="btn" style="margin-top:14px;background:linear-gradient(135deg,#25D366,#1DA851);border:none;color:#fff;font-size:15px;width:100%;">💾 Support Info Save Karo</button>
+    <div id="supportContactSaveMsg" style="display:none;text-align:center;color:var(--g);font-size:12px;margin-top:8px;font-weight:800;">✅ Support info save ho gayi! Users ko ab naya number/email dikhega.</div>
+  </div>
+
   <!-- 🛑 MAINTENANCE MODE CARD -->
   <div class="card" id="maintenanceCard" style="border-color:rgba(255,107,107,.4);background:linear-gradient(135deg,rgba(255,107,107,.06),rgba(255,100,0,.03));">
     <div class="card-title" style="color:var(--r);">🛑 Maintenance Mode</div>
@@ -5710,6 +5746,7 @@ async function onAdminAuthChange(user){
     if(typeof loadAnalyticsCharts==='function') loadAnalyticsCharts();
     if(typeof loadRetentionChart==='function') loadRetentionChart();
     if(typeof _loadMaintenanceUI==='function') _loadMaintenanceUI();
+    if(typeof _loadSupportContactUI==='function') _loadSupportContactUI();
   }, 2000);
   const firstTab = document.querySelector('.nav-tab');
   if(firstTab) showPage('dashboard', firstTab);
@@ -6254,7 +6291,7 @@ function showPage(name,btn){
     if(st && saved){ st.textContent='✅ Token saved'; st.style.color='#2EE59D'; }
   }
   if(name==='payment'){ renderPaymentPlans(); renderPayAccounts(); }
-  if(name==='settings'){ loadSettings(); setTimeout(()=>{ if(typeof _loadMaintenanceUI==='function') _loadMaintenanceUI(); }, 300); }
+  if(name==='settings'){ loadSettings(); setTimeout(()=>{ if(typeof _loadMaintenanceUI==='function') _loadMaintenanceUI(); if(typeof _loadSupportContactUI==='function') _loadSupportContactUI(); }, 300); }
   if(name==='ai-gen'){ const key=getApiKey(); document.getElementById('apiSetupBox').style.display=key?'none':'block'; }
   if(name==='prompt-gen'){ 
     if(!pgSelectedDay) pgSelectedDay=1; 
@@ -8994,8 +9031,70 @@ function _loadMaintenanceUI(){
   if(msgEl && s.maintenanceMessage) msgEl.value = s.maintenanceMessage;
 }
 
-// ════════════════════════════════════════════
-// RETENTION CHART
+// ── SUPPORT CONTACT INFO ──
+function saveSupportContact(){
+  const ph = (document.getElementById('supportPhoneInp')?.value || '').trim();
+  const em = (document.getElementById('supportEmailInp')?.value || '').trim();
+  if(!ph && !em){ alert('Phone ya Email koi ek toh zaroor bharo!'); return; }
+
+  const data = { phone: ph, email: em };
+
+  // Firebase mein save karo
+  if(window.FB_DB && window.FB_REF && window.FB_SET){
+    window.FB_SET(window.FB_REF(window.FB_DB, 'adminData/supportContact'), data)
+      .then(()=>{
+        const msgEl = document.getElementById('supportContactSaveMsg');
+        if(msgEl){ msgEl.style.display='block'; setTimeout(()=>msgEl.style.display='none', 3000); }
+        _updateSupportPreview(ph, em);
+      })
+      .catch(err=>{ alert('Firebase save error: ' + err.message); });
+  } else {
+    // Fallback: localStorage
+    try { localStorage.setItem('su_support_phone', ph); } catch(e){}
+    try { localStorage.setItem('su_support_email', em); } catch(e){}
+    const msgEl = document.getElementById('supportContactSaveMsg');
+    if(msgEl){ msgEl.style.display='block'; setTimeout(()=>msgEl.style.display='none', 3000); }
+    _updateSupportPreview(ph, em);
+  }
+}
+
+function _updateSupportPreview(ph, em){
+  const pp = document.getElementById('supportPhonePreview');
+  const ep = document.getElementById('supportEmailPreview');
+  if(pp) pp.textContent = ph || '—';
+  if(ep) ep.textContent = em || '—';
+}
+
+function _loadSupportContactUI(){
+  // Firebase se load karo
+  if(window.FB_DB && window.FB_REF && window.FB_GET){
+    window.FB_GET(window.FB_REF(window.FB_DB, 'adminData/supportContact'))
+      .then(snap=>{
+        const val = snap && snap.val ? snap.val() : null;
+        const ph = (val && val.phone) ? val.phone : '03410101415';
+        const em = (val && val.email) ? val.email : 'Adeelmakhial@gmail.com';
+        const phInp = document.getElementById('supportPhoneInp');
+        const emInp = document.getElementById('supportEmailInp');
+        if(phInp) phInp.value = ph;
+        if(emInp) emInp.value = em;
+        _updateSupportPreview(ph, em);
+      }).catch(()=>{});
+  }
+}
+
+// Live preview jaise user type kare
+(function(){
+  function _bindSupportPreview(){
+    const phInp = document.getElementById('supportPhoneInp');
+    const emInp = document.getElementById('supportEmailInp');
+    if(phInp) phInp.addEventListener('input', function(){ _updateSupportPreview(this.value, document.getElementById('supportEmailInp')?.value||''); });
+    if(emInp) emInp.addEventListener('input', function(){ _updateSupportPreview(document.getElementById('supportPhoneInp')?.value||'', this.value); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', _bindSupportPreview);
+  else _bindSupportPreview();
+})();
+
+
 // Firebase users + emailProfiles — createdAt vs lastLogin
 // D1 = next day wapas aaya, D7 = 7 din mein active, D30 = 30 din mein
 // ════════════════════════════════════════════
