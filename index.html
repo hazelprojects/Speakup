@@ -14661,76 +14661,93 @@ function pcMicSpeak(micId, resId, expected){
   if(!SRClass){ if(resEl) resEl.innerHTML='<div style="color:var(--mut);font-size:12px;">🎤 Mic is browser mein nahi chala.</div>'; return; }
   var btn = document.getElementById(micId);
   if(btn){ btn.textContent='🔴 Sun raha hun...'; btn.style.background='rgba(255,75,75,.3)'; btn.disabled=true; }
+
+  // ── Browser letter transcription map ──
+  // KEY insight: jab user sirf "A" bolta hai, browser usse "a" ya "ay" transcribe karta hai.
+  // Yahan SIRF woh words hain jo browser actually return karta hai — koi extra nahi.
+  var charMap = {
+    'a': ['a','ay'],
+    'b': ['b','be','bee'],
+    'c': ['c','see','sea'],
+    'd': ['d','de','dee'],
+    'e': ['e','ee','he'],
+    'f': ['f','ef','eff'],
+    'g': ['g','ge','gee','je'],
+    'h': ['h','aitch','haitch','hey','ha'],
+    'i': ['i','eye','ai'],
+    'j': ['j','jay','je'],
+    'k': ['k','kay','ke'],
+    'l': ['l','el','ell'],
+    'm': ['m','em'],
+    'n': ['n','en'],
+    'o': ['o','oh','owe'],
+    'p': ['p','pe','pee'],
+    'q': ['q','cue','queue'],
+    'r': ['r','ar','are'],
+    's': ['s','es','ess'],
+    't': ['t','te','tee','tea'],
+    'u': ['u','you','yew'],
+    'v': ['v','ve','vee'],
+    'w': ['w','double u','doubleyou','double you'],
+    'x': ['x','ex','eks'],
+    'y': ['y','why','wai'],
+    'z': ['z','zee','zed']
+  };
+
   var sr = new SRClass();
-  sr.lang = 'en-US'; sr.continuous = false; sr.interimResults = false;
+  sr.lang = 'en-US';
+  sr.continuous = false;
+  sr.interimResults = false;
+  sr.maxAlternatives = 10;
+
   sr.onresult = function(ev){
-    var spoken = ev.results[0][0].transcript.trim().toLowerCase().replace(/[^a-z0-9 ]/g,'');
+    // Sab alternatives ek list mein lao
+    var allHeard = [];
+    for(var ai = 0; ai < ev.results[0].length; ai++){
+      var t = ev.results[0][ai].transcript.trim().toLowerCase().replace(/[^a-z0-9 ]/g,'');
+      allHeard.push(t);
+    }
+    var spoken = allHeard[0]; // display ke liye pehla
     var exp = expected.toLowerCase().replace(/[^a-z0-9]/g,'');
+    var validList = charMap[exp] || [exp];
+    var matched = false;
 
-    // Letter -> acceptable spoken words map
-    // User sirf letter bolta hai (A, B, C...) ya uski koi bhi variant
-    var charMap = {
-      'a':['a','ay','aye','aa','alpha'],'b':['b','be','bee','bi','beh'],
-      'c':['c','see','sea','si','ce','chay'],'d':['d','de','dee','di','deh'],
-      'e':['e','ee','eh','ea','i'],'f':['f','ef','eff','ph','eph'],
-      'g':['g','ge','gee','ji','jay','geh'],'h':['h','aitch','haitch','hah','ach','ha','hey'],
-      'i':['i','eye','ai','aye','ie','ee'],'j':['j','jay','jae','je','jeh'],
-      'k':['k','kay','ke','ka','keh'],'l':['l','el','ell','elle','leh'],
-      'm':['m','em','mm','hmm','meh'],'n':['n','en','nn','neh'],
-      'o':['o','oh','ow','eau','oo','zero'],'p':['p','pe','pee','pi','peh'],
-      'q':['q','cue','queue','ku','kyu'],'r':['r','ar','are','err','er','reh'],
-      's':['s','es','ess','ace','ss','seh'],'t':['t','te','tee','ti','tea','teh'],
-      'u':['u','you','yoo','yu','oo','yew','uh'],'v':['v','ve','vee','vi','veh'],
-      'w':['w','double','doubleyou','doubleu','dubya'],
-      'x':['x','ex','eks','ecks'],'y':['y','why','wai','wie','yee','yeh'],
-      'z':['z','ze','zee','zed','zzz']
-    };
+    // Har alternative check karo
+    for(var hi = 0; hi < allHeard.length; hi++){
+      var heard = allHeard[hi];
+      var heardWords = heard.split(' ');
+      // Exact full match
+      if(heard === exp){ matched = true; break; }
+      // charMap mein hai
+      if(validList.indexOf(heard) !== -1){ matched = true; break; }
+      // Koi bhi word charMap mein hai
+      for(var wi = 0; wi < heardWords.length; wi++){
+        if(validList.indexOf(heardWords[wi]) !== -1){ matched = true; break; }
+      }
+      if(matched) break;
+    }
 
-    var score;
-    var expClean = exp.replace(/ /g,'');
-    var spokenWords = spoken.split(' ');
-
-    // 1. Exact match
-    if(spoken === expClean || spokenWords[0] === expClean){
-      score = 100;
-    }
-    // 2. Char map match (user said letter name or any variant)
-    else if(charMap[expClean] && charMap[expClean].indexOf(spoken) !== -1){
-      score = 100;
-    }
-    // 3. Any spoken word matches
-    else if(charMap[expClean] && spokenWords.some(function(w){ return charMap[expClean].indexOf(w) !== -1; })){
-      score = 100;
-    }
-    // 4. Fuzzy match (last resort)
-    else {
-      score = (spoken.split('').filter(function(c){ return expClean.indexOf(c)!==-1; }).length / Math.max(spoken.length, expClean.length) * 100);
-    }
-    var pct = Math.round(score);
-
-    if(pct >= 80){
-      // ✅ SAHI JAWAB — green celebration box + auto next
+    if(matched){
+      // ✅ SAHI — green box + auto next
       if(resEl) resEl.innerHTML=
         '<div style="background:linear-gradient(135deg,rgba(88,204,2,.18),rgba(46,229,157,.08));border:2px solid rgba(88,204,2,.5);border-radius:14px;padding:12px 16px;text-align:center;animation:correctPulse .6s ease;">'
         +'<div style="font-size:28px;margin-bottom:4px;">🎉</div>'
         +'<div style="font-family:Fredoka One,sans-serif;font-size:18px;color:#58CC02;margin-bottom:2px;">Zabardast!</div>'
         +'<div style="font-size:12px;color:rgba(255,255,255,.55);">Bilkul sahi talaffuz! Agla letter aa raha hai...</div>'
         +'</div>';
-      if(btn){ btn.style.display='none'; }
-      // Auto next after 1.2s
+      if(btn) btn.style.display='none';
       setTimeout(function(){ if(typeof pcNx==='function') pcNx(); }, 1200);
     } else {
-      // ❌ GALAT JAWAB — error feedback + retry button
-      var col = pct>=50?'#FFD166':'#FF4B4B';
-      var msg = pct>=50?'😃 Karib hai! Dobara try karo':'😩 Dobara suno phir bolo';
+      // ❌ GALAT — retry
       if(resEl) resEl.innerHTML=
         '<div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(255,75,75,.3);border-radius:12px;padding:10px;font-size:13px;">'
-        +'<div style="color:'+col+';font-weight:700;margin-bottom:4px;">'+msg+'</div>'
-        +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "'+spoken+'" | Expected: "'+exp+'" | Score: <b style="color:'+col+'">'+pct+'%</b></div>'
+        +'<div style="color:#FF4B4B;font-weight:700;margin-bottom:4px;">😩 Dobara suno phir bolo</div>'
+        +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "<b style="color:#FFD166">'+spoken+'</b>" — "<b style="color:#fff">'+exp.toUpperCase()+'</b>" bolna tha</div>'
         +'</div>';
       if(btn){ btn.textContent='🎤 Dobara Bolo'; btn.style.background=''; btn.disabled=false; }
     }
   };
+
   sr.onerror = function(){
     if(btn){ btn.textContent='🎤 Bol ke Dekho'; btn.style.background=''; btn.disabled=false; }
   };
