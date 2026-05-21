@@ -14695,7 +14695,7 @@ function pcMicSpeak(micId, resId, expected){
   };
 
   var sr = new SRClass();
-  sr.lang = 'en-US';
+  sr.lang = 'en-GB';
   sr.continuous = false;
   sr.interimResults = false;
   sr.maxAlternatives = 10;
@@ -14704,10 +14704,12 @@ function pcMicSpeak(micId, resId, expected){
     // Sab alternatives ek list mein lao
     var allHeard = [];
     for(var ai = 0; ai < ev.results[0].length; ai++){
-      var t = ev.results[0][ai].transcript.trim().toLowerCase().replace(/[^a-z0-9 ]/g,'');
-      allHeard.push(t);
+      var raw = ev.results[0][ai].transcript.trim().toLowerCase().replace(/[^a-z0-9 ]/g,'');
+      if(raw) allHeard.push(raw);
     }
-    var spoken = allHeard[0]; // display ke liye pehla
+    // DEBUG: console mein dekho browser kya sun raha hai
+    console.log('[SpeakUp] Expected:', expected, '| Browser heard:', JSON.stringify(allHeard));
+    var spoken = allHeard[0] || '';
     var exp = expected.toLowerCase().replace(/[^a-z0-9]/g,'');
     var validList = charMap[exp] || [exp];
     var matched = false;
@@ -14742,7 +14744,7 @@ function pcMicSpeak(micId, resId, expected){
       if(resEl) resEl.innerHTML=
         '<div style="background:rgba(255,255,255,.05);border:1.5px solid rgba(255,75,75,.3);border-radius:12px;padding:10px;font-size:13px;">'
         +'<div style="color:#FF4B4B;font-weight:700;margin-bottom:4px;">😩 Dobara suno phir bolo</div>'
-        +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "<b style="color:#FFD166">'+spoken+'</b>" — "<b style="color:#fff">'+exp.toUpperCase()+'</b>" bolna tha</div>'
+        +'<div style="color:rgba(255,255,255,.5);">Tumne bola: "<b style="color:#FFD166">'+allHeard.join(', ')+'</b>" — "<b style="color:#fff">'+exp.toUpperCase()+'</b>" bolna tha</div>'
         +'</div>';
       if(btn){ btn.textContent='🎤 Dobara Bolo'; btn.style.background=''; btn.disabled=false; }
     }
